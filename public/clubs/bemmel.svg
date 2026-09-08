@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="120" viewBox="0 0 320 120" role="img" aria-labelledby="title description">
+  <title id="title">Voorbeeldclub Bemmel</title>
+  <description id="description">Tijdelijke plaatsaanduiding voor het clublogo</description>
+  <!-- TODO: Vervang dit bestand door het goedgekeurde clublogo. -->
+  <rect width="320" height="120" fill="#072737" />
+  <text x="160" y="55" fill="#ffffff" font-family="sans-serif" font-size="20" text-anchor="middle">Voorbeeldclub Bemmel</text>
+  <text x="160" y="82" fill="#ffffff" font-family="sans-serif" font-size="14" text-anchor="middle">TODO: clublogo</text>
+</svg>

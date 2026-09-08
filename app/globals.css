@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* #072737 on white: 15.3:1 */
+  --color-navy: #072737;
+  /* #0C2A40 on white: 14.7:1 */
+  --color-navy-licht: #0c2a40;
+  /* #E94E12 on white: 3.8:1; with navy: 4.1:1. Accent or large text only. */
+  --color-oranje: #e94e12;
+  /* #C43F0C on white: 5.2:1 */
+  --color-oranje-diep: #c43f0c;
+  --color-tag: #bfd9e5;
+  --color-vlak: #f4f4f2;
+  --color-lijn: #e5e5e3;
+  --color-keuzekaart: #e6e6e4;
+  --color-salderingsvlak: #f2f2f1;
+  --color-salderingslijn: #d8d8d6;
+  --color-stippellijn: #c9c9c6;
+  --color-body-grijs: #6b7280;
+  --color-body-donker: #4b5563;
+
+  --font-sans: var(--font-outfit);
+
+  --text-display-xl: clamp(2.75rem, 7vw, 5.5rem);
+  --text-display-xl--line-height: 0.95;
+  --text-display-xl--letter-spacing: -0.03em;
+  --text-display-xl--font-weight: 400;
+
+  --text-display-l: clamp(2rem, 5vw, 3.5rem);
+  --text-display-l--line-height: 1;
+  --text-display-l--letter-spacing: -0.02em;
+  --text-display-l--font-weight: 400;
+
+  --text-display-m: clamp(1.5rem, 3vw, 2.25rem);
+  --text-display-m--line-height: 1.1;
+  --text-display-m--font-weight: 400;
+
+  --text-body-l: 1.125rem;
+  --text-body-l--line-height: 1.6;
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+}
+
+:root {
+  /* De bovenbalk is doorzichtig en telt niet mee in de flow: secties die tot
+     bovenaan de pagina doorlopen, rekenen met deze hoogte. */
+  --hoogte-headerbalk: 104px;
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-oranje);
+  outline-offset: 3px;
+}
+
+/* Op het ijsblauwe paneel haalt de oranje focusring maar 2,6:1 en blijft hij
+   onder de 3:1 die een focusindicator nodig heeft; navy haalt er 10,5:1. Deze
+   regel staat buiten een laag, net als de globale ring, want een
+   Tailwind-utility in een laag zou er niet bovenop komen. */
+.formulier-op-ijsblauw :is(input, textarea):focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 4px;
+}
+
+/* Bij autofill zet de browser een eigen achtergrond en tekstkleur op een
+   invoerveld. De lange transitie houdt die achtergrond weg, zodat het
+   ijsblauwe paneel doorloopt, en de navy tekstkleur blijft staan. */
+.formulier-op-ijsblauw :is(input, textarea):-webkit-autofill,
+.formulier-op-ijsblauw :is(input, textarea):-webkit-autofill:hover,
+.formulier-op-ijsblauw :is(input, textarea):-webkit-autofill:focus {
+  -webkit-text-fill-color: #072737;
+  caret-color: #072737;
+  transition: background-color 9999s;
+}
+
+/* Pagina's met `data-installateur` tonen `SectieInstallateur` zelf. Het
+   vertrouwensblok in de footer zou Zonneplaneet daar dubbel noemen, en zo'n
+   pagina eindigt in een vol vlak: de footer sluit er direct op aan. */
+body:has(main[data-installateur]) .site-footer-trust {
+  display: none;
+}
+
+body:has(main[data-installateur]) .site-footer {
+  margin-top: 0;
+}
+
+/* De homepage-hero heeft een eigen bovenbalk met logo, navigatie en menuknop. */
+body:has(main[data-homepage]) .site-header {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

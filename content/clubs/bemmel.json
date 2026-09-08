@@ -1,0 +1,30 @@
+{
+  "naam": "Voorbeeldclub Bemmel",
+  "code": "BEMMEL-TODO",
+  "plaats": "Bemmel",
+  "logo": "/clubs/bemmel.svg",
+  "ledenaantal": "TODO: vul het gecontroleerde ledenaantal in",
+  "vergoedingPerInstallatie": "€200",
+  "kortingPanelen": "€[TODO]",
+  "kortingBatterij": "€[TODO]",
+  "quote": {
+    "tekst": "TODO: voeg hier een goedgekeurde quote van een lid toe.",
+    "naam": "TODO: naam lid",
+    "rol": "lid"
+  },
+  "bestuurRegel": "TODO: voeg hier de goedgekeurde bestuursregel toe.",
+  "faq": [
+    {
+      "vraag": "Wie neemt contact met me op?",
+      "antwoord": "Zonneplaneet neemt contact met je op. Zonneplaneet verzorgt de verkoop en installatie."
+    },
+    {
+      "vraag": "Ziet de club mijn persoonsgegevens?",
+      "antwoord": "Nee. De club ziet geen persoonsgegevens uit je aanmelding."
+    },
+    {
+      "vraag": "Zit ik na mijn aanmelding ergens aan vast?",
+      "antwoord": "Nee. Je zit nergens aan vast tot je een offerte tekent."
+    }
+  ]
+}
