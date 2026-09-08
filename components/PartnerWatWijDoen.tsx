@@ -37,7 +37,7 @@ export function PartnerWatWijDoen() {
   return (
     <section
       aria-labelledby="wat-wij-doen"
-      className="bg-salderingsvlak pt-0 pb-0"
+      className="bg-salderingsvlak py-20 md:py-28"
     >
       <div className="mx-auto max-w-[1440px] px-8 md:px-16">
         <div className="mb-24 md:flex md:items-start md:justify-between md:gap-16">
