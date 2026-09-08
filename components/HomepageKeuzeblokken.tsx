@@ -95,12 +95,11 @@ const keuzeblokken: Keuzeblok[] = [
       "Voor aanmelden heb je de link of QR-code van je eigen club nodig. Die krijg je via je club.",
     Icoon: ZonnepaneelIcoon,
   },
+  /* TODO: Zet `href: "/kennisbank"` terug als de kennisbank weer live gaat. */
   {
     id: "keuze-opbrengst",
     titel: "Ik wil weten wat het mij oplevert",
-    beschrijving:
-      "Lees in de kennisbank hoe zonnepanelen, thuisbatterijen en laadpalen werken.",
-    href: "/kennisbank",
+    beschrijving: "Lees hoe zonnepanelen, thuisbatterijen en laadpalen werken.",
     Icoon: HuisbatterijIcoon,
   },
   {

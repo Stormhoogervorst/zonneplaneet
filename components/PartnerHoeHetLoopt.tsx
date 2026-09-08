@@ -78,10 +78,12 @@ export function PartnerHoeHetLoopt() {
                 />
               ) : null}
 
-              <h3 className="text-[1.75rem] font-normal text-navy">{titel}</h3>
-              <p className="mt-5 text-[0.9375rem] leading-[1.6] text-body-donker">
-                {beschrijving}
-              </p>
+              <div className="pl-[calc(52px+1rem)] md:pl-0">
+                <h3 className="text-[1.75rem] font-normal text-navy">{titel}</h3>
+                <p className="mt-5 text-[0.9375rem] leading-[1.6] text-body-donker">
+                  {beschrijving}
+                </p>
+              </div>
             </li>
           ))}
         </ol>

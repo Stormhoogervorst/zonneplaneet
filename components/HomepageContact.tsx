@@ -15,7 +15,7 @@ export function HomepageContact() {
         </h2>
 
         <Knop
-          href="/partner"
+          href="/contact"
           variant="grootDonker"
           metPijl
           className="mt-10 justify-center"

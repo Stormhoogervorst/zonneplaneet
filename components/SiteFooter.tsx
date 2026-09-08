@@ -30,8 +30,8 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/kennisbank" className="text-body-l">
-                Kennisbank
+              <Link href="/contact" className="text-body-l">
+                Contact
               </Link>
             </li>
           </ul>

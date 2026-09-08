@@ -12,8 +12,10 @@ export type AccordeonItem = {
  * kleur: dicht alleen een omlijning op de sectiekleur, open een wit vlak dat
  * uit het grijs komt. Oranje zit daar alleen in het gevulde cirkeltje, nooit
  * in tekst of in de icoonlijn.
+ * `lijnen` is de FAQ-rij: geen kaarten, alleen een haarlijn onder elk item.
+ * Dicht een grijs pluscirkeltje, open een oranje cirkel met navy min.
  */
-type AccordeonVariant = "licht" | "vlak";
+type AccordeonVariant = "licht" | "vlak" | "lijnen";
 
 type AccordeonProps = {
   className?: string;
@@ -21,30 +23,43 @@ type AccordeonProps = {
   variant?: AccordeonVariant;
 };
 
+const lijstClasses: Record<AccordeonVariant, string> = {
+  licht: "flex flex-col gap-3",
+  vlak: "flex flex-col gap-3",
+  lijnen: "accordeon-lijnen",
+};
+
 const detailsClasses: Record<AccordeonVariant, string> = {
   licht:
-    "rounded-3xl border border-slate-200 bg-white px-6 py-4 text-navy open:border-navy open:bg-navy open:text-white",
-  vlak: "rounded-none border border-navy/15 bg-transparent px-7 py-6 open:border-transparent open:bg-white",
+    "rounded-3xl border border-slate-200 bg-white px-6 py-4 text-navy transition-[background-color] duration-200 open:border-navy open:bg-navy open:text-white",
+  vlak: "rounded-none border border-navy/15 bg-transparent px-7 py-6 transition-[background-color] duration-200 open:border-transparent open:bg-white",
+  lijnen: "border-b border-stippellijn first:border-t",
 };
 
 const summaryClasses: Record<AccordeonVariant, string> = {
   licht: "min-h-12 gap-4",
   vlak: "gap-6",
+  lijnen: "gap-8 py-7",
 };
 
 const vraagClasses: Record<AccordeonVariant, string> = {
   licht: "text-body font-semibold",
   vlak: "text-[1.125rem] font-medium text-navy",
+  lijnen:
+    "min-w-0 text-left text-[1.25rem] font-normal text-navy group-open:font-medium",
 };
 
 const cirkelClasses: Record<AccordeonVariant, string> = {
-  licht: "size-8 border-current",
-  vlak: "size-9 border-navy/25 text-navy transition-[background-color] duration-200 group-open:border-transparent group-open:bg-oranje",
+  licht: "size-8 border border-current",
+  vlak: "size-9 border border-navy/25 text-navy transition-[background-color] duration-200 group-open:border-transparent group-open:bg-oranje",
+  lijnen:
+    "size-9 bg-navy/7 text-body-donker transition-[background-color] duration-200 group-open:bg-oranje group-open:text-navy",
 };
 
 const antwoordClasses: Record<AccordeonVariant, string> = {
   licht: "mt-4 text-body",
   vlak: "mt-4 max-w-[70ch] text-[0.9375rem] leading-[1.7] text-body-donker",
+  lijnen: "max-w-[70ch] pb-7 text-[1rem] leading-[1.7] text-body-donker",
 };
 
 export function Accordeon({
@@ -53,12 +68,12 @@ export function Accordeon({
   variant = "licht",
 }: AccordeonProps) {
   return (
-    <div className={`flex flex-col gap-3 ${className}`}>
+    <div className={`${lijstClasses[variant]} ${className}`}>
       {items.map((item) => (
         <details
           key={item.vraag}
           open={item.standaardOpen}
-          className={`group transition-[background-color] duration-200 ${detailsClasses[variant]}`}
+          className={`group ${detailsClasses[variant]}`}
         >
           <summary
             className={`flex cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden ${summaryClasses[variant]}`}
@@ -68,7 +83,7 @@ export function Accordeon({
             {/* De verticale streep verdwijnt bij open, zodat de plus een min wordt. */}
             <span
               aria-hidden="true"
-              className={`grid shrink-0 place-items-center rounded-full border ${cirkelClasses[variant]}`}
+              className={`grid shrink-0 place-items-center rounded-full ${cirkelClasses[variant]}`}
             >
               <svg
                 viewBox="0 0 14 14"

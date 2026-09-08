@@ -2,8 +2,8 @@ import "server-only";
 
 import { Resend } from "resend";
 import type { Club } from "@/lib/clubs";
-import type { Lead, PartnerLead } from "@/lib/leads";
-import type { Aanmelding } from "@/lib/validatie";
+import type { ContactLead, Lead, PartnerLead } from "@/lib/leads";
+import { contactRolLabels, type Aanmelding } from "@/lib/validatie";
 
 const interesseLabels: Record<Aanmelding["interesse"], string> = {
   panelen: "Zonnepanelen",
@@ -76,9 +76,7 @@ export async function stuurDoorNaarZonneplaneet(
   }
 }
 
-export async function stuurPartnerAanmelding(
-  lead: PartnerLead,
-): Promise<void> {
+export async function stuurPartnerAanmelding(lead: PartnerLead): Promise<void> {
   const { resend, van } = getMailConfig();
   const resultaat = await resend.emails.send({
     from: van,
@@ -99,6 +97,39 @@ export async function stuurPartnerAanmelding(
   });
 
   if (resultaat.error) {
-    throw new Error(`Mail over clubaanmelding mislukt: ${resultaat.error.message}`);
+    throw new Error(
+      `Mail over clubaanmelding mislukt: ${resultaat.error.message}`,
+    );
+  }
+}
+
+/* De gekozen rol staat in de onderwerpregel: daaraan is te zien of het bericht
+   naar de clubwerving of naar de leden-afhandeling moet. */
+export async function stuurContactbericht(lead: ContactLead): Promise<void> {
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: van,
+    replyTo: lead.email,
+    subject: `Nieuw contactbericht: ${contactRolLabels[lead.rol]}`,
+    text: [
+      "Nieuw bericht via het contactformulier",
+      "",
+      `Naam: ${lead.naam}`,
+      `E-mail: ${lead.email}`,
+      `Telefoon: ${lead.telefoon === "" ? "niet opgegeven" : lead.telefoon}`,
+      `Ik ben: ${contactRolLabels[lead.rol]}`,
+      "",
+      "Bericht:",
+      lead.bericht,
+      "",
+      `Lead-id: ${lead.id}`,
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(
+      `Mail over contactbericht mislukt: ${resultaat.error.message}`,
+    );
   }
 }

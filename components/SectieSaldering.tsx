@@ -1,4 +1,4 @@
-import { Knop, Rijenlijst, rijenlijstIcoonClasses } from "@/components/ui";
+import { Rijenlijst, rijenlijstIcoonClasses } from "@/components/ui";
 
 /*
  * Deze sectie deelt alleen de scherpe, isometrische vormentaal met de
@@ -93,21 +93,13 @@ const salderingsRijen = [
 ];
 
 export function SectieSaldering() {
+  /* TODO: Zet de knop naar /kennisbank terug als de kennisbank weer live gaat. */
   return (
     <Rijenlijst
       eyebrow="SALDERINGSREGELING"
       id="salderen-deadline"
       kop="Waarom nu: op 1 januari 2027 stopt de salderingsregeling. Tot en met 31 december 2026 kun je nog volledig salderen."
       rijen={salderingsRijen}
-    >
-      <Knop
-        className="flex w-full md:inline-flex md:w-auto"
-        href="/kennisbank"
-        metPijl
-        variant="groot"
-      >
-        Kennisbank
-      </Knop>
-    </Rijenlijst>
+    />
   );
 }

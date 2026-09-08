@@ -61,6 +61,13 @@
   outline-offset: 4px;
 }
 
+/* De globale oranje ring blijft 3px; op de lijnaccordeon hoort een navy
+   ring van 2px met 4px offset, zodat de focus op de summary blijft staan. */
+.accordeon-lijnen summary:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 4px;
+}
+
 /* Bij autofill zet de browser een eigen achtergrond en tekstkleur op een
    invoerveld. De lange transitie houdt die achtergrond weg, zodat het
    ijsblauwe paneel doorloopt, en de navy tekstkleur blijft staan. */
@@ -69,6 +76,16 @@
 .formulier-op-ijsblauw :is(input, textarea):-webkit-autofill:focus {
   -webkit-text-fill-color: #072737;
   caret-color: #072737;
+  transition: background-color 9999s;
+}
+
+/* Hetzelfde op het navy paneel, met witte tekst: de lichte autofill-achtergrond
+   van de browser zou de navy kolom middenin openbreken. */
+.formulier-op-navy :is(input, textarea, select):-webkit-autofill,
+.formulier-op-navy :is(input, textarea, select):-webkit-autofill:hover,
+.formulier-op-navy :is(input, textarea, select):-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
   transition: background-color 9999s;
 }
 
@@ -81,6 +98,18 @@ body:has(main[data-installateur]) .site-footer-trust {
 
 body:has(main[data-installateur]) .site-footer {
   margin-top: 0;
+}
+
+/* Een pagina die zelf in een donker vlak eindigt, sluit direct op de footer
+   aan: de witte marge zou daar een naad tussen twee donkere vlakken worden. */
+body:has(main[data-donker-einde]) .site-footer {
+  margin-top: 0;
+}
+
+/* Pagina's die het vertrouwensblok niet in de footer willen, zonder dat ze
+   `SectieInstallateur` zelf tonen. */
+body:has(main[data-geen-vertrouwensblok]) .site-footer-trust {
+  display: none;
 }
 
 /* De homepage-hero heeft een eigen bovenbalk met logo, navigatie en menuknop. */

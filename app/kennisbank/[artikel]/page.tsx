@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import {
-  getArtikel,
-  getArtikelSlugs,
-  type Artikel,
-} from "@/lib/artikelen";
+import { getArtikel, getArtikelSlugs, type Artikel } from "@/lib/artikelen";
 
 type ArtikelPageProps = {
   params: Promise<{ artikel: string }>;
@@ -30,6 +26,11 @@ export async function generateMetadata({
   return {
     title: artikel.titel,
     description: artikel.beschrijving,
+    /* TODO: Indexeren als de kennisbank weer in de navigatie komt. */
+    robots: {
+      index: false,
+      follow: true,
+    },
     alternates: {
       canonical: `/kennisbank/${artikel.slug}`,
     },

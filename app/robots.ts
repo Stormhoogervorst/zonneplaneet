@@ -7,6 +7,8 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
+      /* TODO: Haal deze disallow weg als de kennisbank weer live gaat. */
+      disallow: ["/kennisbank"],
     },
     sitemap: new URL("/sitemap.xml", siteUrl).toString(),
   };

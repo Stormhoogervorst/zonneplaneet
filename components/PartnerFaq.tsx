@@ -40,10 +40,9 @@ const jsonLd = {
 };
 
 /**
- * Hetzelfde grijze vlak als `PartnerHoeHetLoopt` erboven, zodat de stappen en
- * de vragen één licht blok vormen dat op het navy aanmeldpaneel uitkomt. De
- * accordeon staat links uitgelijnd onder het kopblok en werkt zonder
- * JavaScript.
+ * Smaller container dan de overige partnersecties: een FAQ leest slecht over
+ * volle breedte. Kopblok gecentreerd, accordeon als rijen met haarlijnen.
+ * Alle items staan dicht bij het laden.
  */
 export function PartnerFaq() {
   return (
@@ -58,25 +57,20 @@ export function PartnerFaq() {
         }}
       />
 
-      <div className="mx-auto max-w-[1440px] px-8 md:px-16">
-        <div className="mb-16">
-          <Tag className="font-mono">VOOR BESTUURDERS</Tag>
+      <div className="mx-auto max-w-[1000px] px-8 md:px-16">
+        <div className="mb-16 text-center">
+          <Tag className="mx-auto px-4 py-2 font-mono text-[0.8125rem]">
+            VOOR BESTUURDERS
+          </Tag>
           <h2
             id="faq-bestuurders"
-            className="mt-8 text-[clamp(2rem,4.5vw,3.25rem)] leading-[1.05] font-normal text-navy"
+            className="mt-10 text-center text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] font-normal text-navy"
           >
             Veelgestelde vragen
           </h2>
         </div>
 
-        <Accordeon
-          variant="vlak"
-          className="ml-0 max-w-[900px]"
-          items={vragen.map((item, index) => ({
-            ...item,
-            standaardOpen: index === 0,
-          }))}
-        />
+        <Accordeon variant="lijnen" items={vragen} />
       </div>
     </section>
   );

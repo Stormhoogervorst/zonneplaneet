@@ -6,11 +6,10 @@ import logoWit from "@/public/logo-zonneplaneet-wit.png";
 
 const navigatie = [
   { href: "/", label: "Home" },
-  { href: "/kennisbank", label: "Kennisbank" },
   { href: "/partner", label: "Voor clubs" },
 ];
 
-const contact = { href: "/partner#club-aanmelden", label: "Contact" };
+const contact = { href: "/contact", label: "Contact" };
 
 /** Het vlak waarop de doorzichtige balk ligt, want dat bepaalt de kleuren. */
 type Ondergrond = "licht" | "donker";

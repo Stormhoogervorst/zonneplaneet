@@ -1,11 +1,6 @@
 import { z } from "zod";
 
-export const interesses = [
-  "panelen",
-  "batterij",
-  "beide",
-  "laadpaal",
-] as const;
+export const interesses = ["panelen", "batterij", "beide", "laadpaal"] as const;
 
 export const aanmeldingSchema = z.object({
   naam: z
@@ -98,6 +93,64 @@ export type PartnerAanmeldState = {
   message?: string;
   meetConversie?: boolean;
   errors?: Partial<Record<PartnerAanmeldVeld, string[]>>;
+};
+
+export const contactRollen = ["lid", "bestuurslid", "anders"] as const;
+
+/* Deze labels staan in het keuzeveld én in de onderwerpregel van de mail, zodat
+   een bericht meteen bij de clubwerving of de leden-afhandeling terechtkomt. */
+export const contactRolLabels: Record<(typeof contactRollen)[number], string> =
+  {
+    lid: "lid van een vereniging",
+    bestuurslid: "bestuurslid",
+    anders: "anders",
+  };
+
+export const contactSchema = z.object({
+  naam: z
+    .string({ error: "Vul je naam in." })
+    .trim()
+    .min(2, "Vul je volledige naam in."),
+  email: z
+    .string({ error: "Vul je e-mailadres in." })
+    .trim()
+    .email("Vul een geldig e-mailadres in."),
+  /* Optioneel: we hebben het e-mailadres al om te antwoorden. */
+  telefoon: z
+    .string()
+    .trim()
+    .refine(
+      (telefoon) =>
+        telefoon === "" ||
+        /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in, of laat dit veld leeg.",
+    ),
+  rol: z.enum(contactRollen, {
+    error:
+      "Kies wat voor jou geldt, zodat je bericht bij de juiste persoon komt.",
+  }),
+  bericht: z
+    .string({ error: "Vul je bericht in." })
+    .trim()
+    .min(10, "Schrijf in een paar woorden waar je vraag over gaat."),
+});
+
+export type Contactbericht = z.infer<typeof contactSchema>;
+export type ContactVeld = keyof Contactbericht;
+
+export type ContactState = {
+  success: boolean;
+  message?: string;
+  meetConversie?: boolean;
+  errors?: Partial<Record<ContactVeld, string[]>>;
+};
+
+/** De vorm van de action-state die `ContactFormulier` leest. */
+export type FormulierState = {
+  success: boolean;
+  message?: string;
+  meetConversie?: boolean;
+  errors?: Partial<Record<string, string[]>>;
 };
 
 export function normaliseerTelefoon(telefoon: string): string {

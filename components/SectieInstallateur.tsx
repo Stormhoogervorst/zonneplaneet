@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Knop } from "@/components/ui";
 
 export function SectieInstallateur() {
   return (
@@ -17,32 +18,19 @@ export function SectieInstallateur() {
             werkt vanuit Assen en Arnhem.
           </h2>
 
-          <div className="mt-8 flex items-center gap-2">
-            <a
-              href="https://www.zonneplaneet.nl"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center rounded-full bg-oranje px-6 text-xl font-semibold text-navy"
-            >
-              Bekijk Zonneplaneet
-              <span className="sr-only"> (opent in een nieuw venster)</span>
-            </a>
-            <span
-              aria-hidden="true"
-              className="grid size-12 shrink-0 place-items-center rounded-full bg-oranje"
-            >
-              <svg viewBox="0 0 24 24" className="size-[18px]" fill="none">
-                <path
-                  d="M7 17 17 7M17 7H8M17 7v9"
-                  stroke="#072737"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
-          </div>
-
+          {/* De pijlcirkel hoort binnen de link, zodat ook een klik daarop
+              naar Zonneplaneet gaat. */}
+          <Knop
+            href="https://www.zonneplaneet.nl/"
+            variant="extern"
+            metPijl
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8"
+          >
+            Bekijk Zonneplaneet
+            <span className="sr-only"> (opent in een nieuw venster)</span>
+          </Knop>
         </div>
 
         <div className="relative mt-12 aspect-[4/3] min-w-0 w-full overflow-hidden md:mt-0 md:aspect-[16/10] md:w-[62%]">

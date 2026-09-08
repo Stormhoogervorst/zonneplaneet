@@ -1,18 +1,25 @@
 "use server";
 
 import { getClub } from "@/lib/clubs";
-import { bewaarLead, bewaarPartnerLead } from "@/lib/leads";
+import {
+  bewaarContactbericht,
+  bewaarLead,
+  bewaarPartnerLead,
+} from "@/lib/leads";
 import {
   stuurBevestiging,
+  stuurContactbericht,
   stuurDoorNaarZonneplaneet,
   stuurPartnerAanmelding,
 } from "@/lib/mail";
 import { magAanmelden } from "@/lib/rate-limit";
 import {
   aanmeldingSchema,
+  contactSchema,
   normaliseerTelefoon,
   partnerAanmeldingSchema,
   type AanmeldState,
+  type ContactState,
   type PartnerAanmeldState,
 } from "@/lib/validatie";
 
@@ -171,6 +178,79 @@ export async function meldClubAan(
       fout,
     });
   }
+
+  return { success: true, meetConversie: true };
+}
+
+export async function stuurContact(
+  prevState: ContactState,
+  formData: FormData,
+): Promise<ContactState> {
+  void prevState;
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.trim() !== "") {
+    return { success: true };
+  }
+
+  if (!(await magAanmelden("contactbericht"))) {
+    return {
+      success: false,
+      message:
+        "Je hebt te vaak een bericht verstuurd. Wacht even en probeer het later opnieuw.",
+    };
+  }
+
+  const resultaat = contactSchema.safeParse({
+    naam: formData.get("naam"),
+    email: formData.get("email"),
+    telefoon: formData.get("telefoon") ?? "",
+    rol: formData.get("rol"),
+    bericht: formData.get("bericht"),
+  });
+
+  if (!resultaat.success) {
+    return {
+      success: false,
+      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
+      errors: resultaat.error.flatten().fieldErrors,
+    };
+  }
+
+  const bericht = {
+    ...resultaat.data,
+    telefoon:
+      resultaat.data.telefoon === ""
+        ? ""
+        : normaliseerTelefoon(resultaat.data.telefoon),
+  };
+
+  let lead;
+  try {
+    lead = await bewaarContactbericht(bericht);
+  } catch (fout) {
+    console.error(
+      "Contactbericht opslaan mislukt; er is geen mail verstuurd.",
+      fout,
+    );
+    return {
+      success: false,
+      message:
+        "Je bericht kon niet worden opgeslagen. Probeer het later opnieuw.",
+    };
+  }
+
+  const mailResultaten = await Promise.allSettled([stuurContactbericht(lead)]);
+  const mailNamen = ["contactbericht naar Clubactie"];
+
+  mailResultaten.forEach((mailResultaat, index) => {
+    if (mailResultaat.status === "rejected") {
+      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
+        leadId: lead.id,
+        fout: mailResultaat.reason,
+      });
+    }
+  });
 
   return { success: true, meetConversie: true };
 }

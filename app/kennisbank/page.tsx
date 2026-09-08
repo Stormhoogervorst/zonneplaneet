@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   title: "Kennisbank over zonne-energie",
   description:
     "Lees uitleg over zonnepanelen, thuisbatterijen en laadpalen via je sportvereniging.",
+  /* TODO: Indexeren als de kennisbank weer in de navigatie komt. */
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function KennisbankPage() {
