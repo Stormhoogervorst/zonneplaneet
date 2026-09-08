@@ -1,7 +1,7 @@
 import {
+  GraphicAanspreekpunt,
   GraphicGevolgd,
   GraphicKlaargezet,
-  GraphicUitbetaald,
 } from "@/components/WaardeGraphics";
 
 const kaarten = [
@@ -19,7 +19,7 @@ const kaarten = [
   },
   {
     titel: "De club blijft erbuiten",
-    graphic: GraphicUitbetaald,
+    graphic: GraphicAanspreekpunt,
     beschrijving:
       "Leden melden zich zelf aan, dus de club deelt geen ledengegevens en voert geen verkoopgesprekken. Wij zijn het enige aanspreekpunt.",
   },
