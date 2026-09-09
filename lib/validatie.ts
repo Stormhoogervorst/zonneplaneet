@@ -153,6 +153,54 @@ export type FormulierState = {
   errors?: Partial<Record<string, string[]>>;
 };
 
+export const actieTypen = ["cashback", "winactie"] as const;
+
+export const actieAanmeldingSchema = z.object({
+  naam: z
+    .string({ error: "Vul je naam in." })
+    .trim()
+    .min(2, "Vul je volledige naam in."),
+  email: z
+    .string({ error: "Vul je e-mailadres in." })
+    .trim()
+    .email("Vul een geldig e-mailadres in."),
+  telefoon: z
+    .string({ error: "Vul je telefoonnummer in." })
+    .trim()
+    .refine(
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
+    ),
+  postcode: z
+    .string({ error: "Vul je postcode in." })
+    .trim()
+    .regex(
+      /^[1-9]\d{3}\s?[a-zA-Z]{2}$/,
+      "Vul een geldige Nederlandse postcode in.",
+    ),
+  actie: z.enum(actieTypen, {
+    error:
+      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
+  }),
+  akkoord: z
+    .boolean({ error: "Geef toestemming om je gegevens te gebruiken." })
+    .refine(
+      (akkoord) => akkoord,
+      "Geef toestemming om je gegevens te gebruiken.",
+    ),
+});
+
+export type ActieType = (typeof actieTypen)[number];
+export type ActieAanmelding = z.infer<typeof actieAanmeldingSchema>;
+export type ActieAanmeldVeld = keyof ActieAanmelding;
+
+export type ActieAanmeldState = {
+  success: boolean;
+  message?: string;
+  meetConversie?: boolean;
+  errors?: Partial<Record<ActieAanmeldVeld, string[]>>;
+};
+
 export function normaliseerTelefoon(telefoon: string): string {
   let nummer = telefoon.trim().replace(/[()\s.-]/g, "");
 

@@ -18,10 +18,30 @@ export function SiteFooter() {
         />
 
         <nav aria-label="Voettekstnavigatie">
-          <ul className="grid gap-8 sm:grid-cols-3">
+          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             <li>
-              <Link href="/" className="text-body-l">
+              <Link href="/clubactie" className="text-body-l">
                 Clubactie
+              </Link>
+            </li>
+            <li>
+              <Link href="/cashback" className="text-body-l">
+                Cashback
+              </Link>
+            </li>
+            <li>
+              <Link href="/winactie" className="text-body-l">
+                Winactie
+              </Link>
+            </li>
+            <li>
+              <Link href="/leden" className="text-body-l">
+                Voor leden
+              </Link>
+            </li>
+            <li>
+              <Link href="/clubs" className="text-body-l">
+                Zoek je club
               </Link>
             </li>
             <li>
@@ -65,7 +85,7 @@ export function SiteFooter() {
             y="220"
             className="fill-navy-licht font-sans text-[240px] font-normal tracking-[-0.06em]"
           >
-            Clubactie
+            Zonneplaneet Actie
           </text>
         </svg>
       </div>

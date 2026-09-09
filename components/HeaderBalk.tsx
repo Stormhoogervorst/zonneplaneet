@@ -5,7 +5,8 @@ import logoNavy from "@/public/logo-zonneplaneet-navy.png";
 import logoWit from "@/public/logo-zonneplaneet-wit.png";
 
 const navigatie = [
-  { href: "/", label: "Home" },
+  { href: "/clubactie", label: "Clubactie" },
+  { href: "/clubs", label: "Zoek je club" },
   { href: "/partner", label: "Voor clubs" },
 ];
 

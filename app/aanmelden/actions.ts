@@ -2,11 +2,13 @@
 
 import { getClub } from "@/lib/clubs";
 import {
+  bewaarActieLead,
   bewaarContactbericht,
   bewaarLead,
   bewaarPartnerLead,
 } from "@/lib/leads";
 import {
+  stuurActieAanmelding,
   stuurBevestiging,
   stuurContactbericht,
   stuurDoorNaarZonneplaneet,
@@ -15,11 +17,13 @@ import {
 import { magAanmelden } from "@/lib/rate-limit";
 import {
   aanmeldingSchema,
+  actieAanmeldingSchema,
   contactSchema,
   normaliseerTelefoon,
   partnerAanmeldingSchema,
   type AanmeldState,
   type ContactState,
+  type FormulierState,
   type PartnerAanmeldState,
 } from "@/lib/validatie";
 
@@ -241,12 +245,85 @@ export async function stuurContact(
   }
 
   const mailResultaten = await Promise.allSettled([stuurContactbericht(lead)]);
-  const mailNamen = ["contactbericht naar Clubactie"];
+  const mailNamen = ["contactbericht naar Zonneplaneet Actie"];
 
   mailResultaten.forEach((mailResultaat, index) => {
     if (mailResultaat.status === "rejected") {
       console.error(`Mail mislukt: ${mailNamen[index]}.`, {
         leadId: lead.id,
+        fout: mailResultaat.reason,
+      });
+    }
+  });
+
+  return { success: true, meetConversie: true };
+}
+
+export async function meldActieAan(
+  prevState: FormulierState,
+  formData: FormData,
+): Promise<FormulierState> {
+  void prevState;
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.trim() !== "") {
+    return { success: true };
+  }
+
+  if (!(await magAanmelden("actieaanmelding"))) {
+    return {
+      success: false,
+      message:
+        "Je hebt te vaak geprobeerd je aan te melden. Wacht even en probeer het later opnieuw.",
+    };
+  }
+
+  const resultaat = actieAanmeldingSchema.safeParse({
+    naam: formData.get("naam"),
+    email: formData.get("email"),
+    telefoon: formData.get("telefoon"),
+    postcode: formData.get("postcode"),
+    actie: formData.get("actie"),
+    akkoord: formData.get("akkoord") === "on",
+  });
+
+  if (!resultaat.success) {
+    return {
+      success: false,
+      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
+      errors: resultaat.error.flatten().fieldErrors,
+    };
+  }
+
+  const aanmelding = {
+    ...resultaat.data,
+    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
+    postcode: resultaat.data.postcode.toUpperCase(),
+  };
+
+  let lead;
+  try {
+    lead = await bewaarActieLead(aanmelding);
+  } catch (fout) {
+    console.error(
+      "Actie-aanmelding opslaan mislukt; er is geen mail verstuurd.",
+      fout,
+    );
+    return {
+      success: false,
+      message:
+        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
+    };
+  }
+
+  const mailResultaten = await Promise.allSettled([stuurActieAanmelding(lead)]);
+  const mailNamen = ["actie-aanmelding naar Zonneplaneet Actie"];
+
+  mailResultaten.forEach((mailResultaat, index) => {
+    if (mailResultaat.status === "rejected") {
+      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
+        leadId: lead.id,
+        actie: lead.actie,
         fout: mailResultaat.reason,
       });
     }

@@ -9,6 +9,9 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 <!-- END:nextjs-agent-rules -->
 
 FASE: designsysteem gereed, pagina-ontwerp volgt
+De site heet Zonneplaneet Actie. Clubactie is één van de acties (route
+`/clubactie`), geen merknaam. In lopende tekst blijft "clubactie" staan als
+zelfstandig naamwoord.
 Het designsysteem staat in `app/globals.css` en `components/ui/`. Gebruik deze tokens
 en primitives bij volgende ontwerprondes; maak geen lokale varianten opnieuw.
 Voeg geen dependencies toe: geen UI-library, geen icon-library, geen form-library
@@ -58,9 +61,9 @@ Knop varianten `primair`, `donker`, `groot`, `stil`; optioneel `metPijl`
 pijl die 45 graden schuin omhoog wijst. De cirkel zit dus niet in de pil.
 Op mobiel vult de pil de volledige breedte met min-hoogte 56px en staat de cirkel
 ernaast; de piltekst mag daar over twee regels lopen.
-De homepage-hero staat in `components/HomepageHero.tsx` en heeft een eigen bovenbalk
+De full-screen hero staat in `components/Hero.tsx` en heeft een eigen bovenbalk
 met logo, navigatie en menuknop. Daarom verbergt `app/globals.css` de `SiteHeader` op
-de homepage; de navigatie voor de rest van de pagina staat in de footer.
+pagina's met `data-hero-balk`; de navigatie voor de rest van de pagina staat in de footer.
 Kaart vlakachtergrond, `rounded-3xl`, ruime padding
 IconTegel oranje vierkant met navy icoon
 Sectie verticale ritmiek en containerbreedtes

@@ -1,7 +1,14 @@
 import Image from "next/image";
 import { Knop } from "@/components/ui";
 
-export function SectieInstallateur() {
+export const installateurAlineaVoorClubs =
+  "Zonneplaneet levert en installeert. Wij regelen de actie voor je club en zorgen dat je korting op de offerte staat. Zonneplaneet werkt vanuit Assen en Arnhem.";
+
+export function SectieInstallateur({
+  alinea = installateurAlineaVoorClubs,
+}: {
+  alinea?: string;
+}) {
   return (
     <section
       aria-labelledby="installateur-titel"
@@ -13,9 +20,7 @@ export function SectieInstallateur() {
             id="installateur-titel"
             className="text-[1.25rem] leading-[1.5] font-normal text-navy md:text-[1.375rem]"
           >
-            Zonneplaneet levert en installeert. Wij regelen de actie voor je
-            club en zorgen dat je korting op de offerte staat. Zonneplaneet
-            werkt vanuit Assen en Arnhem.
+            {alinea}
           </h2>
 
           {/* De pijlcirkel hoort binnen de link, zodat ook een klik daarop

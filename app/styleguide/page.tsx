@@ -12,7 +12,7 @@ import {
 
 export const metadata: Metadata = {
   title: "Styleguide",
-  description: "Interne styleguide voor de interface van Clubactie.",
+  description: "Interne styleguide voor de interface van Zonneplaneet Actie.",
   robots: {
     index: false,
     follow: false,
@@ -56,7 +56,7 @@ export default function StyleguidePagina() {
     <main>
       <Sectie aria-labelledby="styleguide-titel">
         <header className="max-w-2xl">
-          <p className="text-body font-semibold">Clubactie</p>
+          <p className="text-body font-semibold">Zonneplaneet Actie</p>
           <h1 id="styleguide-titel" className="mt-4 text-display-xl">
             Styleguide
           </h1>

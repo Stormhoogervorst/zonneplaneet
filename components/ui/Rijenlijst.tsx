@@ -52,9 +52,9 @@ export function Rijenlijst({
         {/* Alleen haarlijnen tussen de rijen: de laatste rij wordt niet
             afgesloten met een lijn. */}
         <dl>
-          {rijen.map(({ titel, icoon, beschrijving, actie }) => (
+          {rijen.map(({ titel, icoon, beschrijving, actie }, index) => (
             <div
-              key={titel}
+              key={`${titel}-${index}`}
               className={
                 actie
                   ? "border-t border-salderingslijn pt-10 pb-0 md:grid md:grid-cols-12 md:items-start md:pt-14"

@@ -17,8 +17,8 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Clubactie",
-    template: "%s | Clubactie",
+    default: "Zonneplaneet Actie",
+    template: "%s | Zonneplaneet Actie",
   },
   description:
     "Meld je via je sportvereniging aan voor informatie van Zonneplaneet.",

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "Clubactie voor zonne-energie via sportverenigingen";
+export const alt = "Zonneplaneet Actie voor zonne-energie via sportverenigingen";
 export const size = {
   width: 1200,
   height: 630,
@@ -30,7 +30,7 @@ export default function OpenGraphImage() {
             background: "#E94E12",
           }}
         />
-        <p style={{ margin: "40px 0 0", fontSize: "36px" }}>Clubactie</p>
+        <p style={{ margin: "40px 0 0", fontSize: "36px" }}>Zonneplaneet Actie</p>
         <p
           style={{
             maxWidth: "900px",

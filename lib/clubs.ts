@@ -2,6 +2,7 @@ import "server-only";
 
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { GERESERVEERDE_SLUGS } from "@/lib/routes";
 
 export type Club = {
   naam: string;
@@ -12,17 +13,44 @@ export type Club = {
   vergoedingPerInstallatie: string;
   kortingPanelen: string;
   kortingBatterij: string;
-  quote: {
+  quote?: {
     tekst: string;
     naam: string;
     rol: string;
   };
-  bestuurRegel: string;
+  bestuurRegel?: string;
   faq: Array<{
     vraag: string;
     antwoord: string;
   }>;
 };
+
+/** Lege velden en JSON-placeholders tellen niet als gepubliceerde inhoud. */
+export function isClubVeldGevuld(waarde: string | undefined): boolean {
+  const tekst = waarde?.trim() ?? "";
+
+  if (tekst === "") {
+    return false;
+  }
+
+  return !/^TODO\b/i.test(tekst);
+}
+
+export function clubHeeftQuote(
+  club: Club,
+): club is Club & { quote: NonNullable<Club["quote"]> } {
+  return (
+    isClubVeldGevuld(club.quote?.tekst) &&
+    isClubVeldGevuld(club.quote?.naam) &&
+    isClubVeldGevuld(club.quote?.rol)
+  );
+}
+
+export function clubHeeftBestuurRegel(
+  club: Club,
+): club is Club & { bestuurRegel: string } {
+  return isClubVeldGevuld(club.bestuurRegel);
+}
 
 export type ClubMetSlug = Club & {
   slug: string;
@@ -30,11 +58,21 @@ export type ClubMetSlug = Club & {
 
 const clubsMap = join(process.cwd(), "content", "clubs");
 
+const gereserveerdeSlugs = new Set<string>(GERESERVEERDE_SLUGS);
+
 export function getClubSlugs(): string[] {
-  return readdirSync(clubsMap)
+  const slugs = readdirSync(clubsMap)
     .filter((bestandsnaam) => bestandsnaam.endsWith(".json"))
     .map((bestandsnaam) => bestandsnaam.replace(/\.json$/, ""))
     .sort();
+
+  for (const slug of slugs) {
+    if (gereserveerdeSlugs.has(slug)) {
+      throw new Error(`Clubslug '${slug}' botst met een gereserveerde route.`);
+    }
+  }
+
+  return slugs;
 }
 
 export function getClub(slug: string): Club | null {

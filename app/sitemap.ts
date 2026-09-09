@@ -7,6 +7,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
      live gaat. */
   return [
     { url: new URL("/", siteUrl).toString() },
+    { url: new URL("/clubactie", siteUrl).toString() },
+    { url: new URL("/leden", siteUrl).toString() },
+    { url: new URL("/clubs", siteUrl).toString() },
     { url: new URL("/partner", siteUrl).toString() },
   ];
 }

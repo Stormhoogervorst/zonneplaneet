@@ -1,8 +1,20 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { AanmeldFormulier } from "@/components/AanmeldFormulier";
-import { SectieSaldering } from "@/components/SectieSaldering";
+import { ClubAanbodVlak } from "@/components/ClubAanbodVlak";
+import { ClubFaq } from "@/components/ClubFaq";
+import { ClubVertrouwen } from "@/components/ClubVertrouwen";
+import { Hero } from "@/components/Hero";
+import { LedenHoeHetWerkt } from "@/components/LedenHoeHetWerkt";
+import { LedenWatJeKuntKopen } from "@/components/LedenWatJeKuntKopen";
+import {
+  SectieInstallateur,
+  installateurAlineaVoorClubs,
+} from "@/components/SectieInstallateur";
+import {
+  SectieSaldering,
+  salderingKopVoorClubs,
+} from "@/components/SectieSaldering";
 import { getClub, getClubSlugs } from "@/lib/clubs";
 
 type ClubPageProps = {
@@ -44,76 +56,31 @@ export default async function ClubPage({ params }: ClubPageProps) {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-5 py-12">
-      <header>
-        <Image
-          src={club.logo}
-          alt={`Logo van ${club.naam}`}
-          width={320}
-          height={120}
-          priority
-        />
-        <h1 className="mt-6 text-3xl font-semibold">{club.naam}</h1>
-        <p className="mt-4 max-w-2xl">
-          Als lid krijg je {club.kortingPanelen} korting op zonnepanelen en{" "}
-          {club.kortingBatterij} korting op een thuisbatterij. Na een installatie
-          ontvangt de club {club.vergoedingPerInstallatie}.
-        </p>
-        <p className="mt-4 max-w-2xl">{club.bestuurRegel}</p>
-      </header>
+    <main data-hero-balk data-installateur>
+      <Hero
+        compact
+        logo={{ src: club.logo, alt: `Logo van ${club.naam}` }}
+        kop={`Ledenvoordeel voor ${club.naam}`}
+        subregel={`In ${club.plaats}. Korting op zonnepanelen en een thuisbatterij.`}
+        knoptekst="Meld je aan"
+        knoplink="#aanmelden"
+      />
 
-      <section aria-labelledby="werking" className="mt-12">
-        <h2 id="werking" className="text-2xl font-semibold">
-          Zo werkt het
-        </h2>
-        <ol className="mt-6 list-decimal space-y-4 pl-5">
-          <li>Je meldt je aan met je contactgegevens en interesse.</li>
-          <li>
-            Wij sturen je aanmelding met de clubcode door naar Zonneplaneet.
-          </li>
-          <li>
-            Zonneplaneet neemt contact op en verzorgt een eventuele offerte,
-            verkoop en installatie.
-          </li>
-        </ol>
-      </section>
+      <ClubAanbodVlak club={club} />
 
-      <section aria-labelledby="ervaring" className="mt-12">
-        <h2 id="ervaring" className="text-2xl font-semibold">
-          Ervaring van een lid
-        </h2>
-        <blockquote className="mt-6">
-          <p>“{club.quote.tekst}”</p>
-          <footer className="mt-4">
-            {club.quote.naam}, {club.quote.rol}
-          </footer>
-        </blockquote>
-      </section>
+      <ClubVertrouwen club={club} />
 
-      <section aria-labelledby="aanmelden" className="mt-12">
-        <h2 id="aanmelden" className="text-2xl font-semibold">
-          Meld je aan
-        </h2>
-        <AanmeldFormulier clubslug={slug} clubcode={club.code} />
-      </section>
+      <AanmeldFormulier clubslug={slug} clubcode={club.code} />
 
-      <div className="mt-12">
-        <SectieSaldering />
-      </div>
+      <LedenWatJeKuntKopen />
 
-      <section aria-labelledby="faq" className="mt-12">
-        <h2 id="faq" className="text-2xl font-semibold">
-          Veelgestelde vragen
-        </h2>
-        <dl className="mt-6">
-          {club.faq.map((item) => (
-            <div key={item.vraag} className="mt-6 first:mt-0">
-              <dt className="font-semibold">{item.vraag}</dt>
-              <dd className="mt-4">{item.antwoord}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
+      <LedenHoeHetWerkt />
+
+      <SectieSaldering kop={salderingKopVoorClubs} />
+
+      <ClubFaq vragen={club.faq} />
+
+      <SectieInstallateur alinea={installateurAlineaVoorClubs} />
     </main>
   );
 }

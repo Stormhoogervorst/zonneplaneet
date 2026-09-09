@@ -1,15 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, type ReactNode } from "react";
 import { Knop } from "@/components/ui";
 import { meetPlausibleEvent } from "@/lib/plausible";
 import type { FormulierState } from "@/lib/validatie";
 
 /**
  * De sectie met een foto links en een formulier rechts. `/partner` gebruikt het
- * ijsblauwe paneel, `/contact` het navy paneel. Alles wat per pagina verschilt
- * komt via props binnen; er is geen tweede variant van dit blok.
+ * ijsblauwe paneel, `/contact`, `/cashback` en `/winactie` het navy paneel.
+ * Alles wat per pagina verschilt komt via props binnen; er is geen tweede
+ * variant van dit blok.
  */
 type Paneel = "ijsblauw" | "navy";
 
@@ -30,7 +31,8 @@ export type FormulierVeld =
       /** Tekst van de lege eerste optie, zodat de bezoeker zelf kiest. */
       leegLabel: string;
       keuzes: ReadonlyArray<{ waarde: string; label: string }>;
-    });
+    })
+  | (VeldGedeeld & { soort: "vinkje" });
 
 type ContactFormulierProps = {
   /** Ankernaam van de sectie; ook het voorvoegsel van alle veld-id's. */
@@ -49,6 +51,14 @@ type ContactFormulierProps = {
   foto: { src: string; alt: string };
   plausibleEvent: string;
   paneel?: Paneel;
+  /** Waarden die meegaan in de POST, zonder zichtbaar veld. */
+  verborgenVelden?: ReadonlyArray<{ naam: string; waarde: string }>;
+  /** Zichtbare inhoud direct bij de verzendknop, bijvoorbeeld een link. */
+  bijKnop?: ReactNode;
+  /** Extra klassen op de sectie, bijvoorbeeld een andere scroll-marge. */
+  className?: string;
+  /** Extra Plausible-eigenschappen bij een geslaagde verzending. */
+  plausibleProps?: Record<string, string>;
 };
 
 type Paneelstijl = {
@@ -134,6 +144,10 @@ export function ContactFormulier({
   foto,
   plausibleEvent,
   paneel = "ijsblauw",
+  verborgenVelden,
+  bijKnop,
+  className,
+  plausibleProps,
 }: ContactFormulierProps) {
   const [state, formAction, pending] = useActionState(action, beginState);
   const conversieGemeten = useRef(false);
@@ -142,16 +156,16 @@ export function ContactFormulier({
 
   useEffect(() => {
     if (state.success && state.meetConversie && !conversieGemeten.current) {
-      meetPlausibleEvent(plausibleEvent);
+      meetPlausibleEvent(plausibleEvent, plausibleProps);
       conversieGemeten.current = true;
     }
-  }, [plausibleEvent, state.meetConversie, state.success]);
+  }, [plausibleEvent, plausibleProps, state.meetConversie, state.success]);
 
   return (
     <section
       id={id}
       aria-labelledby={titelId}
-      className="scroll-mt-[var(--hoogte-headerbalk)] py-0"
+      className={`py-0 ${className ?? "scroll-mt-[var(--hoogte-headerbalk)]"}`}
     >
       <div className="md:flex md:min-h-[760px]">
         {/* Fotokolom: onder md een liggend vlak, vanaf md de volle kolomhoogte */}
@@ -199,11 +213,59 @@ export function ContactFormulier({
                 />
               </div>
 
+              {verborgenVelden?.map((veld) => (
+                <input
+                  key={veld.naam}
+                  type="hidden"
+                  name={veld.naam}
+                  value={veld.waarde}
+                />
+              ))}
+
               <div className="grid gap-x-10 gap-y-10 md:grid-cols-2">
                 {velden.map((veld) => {
                   const veldId = `${id}-${veld.naam}`;
                   const foutId = `${veldId}-fout`;
                   const fout = state.errors?.[veld.naam]?.[0];
+
+                  if (veld.soort === "vinkje") {
+                    return (
+                      <div
+                        key={veld.naam}
+                        className={`min-w-0 ${
+                          veld.volleBreedte ? "md:col-span-2" : ""
+                        }`}
+                      >
+                        <div className="flex items-start gap-3">
+                          <input
+                            id={veldId}
+                            name={veld.naam}
+                            type="checkbox"
+                            required={veld.verplicht}
+                            autoComplete="off"
+                            aria-invalid={Boolean(fout)}
+                            aria-describedby={fout ? foutId : undefined}
+                            className={`mt-1 size-5 shrink-0 accent-oranje ${stijl.veldTekst}`}
+                          />
+                          <label
+                            htmlFor={veldId}
+                            className={`text-[0.9375rem] leading-[1.6] ${stijl.naschrift}`}
+                          >
+                            {veld.label}
+                          </label>
+                        </div>
+                        {fout && (
+                          <p
+                            id={foutId}
+                            className={`mt-3 text-sm ${stijl.fout}`}
+                          >
+                            {fout}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+
                   const veldClassName = `${veldClasses} ${stijl.veldTekst} ${
                     fout ? stijl.veldRandFout : stijl.veldRand
                   }`;
@@ -302,14 +364,17 @@ export function ContactFormulier({
                 </p>
               )}
 
-              <Knop
-                type="submit"
-                variant={stijl.knop}
-                disabled={pending}
-                className="mt-12 h-14 w-full disabled:opacity-60 md:w-auto"
-              >
-                {pending ? knopBezigLabel : knopLabel}
-              </Knop>
+              <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
+                <Knop
+                  type="submit"
+                  variant={stijl.knop}
+                  disabled={pending}
+                  className="h-14 w-full disabled:opacity-60 md:w-auto"
+                >
+                  {pending ? knopBezigLabel : knopLabel}
+                </Knop>
+                {bijKnop}
+              </div>
 
               <p className={`mt-6 text-sm ${stijl.naschrift}`}>{naschrift}</p>
             </form>

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Voorwaarden",
-  description: "Lees de voorwaarden van Clubactie.",
+  description: "Lees de voorwaarden van Zonneplaneet Actie.",
   robots: {
     index: false,
     follow: true,
@@ -19,10 +19,10 @@ export default function VoorwaardenPage() {
           Onze rol
         </h2>
         <p className="mt-4">
-          Clubactie brengt leden van sportverenigingen in contact met
+          Zonneplaneet Actie brengt leden van sportverenigingen in contact met
           Zonneplaneet. Zonneplaneet verkoopt en installeert de producten.
-          Clubactie is geen installateur en is geen partij bij de overeenkomst
-          over verkoop en installatie.
+          Zonneplaneet Actie is geen installateur en is geen partij bij de
+          overeenkomst over verkoop en installatie.
         </p>
         {/* TODO: Laat de omschrijving van de bemiddelingsrol juridisch controleren. */}
       </section>

@@ -92,13 +92,20 @@ const salderingsRijen = [
   },
 ];
 
-export function SectieSaldering() {
+export const salderingKopVoorClubs =
+  "Waarom nu: op 1 januari 2027 stopt de salderingsregeling. Tot en met 31 december 2026 kun je nog volledig salderen.";
+
+export function SectieSaldering({
+  kop = salderingKopVoorClubs,
+}: {
+  kop?: string;
+}) {
   /* TODO: Zet de knop naar /kennisbank terug als de kennisbank weer live gaat. */
   return (
     <Rijenlijst
       eyebrow="SALDERINGSREGELING"
       id="salderen-deadline"
-      kop="Waarom nu: op 1 januari 2027 stopt de salderingsregeling. Tot en met 31 december 2026 kun je nog volledig salderen."
+      kop={kop}
       rijen={salderingsRijen}
     />
   );

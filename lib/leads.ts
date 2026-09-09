@@ -3,6 +3,7 @@ import "server-only";
 import { randomUUID } from "node:crypto";
 import type {
   Aanmelding,
+  ActieAanmelding,
   Contactbericht,
   PartnerAanmelding,
 } from "@/lib/validatie";
@@ -23,6 +24,11 @@ export type PartnerLead = PartnerAanmelding & {
 };
 
 export type ContactLead = Contactbericht & {
+  id: string;
+  aangemaaktOp: string;
+};
+
+export type ActieLead = ActieAanmelding & {
   id: string;
   aangemaaktOp: string;
 };
@@ -72,6 +78,24 @@ export async function bewaarContactbericht(
   // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
   console.info(
     "Tijdelijke opslag van contactbericht, nog niet in een database:",
+    lead,
+  );
+
+  return lead;
+}
+
+export async function bewaarActieLead(
+  aanmelding: ActieAanmelding,
+): Promise<ActieLead> {
+  const lead: ActieLead = {
+    ...aanmelding,
+    id: randomUUID(),
+    aangemaaktOp: new Date().toISOString(),
+  };
+
+  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
+  console.info(
+    "Tijdelijke opslag van actie-aanmelding, nog niet in een database:",
     lead,
   );
 

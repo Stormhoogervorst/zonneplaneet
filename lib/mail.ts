@@ -2,7 +2,7 @@ import "server-only";
 
 import { Resend } from "resend";
 import type { Club } from "@/lib/clubs";
-import type { ContactLead, Lead, PartnerLead } from "@/lib/leads";
+import type { ActieLead, ContactLead, Lead, PartnerLead } from "@/lib/leads";
 import { contactRolLabels, type Aanmelding } from "@/lib/validatie";
 
 const interesseLabels: Record<Aanmelding["interesse"], string> = {
@@ -11,6 +11,12 @@ const interesseLabels: Record<Aanmelding["interesse"], string> = {
   beide: "Zonnepanelen en thuisbatterij",
   laadpaal: "Laadpaal",
 };
+
+function afzender(van: string): string {
+  const tussen = van.match(/<([^>]+)>/);
+  const email = (tussen ? tussen[1] : van).trim();
+  return `Zonneplaneet Actie <${email}>`;
+}
 
 function getMailConfig() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -23,7 +29,7 @@ function getMailConfig() {
     );
   }
 
-  return { resend: new Resend(apiKey), van, zonneplaneet };
+  return { resend: new Resend(apiKey), van: afzender(van), zonneplaneet };
 }
 
 export async function stuurBevestiging(lead: Lead): Promise<void> {
@@ -130,6 +136,35 @@ export async function stuurContactbericht(lead: ContactLead): Promise<void> {
   if (resultaat.error) {
     throw new Error(
       `Mail over contactbericht mislukt: ${resultaat.error.message}`,
+    );
+  }
+}
+
+/* Het actietype staat in de onderwerpregel, zodat cashback en winactie
+   uit elkaar te houden zijn. */
+export async function stuurActieAanmelding(lead: ActieLead): Promise<void> {
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: van,
+    replyTo: lead.email,
+    subject: `Nieuwe aanmelding: ${lead.actie}`,
+    text: [
+      `Nieuwe aanmelding via de ${lead.actie}-pagina`,
+      "",
+      `Actie: ${lead.actie}`,
+      `Naam: ${lead.naam}`,
+      `E-mail: ${lead.email}`,
+      `Telefoon: ${lead.telefoon}`,
+      `Postcode: ${lead.postcode}`,
+      "",
+      `Lead-id: ${lead.id}`,
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(
+      `Mail over actie-aanmelding mislukt: ${resultaat.error.message}`,
     );
   }
 }

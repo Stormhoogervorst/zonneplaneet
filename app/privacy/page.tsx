@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Privacy",
-  description: "Lees hoe Clubactie omgaat met persoonsgegevens.",
+  description: "Lees hoe Zonneplaneet Actie omgaat met persoonsgegevens.",
   robots: {
     index: false,
     follow: true,
@@ -57,8 +57,8 @@ export default function PrivacyPage() {
         </h2>
         <p className="mt-4">
           Je kunt ons vragen je gegevens te verwijderen. Gebruik daarvoor de
-          contactgegevens van Clubactie. We laten je weten als we bepaalde
-          gegevens wettelijk moeten bewaren.
+          contactgegevens van Zonneplaneet Actie. We laten je weten als we
+          bepaalde gegevens wettelijk moeten bewaren.
         </p>
         {/* TODO: Voeg het gecontroleerde privacy-e-mailadres en de procedure voor verzoeken toe. */}
         {/* TODO: Laat rechten, uitzonderingen en reactietermijnen juridisch controleren. */}

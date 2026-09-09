@@ -80,7 +80,7 @@ export default async function ArtikelPage({ params }: ArtikelPageProps) {
     mainEntityOfPage: artikelUrl,
     publisher: {
       "@type": "Organization",
-      name: "Clubactie",
+      name: "Zonneplaneet Actie",
     },
   };
 
