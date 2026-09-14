@@ -2,8 +2,18 @@ import "server-only";
 
 import { Resend } from "resend";
 import type { Club } from "@/lib/clubs";
-import type { ActieLead, ContactLead, Lead, PartnerLead } from "@/lib/leads";
-import { contactRolLabels, type Aanmelding } from "@/lib/validatie";
+import type {
+  ActieLead,
+  ContactLead,
+  Lead,
+  PartnerLead,
+  ReferralLead,
+} from "@/lib/leads";
+import {
+  contactRolLabels,
+  referralInteresseLabels,
+  type Aanmelding,
+} from "@/lib/validatie";
 
 const interesseLabels: Record<Aanmelding["interesse"], string> = {
   panelen: "Zonnepanelen",
@@ -41,9 +51,9 @@ export async function stuurBevestiging(lead: Lead): Promise<void> {
     text: [
       `Hoi ${lead.naam},`,
       "",
-      "We hebben je aanmelding ontvangen en doorgestuurd naar Zonneplaneet.",
-      `Je clubcode is ${lead.clubcode}. Noem deze code als Zonneplaneet je belt.`,
-      "Zonneplaneet neemt binnen twee werkdagen contact met je op.",
+      "We hebben je aanmelding ontvangen.",
+      `Je clubcode is ${lead.clubcode}. Noem deze code als we je bellen.`,
+      "We nemen binnen twee werkdagen contact met je op.",
       "",
       "Je zit nergens aan vast tot je een offerte tekent.",
     ].join("\n"),
@@ -165,6 +175,96 @@ export async function stuurActieAanmelding(lead: ActieLead): Promise<void> {
   if (resultaat.error) {
     throw new Error(
       `Mail over actie-aanmelding mislukt: ${resultaat.error.message}`,
+    );
+  }
+}
+
+export async function stuurReferralNaarZonneplaneet(
+  lead: ReferralLead,
+): Promise<void> {
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: van,
+    replyTo: lead.aandragerEmail,
+    subject: `Referral — ${lead.naam} via ${lead.aandragerNaam}`,
+    text: [
+      "Nieuwe referral via het aanmeldformulier",
+      "",
+      "Aandrager",
+      `Naam: ${lead.aandragerNaam}`,
+      `E-mail: ${lead.aandragerEmail}`,
+      `Telefoon: ${
+        lead.aandragerTelefoon === ""
+          ? "niet opgegeven"
+          : lead.aandragerTelefoon
+      }`,
+      "",
+      "Aangedragene",
+      `Naam: ${lead.naam}`,
+      `E-mail: ${lead.email}`,
+      `Telefoon: ${lead.telefoon}`,
+      `Plaats: ${lead.plaats}`,
+      `Interesse: ${referralInteresseLabels[lead.interesse]}`,
+      `Opmerking: ${lead.opmerking === "" ? "geen" : lead.opmerking}`,
+      "",
+      "Toestemming om gegevens door te geven: ja",
+      `Lead-id: ${lead.id}`,
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(
+      `Referralmail naar ons mislukt: ${resultaat.error.message}`,
+    );
+  }
+}
+
+export async function stuurReferralBevestigingAandrager(
+  lead: ReferralLead,
+): Promise<void> {
+  // TODO: Tekst over een vergoeding voor de aandrager toevoegen als die vaststaat.
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: lead.aandragerEmail,
+    subject: "We hebben je aanmelding ontvangen",
+    text: [
+      `Hoi ${lead.aandragerNaam},`,
+      "",
+      "Bedankt. We hebben je aanmelding ontvangen.",
+      `We nemen binnen twee werkdagen contact op met ${lead.naam}, de persoon die je hebt aangedragen.`,
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(
+      `Bevestigingsmail aan aandrager mislukt: ${resultaat.error.message}`,
+    );
+  }
+}
+
+export async function stuurReferralBevestigingAangedragene(
+  lead: ReferralLead,
+): Promise<void> {
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: lead.email,
+    subject: "Iemand heeft je bij ons aangedragen",
+    text: [
+      `Hoi ${lead.naam},`,
+      "",
+      `${lead.aandragerNaam} heeft je naam bij Zonneplaneet Actie achtergelaten.`,
+      "We nemen binnen twee werkdagen contact met je op.",
+      "",
+      "Wil je liever geen contact? Mail ons dan even, dan verwijderen we je gegevens.",
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(
+      `Bevestigingsmail aan aangedragene mislukt: ${resultaat.error.message}`,
     );
   }
 }

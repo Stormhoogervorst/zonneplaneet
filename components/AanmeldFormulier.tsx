@@ -56,7 +56,7 @@ const velden: FormulierVeld[] = [
   {
     naam: "akkoord",
     label:
-      "Ik geef toestemming om mijn gegevens met mijn clubcode door te sturen naar Zonneplaneet.",
+      "Ik geef toestemming om mijn gegevens met mijn clubcode te gebruiken voor mijn aanvraag.",
     soort: "vinkje",
     verplicht: true,
     volleBreedte: true,
@@ -90,7 +90,7 @@ export function AanmeldFormulier({
       naschrift="Vrijblijvend. Je zit nergens aan vast tot je een offerte tekent."
       bevestiging={{
         titel: "Aanmelding ontvangen",
-        tekst: `We hebben je aanmelding ontvangen. Je clubcode is ${clubcode}. Noem deze code als Zonneplaneet je belt.`,
+        tekst: `We hebben je aanmelding ontvangen. Je clubcode is ${clubcode}. Noem deze code als we je bellen.`,
       }}
       foto={{
         src: "/windmolens-schapen.webp",

@@ -31,7 +31,7 @@ export function LedenWatJeKuntKopen() {
     <KaartenMetGraphics
       headingId="wat-je-kunt-kopen"
       titel="Wat je kunt kopen"
-      intro="Via de actie van je club krijg je korting op drie dingen. Wat in jouw situatie het meest oplevert, rekent Zonneplaneet uit in de offerte."
+      intro="Via de actie van je club krijg je korting op drie dingen. Wat in jouw situatie het meest oplevert, rekenen we uit in de offerte."
       kaarten={kaarten}
     />
   );

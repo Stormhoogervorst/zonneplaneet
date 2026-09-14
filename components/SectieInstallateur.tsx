@@ -2,7 +2,7 @@ import Image from "next/image";
 import { Knop } from "@/components/ui";
 
 export const installateurAlineaVoorClubs =
-  "Zonneplaneet levert en installeert. Wij regelen de actie voor je club en zorgen dat je korting op de offerte staat. Zonneplaneet werkt vanuit Assen en Arnhem.";
+  "Wij leveren en installeren, en zorgen dat de actiekorting op je offerte staat. We werken vanuit Assen en Arnhem.";
 
 export function SectieInstallateur({
   alinea = installateurAlineaVoorClubs,
@@ -24,17 +24,14 @@ export function SectieInstallateur({
           </h2>
 
           {/* De pijlcirkel hoort binnen de link, zodat ook een klik daarop
-              naar Zonneplaneet gaat. */}
+              naar /over-zonneplaneet gaat. */}
           <Knop
-            href="https://www.zonneplaneet.nl/"
+            href="/over-zonneplaneet"
             variant="extern"
             metPijl
-            target="_blank"
-            rel="noopener noreferrer"
             className="mt-8"
           >
-            Bekijk Zonneplaneet
-            <span className="sr-only"> (opent in een nieuw venster)</span>
+            Over Zonneplaneet
           </Knop>
         </div>
 

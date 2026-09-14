@@ -6,17 +6,17 @@ const vragen = [
   {
     vraag: "Krijgt de club persoonsgegevens van leden?",
     antwoord:
-      "Nee. Aanmeldingen gaan rechtstreeks naar ons en Zonneplaneet. De club ontvangt alleen het maandelijkse overzicht zonder persoonsgegevens.",
+      "Nee. Aanmeldingen komen rechtstreeks bij ons binnen. De club ontvangt alleen het maandelijkse overzicht zonder persoonsgegevens.",
   },
   {
     vraag: "Wie behandelt vragen van leden?",
     antwoord:
-      "Zonneplaneet behandelt vragen over producten, offertes, verkoop en installatie.",
+      "Wij behandelen vragen over producten, offertes, verkoop en installatie.",
   },
   {
     vraag: "Wanneer ontvangt de club een vergoeding?",
     antwoord:
-      "De vergoeding ontstaat nadat Zonneplaneet een installatie heeft uitgevoerd.",
+      "De vergoeding ontstaat nadat we een installatie hebben uitgevoerd.",
   },
   {
     vraag: "Verplicht een aanmelding de club tot deelname?",

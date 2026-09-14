@@ -25,19 +25,37 @@ export default function PrivacyPage() {
         {/* TODO: Laat juridisch controleren welke gegevens en grondslag hier exact moeten staan. */}
       </section>
 
-      <section aria-labelledby="doorgeven" className="mt-12">
-        <h2 id="doorgeven" className="text-2xl font-semibold">
-          Met wie we gegevens delen
+      <section aria-labelledby="gebruik" className="mt-12">
+        <h2 id="gebruik" className="text-2xl font-semibold">
+          Waarvoor we je gegevens gebruiken
         </h2>
         <p className="mt-4">
-          We geven je gegevens samen met de clubcode door aan Zonneplaneet.
-          Zonneplaneet gebruikt die gegevens om contact met je op te nemen over
-          je aanvraag.
+          We gebruiken je gegevens samen met de clubcode om contact met je op te
+          nemen over je aanvraag.
         </p>
         <p className="mt-4">
           Je sportvereniging ziet geen persoonsgegevens uit je aanmelding.
         </p>
-        {/* TODO: Laat de rolverdeling en verwerkersafspraken met Zonneplaneet juridisch controleren. */}
+        {/* TODO: Laat de verwerking van persoonsgegevens juridisch controleren. */}
+      </section>
+
+      <section aria-labelledby="referral" className="mt-12">
+        <h2 id="referral" className="text-2xl font-semibold">
+          Als iemand jou bij ons aandraagt
+        </h2>
+        <p className="mt-4">
+          Via het referralformulier kan iemand jouw naam, e-mailadres,
+          telefoonnummer en plaats doorgeven, plus waar jij mogelijk interesse
+          in hebt en een eventuele opmerking. We slaan die gegevens op samen met
+          de naam, het e-mailadres en het telefoonnummer van de persoon die jou
+          aandraagt.
+        </p>
+        <p className="mt-4">
+          We sturen jou altijd een bericht, zodat je weet hoe we aan je gegevens
+          komen. Wil je geen contact, mail ons dan. Dan verwijderen we je
+          gegevens.
+        </p>
+        {/* TODO: Laat deze referral-tekst juridisch controleren, inclusief grondslag en de procedure voor verwijderen. */}
       </section>
 
       <section aria-labelledby="bewaren" className="mt-12">

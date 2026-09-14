@@ -66,7 +66,12 @@ const velden: FormulierVeld[] = [
 export default function ContactPage() {
   return (
     <main data-donker-einde data-geen-vertrouwensblok>
-      <ContactKop />
+      <ContactKop
+        headingId="contact-kop-titel"
+        eyebrow="NEEM CONTACT OP"
+        titel="Contact"
+        alinea="Stel je vraag over de clubactie. Ben je lid van een vereniging, dan helpen we je op weg met je aanmelding. Ben je bestuurslid, dan kijken we samen wat de actie voor je club betekent."
+      />
 
       {/* Foto links, navy paneel met het formulier rechts. Loopt over de volle
           breedte en sluit direct aan op het kopblok. */}

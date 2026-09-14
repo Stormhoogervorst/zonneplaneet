@@ -11,7 +11,7 @@ const stappen = [
     nummer: "02",
     titel: "Contact",
     beschrijving:
-      "Zonneplaneet belt je binnen twee werkdagen om je situatie door te nemen.",
+      "We bellen je binnen twee werkdagen om je situatie door te nemen.",
   },
   {
     nummer: "03",
@@ -23,7 +23,7 @@ const stappen = [
     nummer: "04",
     titel: "Installatie",
     beschrijving:
-      "Na akkoord plant Zonneplaneet de installatie in. Je club ontvangt daarna haar vergoeding.",
+      "Na akkoord plannen we de installatie in. Je club ontvangt daarna haar vergoeding.",
   },
 ];
 

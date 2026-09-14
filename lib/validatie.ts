@@ -37,10 +37,10 @@ export const aanmeldingSchema = z.object({
     .trim()
     .min(1, "Je clubpagina ontbreekt."),
   akkoord: z
-    .boolean({ error: "Geef toestemming om je gegevens door te sturen." })
+    .boolean({ error: "Geef toestemming om je gegevens te gebruiken." })
     .refine(
       (akkoord) => akkoord,
-      "Geef toestemming om je gegevens door te sturen.",
+      "Geef toestemming om je gegevens te gebruiken.",
     ),
 });
 
@@ -200,6 +200,88 @@ export type ActieAanmeldState = {
   meetConversie?: boolean;
   errors?: Partial<Record<ActieAanmeldVeld, string[]>>;
 };
+
+export const referralInteresses = [
+  "zonnepanelen",
+  "thuisbatterij",
+  "warmtepomp",
+  "laadpaal",
+  "weet-ik-niet",
+] as const;
+
+export const referralInteresseLabels: Record<
+  (typeof referralInteresses)[number],
+  string
+> = {
+  zonnepanelen: "Zonnepanelen",
+  thuisbatterij: "Thuisbatterij",
+  warmtepomp: "Warmtepomp",
+  laadpaal: "Laadpaal",
+  "weet-ik-niet": "Weet ik niet",
+};
+
+export const referralSchema = z.object({
+  aandragerNaam: z
+    .string({ error: "Vul je naam in." })
+    .trim()
+    .min(2, "Vul je volledige naam in."),
+  aandragerEmail: z
+    .string({ error: "Vul je e-mailadres in." })
+    .trim()
+    .email("Vul een geldig e-mailadres in."),
+  /* Optioneel: we bellen de aangedragene, niet de aandrager. */
+  aandragerTelefoon: z
+    .string()
+    .trim()
+    .refine(
+      (telefoon) =>
+        telefoon === "" ||
+        /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in, of laat dit veld leeg.",
+    ),
+  naam: z
+    .string({ error: "Vul de naam in van de persoon die je aandraagt." })
+    .trim()
+    .min(2, "Vul de volledige naam in van de persoon die je aandraagt."),
+  email: z
+    .string({
+      error: "Vul het e-mailadres in van de persoon die je aandraagt.",
+    })
+    .trim()
+    .email("Vul een geldig e-mailadres in."),
+  telefoon: z
+    .string({
+      error: "Vul het telefoonnummer in van de persoon die je aandraagt.",
+    })
+    .trim()
+    .refine(
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
+    ),
+  plaats: z
+    .string({ error: "Vul de plaats in van de persoon die je aandraagt." })
+    .trim()
+    .min(2, "Vul de plaats in van de persoon die je aandraagt."),
+  interesse: z.enum(referralInteresses, {
+    error: "Kies waar diegene interesse in heeft.",
+  }),
+  opmerking: z.string().trim(),
+  actie: z.literal("referral", {
+    error:
+      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
+  }),
+  toestemming: z
+    .boolean({
+      error: "Bevestig dat je toestemming hebt om deze gegevens door te geven.",
+    })
+    .refine(
+      (toestemming) => toestemming,
+      "Bevestig dat je toestemming hebt om deze gegevens door te geven.",
+    ),
+});
+
+export type ReferralAanmelding = z.infer<typeof referralSchema>;
+export type ReferralVeld = keyof ReferralAanmelding;
 
 export function normaliseerTelefoon(telefoon: string): string {
   let nummer = telefoon.trim().replace(/[()\s.-]/g, "");

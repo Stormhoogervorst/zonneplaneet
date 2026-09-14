@@ -1,14 +1,11 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import { BureaubladNavigatie } from "@/components/BureaubladNavigatie";
+import { MobielMenu } from "@/components/MobielMenu";
 import { Knop } from "@/components/ui";
+import { navigatie } from "@/lib/navigatie";
 import logoNavy from "@/public/logo-zonneplaneet-navy.png";
 import logoWit from "@/public/logo-zonneplaneet-wit.png";
-
-const navigatie = [
-  { href: "/clubactie", label: "Clubactie" },
-  { href: "/clubs", label: "Zoek je club" },
-  { href: "/partner", label: "Voor clubs" },
-];
 
 const contact = { href: "/contact", label: "Contact" };
 
@@ -32,14 +29,14 @@ const contactKnopVariant = {
 } as const;
 
 /**
- * De bovenbalk: logo, gecentreerde navigatie en rechts de contactknop. Onder
- * `lg` is er geen ruimte voor de navigatie; daar staat het menu in een
- * uitklapper en zit contact in dat menu.
+ * De bovenbalk: logo, gecentreerde navigatie uit `lib/navigatie` en rechts de
+ * contactknop. Onder `lg` past die rij niet; daar staat alles in een
+ * fullscreen hamburgermenu.
  */
 export function HeaderBalk({ ondergrond }: { ondergrond: Ondergrond }) {
   return (
     <div
-      className={`relative flex h-[var(--hoogte-headerbalk)] items-center px-8 md:px-16 ${tekstClasses[ondergrond]}`}
+      className={`relative flex h-[var(--hoogte-headerbalk)] items-center gap-4 px-8 xl:px-16 ${tekstClasses[ondergrond]}`}
     >
       <Link
         href="/"
@@ -54,59 +51,15 @@ export function HeaderBalk({ ondergrond }: { ondergrond: Ondergrond }) {
         />
       </Link>
 
-      <nav
-        aria-label="Hoofdnavigatie"
-        className="absolute left-1/2 hidden -translate-x-1/2 lg:block"
-      >
-        <ul className="flex gap-12 text-[1.0625rem]">
-          {navigatie.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                className="opacity-90 transition-opacity duration-200 hover:opacity-100"
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <BureaubladNavigatie items={navigatie} />
 
-      {/* De zichtbaarheid zit op de wrapper, want `Knop` brengt zijn eigen
-          display-klasse mee */}
-      <span className="ml-auto hidden shrink-0 lg:block">
+      <span className="hidden shrink-0 lg:block">
         <Knop href={contact.href} variant={contactKnopVariant[ondergrond]}>
           {contact.label}
         </Knop>
       </span>
 
-      <details className="relative ml-auto shrink-0 lg:hidden">
-        <summary
-          aria-label="Open het menu"
-          className="flex cursor-pointer list-none flex-col gap-2 py-2 [&::-webkit-details-marker]:hidden"
-        >
-          <span aria-hidden="true" className="block h-0.5 w-10 bg-current" />
-          <span aria-hidden="true" className="block h-0.5 w-10 bg-current" />
-          <span aria-hidden="true" className="block h-0.5 w-10 bg-current" />
-        </summary>
-        <nav
-          aria-label="Menu"
-          className="absolute top-[calc(100%+1.25rem)] right-0 min-w-56 rounded-2xl border border-[rgba(255,255,255,0.2)] bg-navy p-2 text-white"
-        >
-          <ul>
-            {[...navigatie, contact].map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className="block rounded-xl px-4 py-3 text-body-l"
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </details>
+      <MobielMenu items={navigatie} contact={contact} />
     </div>
   );
 }

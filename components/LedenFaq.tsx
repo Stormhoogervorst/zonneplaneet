@@ -11,7 +11,7 @@ const vragen = [
   {
     vraag: "Wat gebeurt er met mijn gegevens?",
     antwoord:
-      "We geven je naam, telefoonnummer, e-mailadres en postcode door aan Zonneplaneet, samen met je clubcode. Je club ziet je gegevens niet.",
+      "We gebruiken je naam, telefoonnummer, e-mailadres en postcode, samen met je clubcode, om contact met je op te nemen. Je club ziet je gegevens niet.",
   },
   {
     vraag: "Moet ik lid zijn?",

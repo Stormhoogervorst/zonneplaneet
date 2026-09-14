@@ -8,9 +8,9 @@ import type { FormulierState } from "@/lib/validatie";
 
 /**
  * De sectie met een foto links en een formulier rechts. `/partner` gebruikt het
- * ijsblauwe paneel, `/contact`, `/cashback` en `/winactie` het navy paneel.
- * Alles wat per pagina verschilt komt via props binnen; er is geen tweede
- * variant van dit blok.
+ * ijsblauwe paneel, `/contact`, `/cashback`, `/winactie` en `/referral` het navy
+ * paneel. Alles wat per pagina verschilt komt via props binnen; er is geen
+ * tweede variant van dit blok.
  */
 type Paneel = "ijsblauw" | "navy";
 
@@ -34,11 +34,19 @@ export type FormulierVeld =
     })
   | (VeldGedeeld & { soort: "vinkje" });
 
+export type FormulierBlok = {
+  /** Monospace kopje boven de velden, bijvoorbeeld "↳ JOUW GEGEVENS". */
+  kopje?: string;
+  velden: FormulierVeld[];
+};
+
 type ContactFormulierProps = {
   /** Ankernaam van de sectie; ook het voorvoegsel van alle veld-id's. */
   id: string;
   titel: string;
-  velden: FormulierVeld[];
+  velden?: FormulierVeld[];
+  /** Groepen velden met een kopje. Komen boven `velden` te staan. */
+  blokken?: ReadonlyArray<FormulierBlok>;
   action: (
     state: FormulierState,
     formData: FormData,
@@ -135,6 +143,7 @@ export function ContactFormulier({
   id,
   titel,
   velden,
+  blokken,
   action,
   beginState,
   knopLabel,
@@ -153,6 +162,10 @@ export function ContactFormulier({
   const conversieGemeten = useRef(false);
   const stijl = stijlen[paneel];
   const titelId = `${id}-titel`;
+  const internBlokken: ReadonlyArray<FormulierBlok> = [
+    ...(blokken ?? []),
+    ...(velden && velden.length > 0 ? [{ velden }] : []),
+  ];
 
   useEffect(() => {
     if (state.success && state.meetConversie && !conversieGemeten.current) {
@@ -222,139 +235,161 @@ export function ContactFormulier({
                 />
               ))}
 
-              <div className="grid gap-x-10 gap-y-10 md:grid-cols-2">
-                {velden.map((veld) => {
-                  const veldId = `${id}-${veld.naam}`;
-                  const foutId = `${veldId}-fout`;
-                  const fout = state.errors?.[veld.naam]?.[0];
+              {internBlokken.map((blok, blokIndex) => (
+                <div
+                  key={blok.kopje ?? `blok-${blokIndex}`}
+                  className={blokIndex > 0 ? "mt-14" : undefined}
+                >
+                  {blok.kopje ? (
+                    <h3
+                      className={`mb-8 block font-mono text-xs tracking-[0.08em] uppercase ${stijl.label}`}
+                    >
+                      {blok.kopje}
+                    </h3>
+                  ) : null}
 
-                  if (veld.soort === "vinkje") {
-                    return (
-                      <div
-                        key={veld.naam}
-                        className={`min-w-0 ${
-                          veld.volleBreedte ? "md:col-span-2" : ""
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <input
-                            id={veldId}
-                            name={veld.naam}
-                            type="checkbox"
-                            required={veld.verplicht}
-                            autoComplete="off"
-                            aria-invalid={Boolean(fout)}
-                            aria-describedby={fout ? foutId : undefined}
-                            className={`mt-1 size-5 shrink-0 accent-oranje ${stijl.veldTekst}`}
-                          />
+                  <div className="grid gap-x-10 gap-y-10 md:grid-cols-2">
+                    {blok.velden.map((veld) => {
+                      const veldId = `${id}-${veld.naam}`;
+                      const foutId = `${veldId}-fout`;
+                      const fout = state.errors?.[veld.naam]?.[0];
+
+                      if (veld.soort === "vinkje") {
+                        return (
+                          <div
+                            key={veld.naam}
+                            className={`min-w-0 ${
+                              veld.volleBreedte ? "md:col-span-2" : ""
+                            }`}
+                          >
+                            <div className="flex items-start gap-3">
+                              <input
+                                id={veldId}
+                                name={veld.naam}
+                                type="checkbox"
+                                required={veld.verplicht}
+                                autoComplete="off"
+                                aria-invalid={Boolean(fout)}
+                                aria-describedby={fout ? foutId : undefined}
+                                className={`mt-1 size-5 shrink-0 accent-oranje ${stijl.veldTekst}`}
+                              />
+                              <label
+                                htmlFor={veldId}
+                                className={`text-[0.9375rem] leading-[1.6] ${stijl.naschrift}`}
+                              >
+                                {veld.label}
+                              </label>
+                            </div>
+                            {fout && (
+                              <p
+                                id={foutId}
+                                className={`mt-3 text-sm ${stijl.fout}`}
+                              >
+                                {fout}
+                              </p>
+                            )}
+                          </div>
+                        );
+                      }
+
+                      const veldClassName = `${veldClasses} ${stijl.veldTekst} ${
+                        fout ? stijl.veldRandFout : stijl.veldRand
+                      }`;
+                      const veldProps = {
+                        id: veldId,
+                        name: veld.naam,
+                        required: veld.verplicht,
+                        autoComplete: veld.autoComplete,
+                        "aria-invalid": Boolean(fout),
+                        "aria-describedby": fout ? foutId : undefined,
+                      };
+
+                      return (
+                        <div
+                          key={veld.naam}
+                          className={`min-w-0 ${
+                            veld.volleBreedte ? "md:col-span-2" : ""
+                          }`}
+                        >
                           <label
                             htmlFor={veldId}
-                            className={`text-[0.9375rem] leading-[1.6] ${stijl.naschrift}`}
+                            className={`${labelClasses} ${stijl.label}`}
                           >
                             {veld.label}
                           </label>
-                        </div>
-                        {fout && (
-                          <p
-                            id={foutId}
-                            className={`mt-3 text-sm ${stijl.fout}`}
-                          >
-                            {fout}
-                          </p>
-                        )}
-                      </div>
-                    );
-                  }
 
-                  const veldClassName = `${veldClasses} ${stijl.veldTekst} ${
-                    fout ? stijl.veldRandFout : stijl.veldRand
-                  }`;
-                  const veldProps = {
-                    id: veldId,
-                    name: veld.naam,
-                    required: veld.verplicht,
-                    autoComplete: veld.autoComplete,
-                    "aria-invalid": Boolean(fout),
-                    "aria-describedby": fout ? foutId : undefined,
-                  };
+                          {veld.soort === "tekstvlak" ? (
+                            <textarea
+                              {...veldProps}
+                              rows={veld.regels}
+                              className={veldClassName}
+                            />
+                          ) : veld.soort === "keuze" ? (
+                            <div className="relative">
+                              {/* De eigen pijl houdt de onderlijn intact; een
+                                  native select tekent zijn eigen vlak en rand. */}
+                              <select
+                                {...veldProps}
+                                defaultValue=""
+                                className={`${veldClassName} appearance-none pr-10 [&>option]:text-navy`}
+                              >
+                                <option value="">{veld.leegLabel}</option>
+                                {veld.keuzes.map((keuze) => (
+                                  <option
+                                    key={keuze.waarde}
+                                    value={keuze.waarde}
+                                  >
+                                    {keuze.label}
+                                  </option>
+                                ))}
+                              </select>
+                              <span
+                                aria-hidden="true"
+                                className={`pointer-events-none absolute right-1 bottom-4 ${stijl.label}`}
+                              >
+                                <svg
+                                  viewBox="0 0 16 16"
+                                  className="size-4"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="m3 6 5 5 5-5" />
+                                </svg>
+                              </span>
+                            </div>
+                          ) : (
+                            <input
+                              {...veldProps}
+                              type={inputTypes[veld.soort]}
+                              inputMode={
+                                veld.soort === "telefoon" ||
+                                veld.soort === "getal"
+                                  ? inputModes[veld.soort]
+                                  : undefined
+                              }
+                              min={veld.soort === "getal" ? 1 : undefined}
+                              step={veld.soort === "getal" ? 1 : undefined}
+                              className={veldClassName}
+                            />
+                          )}
 
-                  return (
-                    <div
-                      key={veld.naam}
-                      className={`min-w-0 ${
-                        veld.volleBreedte ? "md:col-span-2" : ""
-                      }`}
-                    >
-                      <label
-                        htmlFor={veldId}
-                        className={`${labelClasses} ${stijl.label}`}
-                      >
-                        {veld.label}
-                      </label>
-
-                      {veld.soort === "tekstvlak" ? (
-                        <textarea
-                          {...veldProps}
-                          rows={veld.regels}
-                          className={veldClassName}
-                        />
-                      ) : veld.soort === "keuze" ? (
-                        <div className="relative">
-                          {/* De eigen pijl houdt de onderlijn intact; een
-                              native select tekent zijn eigen vlak en rand. */}
-                          <select
-                            {...veldProps}
-                            defaultValue=""
-                            className={`${veldClassName} appearance-none pr-10 [&>option]:text-navy`}
-                          >
-                            <option value="">{veld.leegLabel}</option>
-                            {veld.keuzes.map((keuze) => (
-                              <option key={keuze.waarde} value={keuze.waarde}>
-                                {keuze.label}
-                              </option>
-                            ))}
-                          </select>
-                          <span
-                            aria-hidden="true"
-                            className={`pointer-events-none absolute right-1 bottom-4 ${stijl.label}`}
-                          >
-                            <svg
-                              viewBox="0 0 16 16"
-                              className="size-4"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
+                          {fout && (
+                            <p
+                              id={foutId}
+                              className={`mt-3 text-sm ${stijl.fout}`}
                             >
-                              <path d="m3 6 5 5 5-5" />
-                            </svg>
-                          </span>
+                              {fout}
+                            </p>
+                          )}
                         </div>
-                      ) : (
-                        <input
-                          {...veldProps}
-                          type={inputTypes[veld.soort]}
-                          inputMode={
-                            veld.soort === "telefoon" || veld.soort === "getal"
-                              ? inputModes[veld.soort]
-                              : undefined
-                          }
-                          min={veld.soort === "getal" ? 1 : undefined}
-                          step={veld.soort === "getal" ? 1 : undefined}
-                          className={veldClassName}
-                        />
-                      )}
-
-                      {fout && (
-                        <p id={foutId} className={`mt-3 text-sm ${stijl.fout}`}>
-                          {fout}
-                        </p>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
 
               <hr className={`mt-14 border-t ${stijl.scheiding}`} />
 

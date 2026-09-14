@@ -22,7 +22,7 @@ const kaarten = [
     titel: "De club blijft erbuiten",
     graphic: GraphicAanspreekpunt,
     beschrijving:
-      "Leden melden zich zelf aan, dus de club deelt geen ledengegevens en voert geen verkoopgesprekken. Wij zijn het enige aanspreekpunt.",
+      "Leden melden zich zelf aan, dus de club deelt geen ledengegevens en voert geen verkoopgesprekken. Je hebt één aanspreekpunt.",
   },
 ];
 
@@ -31,7 +31,7 @@ export function PartnerWatWijDoen() {
     <KaartenMetGraphics
       headingId="wat-wij-doen"
       titel="Wat wij doen"
-      intro="De club deelt de actie en Zonneplaneet installeert. Alles daartussenin regelen wij, zodat het bestuur er geen werk aan heeft."
+      intro="De club deelt de actie. Wij leveren, installeren en regelen alles daartussenin, zodat het bestuur er geen werk aan heeft."
       kaarten={kaarten}
     />
   );

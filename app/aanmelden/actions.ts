@@ -6,6 +6,7 @@ import {
   bewaarContactbericht,
   bewaarLead,
   bewaarPartnerLead,
+  bewaarReferralLead,
 } from "@/lib/leads";
 import {
   stuurActieAanmelding,
@@ -13,6 +14,9 @@ import {
   stuurContactbericht,
   stuurDoorNaarZonneplaneet,
   stuurPartnerAanmelding,
+  stuurReferralBevestigingAangedragene,
+  stuurReferralBevestigingAandrager,
+  stuurReferralNaarZonneplaneet,
 } from "@/lib/mail";
 import { magAanmelden } from "@/lib/rate-limit";
 import {
@@ -21,6 +25,7 @@ import {
   contactSchema,
   normaliseerTelefoon,
   partnerAanmeldingSchema,
+  referralSchema,
   type AanmeldState,
   type ContactState,
   type FormulierState,
@@ -324,6 +329,94 @@ export async function meldActieAan(
       console.error(`Mail mislukt: ${mailNamen[index]}.`, {
         leadId: lead.id,
         actie: lead.actie,
+        fout: mailResultaat.reason,
+      });
+    }
+  });
+
+  return { success: true, meetConversie: true };
+}
+
+export async function meldReferralAan(
+  prevState: FormulierState,
+  formData: FormData,
+): Promise<FormulierState> {
+  void prevState;
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.trim() !== "") {
+    return { success: true };
+  }
+
+  if (!(await magAanmelden("referral"))) {
+    return {
+      success: false,
+      message:
+        "Je hebt te vaak geprobeerd iemand aan te dragen. Wacht even en probeer het later opnieuw.",
+    };
+  }
+
+  const resultaat = referralSchema.safeParse({
+    aandragerNaam: formData.get("aandragerNaam"),
+    aandragerEmail: formData.get("aandragerEmail"),
+    aandragerTelefoon: formData.get("aandragerTelefoon") ?? "",
+    naam: formData.get("naam"),
+    email: formData.get("email"),
+    telefoon: formData.get("telefoon"),
+    plaats: formData.get("plaats"),
+    interesse: formData.get("interesse"),
+    opmerking: formData.get("opmerking") ?? "",
+    actie: formData.get("actie"),
+    toestemming: formData.get("toestemming") === "on",
+  });
+
+  if (!resultaat.success) {
+    return {
+      success: false,
+      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
+      errors: resultaat.error.flatten().fieldErrors,
+    };
+  }
+
+  const aanmelding = {
+    ...resultaat.data,
+    aandragerTelefoon:
+      resultaat.data.aandragerTelefoon === ""
+        ? ""
+        : normaliseerTelefoon(resultaat.data.aandragerTelefoon),
+    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
+  };
+
+  let lead;
+  try {
+    lead = await bewaarReferralLead(aanmelding);
+  } catch (fout) {
+    console.error(
+      "Referral opslaan mislukt; er zijn geen mails verstuurd.",
+      fout,
+    );
+    return {
+      success: false,
+      message:
+        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
+    };
+  }
+
+  const mailResultaten = await Promise.allSettled([
+    stuurReferralNaarZonneplaneet(lead),
+    stuurReferralBevestigingAandrager(lead),
+    stuurReferralBevestigingAangedragene(lead),
+  ]);
+  const mailNamen = [
+    "referral naar Zonneplaneet Actie",
+    "bevestiging aan aandrager",
+    "bevestiging aan aangedragene",
+  ];
+
+  mailResultaten.forEach((mailResultaat, index) => {
+    if (mailResultaat.status === "rejected") {
+      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
+        leadId: lead.id,
         fout: mailResultaat.reason,
       });
     }

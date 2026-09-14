@@ -6,6 +6,7 @@ import type {
   ActieAanmelding,
   Contactbericht,
   PartnerAanmelding,
+  ReferralAanmelding,
 } from "@/lib/validatie";
 
 export type LeadStatus =
@@ -29,6 +30,11 @@ export type ContactLead = Contactbericht & {
 };
 
 export type ActieLead = ActieAanmelding & {
+  id: string;
+  aangemaaktOp: string;
+};
+
+export type ReferralLead = ReferralAanmelding & {
   id: string;
   aangemaaktOp: string;
 };
@@ -96,6 +102,27 @@ export async function bewaarActieLead(
   // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
   console.info(
     "Tijdelijke opslag van actie-aanmelding, nog niet in een database:",
+    lead,
+  );
+
+  return lead;
+}
+
+export async function bewaarReferralLead(
+  aanmelding: ReferralAanmelding,
+): Promise<ReferralLead> {
+  const lead: ReferralLead = {
+    ...aanmelding,
+    id: randomUUID(),
+    aangemaaktOp: new Date().toISOString(),
+  };
+
+  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
+  // De rij gaat over de aangedragene (naam, email, telefoon). De aandrager
+  // komt in aandrager_naam, aandrager_email en aandrager_telefoon; zie
+  // db/004_referral.sql.
+  console.info(
+    "Tijdelijke opslag van referral, nog niet in een database:",
     lead,
   );
 

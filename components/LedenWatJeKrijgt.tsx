@@ -26,7 +26,7 @@ const rijen = [
     titel: "Eén installateur",
     icoon: <IconPosterQr className={rijenlijstIcoonClasses} />,
     beschrijving:
-      "Zonneplaneet levert en installeert. Geen vergelijkingssite, geen tussenpersonen die je bellen.",
+      "Wij leveren en installeren. Geen vergelijkingssite, geen tussenpersonen die je bellen.",
   },
   {
     titel: "Je club verdient mee",

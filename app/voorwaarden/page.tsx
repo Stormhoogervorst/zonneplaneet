@@ -14,17 +14,16 @@ export default function VoorwaardenPage() {
     <main className="mx-auto max-w-2xl px-5 py-12">
       <h1 className="text-3xl font-semibold">Voorwaarden</h1>
 
-      <section aria-labelledby="bemiddeling" className="mt-12">
-        <h2 id="bemiddeling" className="text-2xl font-semibold">
+      <section aria-labelledby="rol" className="mt-12">
+        <h2 id="rol" className="text-2xl font-semibold">
           Onze rol
         </h2>
         <p className="mt-4">
-          Zonneplaneet Actie brengt leden van sportverenigingen in contact met
-          Zonneplaneet. Zonneplaneet verkoopt en installeert de producten.
-          Zonneplaneet Actie is geen installateur en is geen partij bij de
-          overeenkomst over verkoop en installatie.
+          Via Zonneplaneet Actie kunnen leden van sportverenigingen zich
+          aanmelden voor zonnepanelen, thuisbatterijen en laadpalen. Wij leveren
+          en installeren de producten.
         </p>
-        {/* TODO: Laat de omschrijving van de bemiddelingsrol juridisch controleren. */}
+        {/* TODO: Laat deze omschrijving juridisch controleren. */}
       </section>
 
       <section aria-labelledby="aanmelding" className="mt-12">
@@ -43,7 +42,7 @@ export default function VoorwaardenPage() {
           Verantwoordelijkheid
         </h2>
         <p className="mt-4">
-          Zonneplaneet is verantwoordelijk voor offertes, advies, verkoop en
+          Wij zijn verantwoordelijk voor offertes, advies, verkoop en
           installatie.
         </p>
         {/* TODO: Voeg na juridische controle bepalingen over aansprakelijkheid, klachten en toepasselijk recht toe. */}
