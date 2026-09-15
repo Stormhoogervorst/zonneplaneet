@@ -68,19 +68,6 @@
   outline-offset: 4px;
 }
 
-/* Clubkaarten en het zoekveld op `/clubs`: navy ring in plaats van de globale
-   oranje. Op het ijsblauwe vlak haalt oranje maar 2,6:1; navy haalt 10,5:1. */
-.clubkaart:focus-visible {
-  outline: 2px solid var(--color-navy);
-  outline-offset: 2px;
-}
-
-.clubs-zoekveld:focus-visible {
-  outline: 2px solid var(--color-navy);
-  outline-offset: 4px;
-  border-color: var(--color-navy);
-}
-
 /* Bij autofill zet de browser een eigen achtergrond en tekstkleur op een
    invoerveld. De lange transitie houdt die achtergrond weg, zodat het
    ijsblauwe paneel doorloopt, en de navy tekstkleur blijft staan. */

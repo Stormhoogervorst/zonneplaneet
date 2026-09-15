@@ -30,11 +30,6 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/clubs" className="text-body-l">
-                Zoek je club
-              </Link>
-            </li>
-            <li>
               <Link href="/partner" className="text-body-l">
                 Voor clubs
               </Link>

@@ -11,8 +11,8 @@ const keuzeblokken: KeuzeKaart[] = [
     id: "keuze-lid",
     titel: "Ik ben lid van een vereniging",
     beschrijving:
-      "Koop zonnepanelen, een thuisbatterij of een laadpaal via je club. Zoek je vereniging en meld je aan.",
-    href: "/clubs",
+      "Koop zonnepanelen, een thuisbatterij of een laadpaal via je club. Meld je aan en geef aan bij welke vereniging je hoort.",
+    href: "/leden",
     Icoon: ZonnepaneelIcoon,
   },
   /* TODO: Zet `href: "/kennisbank"` terug als de kennisbank weer live gaat. */

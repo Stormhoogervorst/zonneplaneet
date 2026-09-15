@@ -3,7 +3,6 @@ import { ContactKop } from "@/components/ContactKop";
 import { LedenFaq } from "@/components/LedenFaq";
 import { LedenFormulier } from "@/components/LedenFormulier";
 import { LedenHoeHetWerkt } from "@/components/LedenHoeHetWerkt";
-import { LedenWatJeKuntKopen } from "@/components/LedenWatJeKuntKopen";
 import {
   SectieSaldering,
   salderingKopVoorClubs,
@@ -17,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function LedenPage() {
   return (
-    <main>
+    <main data-geen-vertrouwensblok>
       <ContactKop
         headingId="leden-kop-titel"
         eyebrow="VOOR LEDEN"
@@ -26,8 +25,6 @@ export default function LedenPage() {
       />
 
       <LedenFormulier />
-
-      <LedenWatJeKuntKopen />
 
       <LedenHoeHetWerkt />
 

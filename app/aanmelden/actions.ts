@@ -12,16 +12,18 @@ import {
 import {
   stuurActieAanmelding,
   stuurBevestiging,
-  stuurContactbericht,
   stuurDoorNaarZonneplaneet,
   stuurLedenBevestiging,
-  stuurLedenDoorNaarZonneplaneet,
   stuurPartnerAanmelding,
   stuurReferralBevestigingAangedragene,
   stuurReferralBevestigingAandrager,
-  stuurReferralNaarZonneplaneet,
 } from "@/lib/mail";
 import { magAanmelden } from "@/lib/rate-limit";
+import {
+  stuurContactViaWeb3Forms,
+  stuurLedenViaWeb3Forms,
+  stuurReferralViaWeb3Forms,
+} from "@/lib/web3forms";
 import {
   aanmeldingSchema,
   actieAanmeldingSchema,
@@ -177,7 +179,10 @@ export async function meldLidAan(
   try {
     lead = await bewaarLedenLead(aanmelding);
   } catch (fout) {
-    console.error("Lead opslaan mislukt; er zijn geen mails verstuurd.", fout);
+    console.error(
+      "Lead opslaan mislukt; er is niets naar Web3Forms gestuurd.",
+      fout,
+    );
     return {
       success: false,
       message:
@@ -185,11 +190,24 @@ export async function meldLidAan(
     };
   }
 
+  try {
+    await stuurLedenViaWeb3Forms(lead);
+  } catch (fout) {
+    console.error("Leden-aanmelding versturen via Web3Forms mislukt.", {
+      leadId: lead.id,
+      fout,
+    });
+    return {
+      success: false,
+      message:
+        "Je aanmelding kon niet worden verstuurd. Probeer het later opnieuw.",
+    };
+  }
+
   const mailResultaten = await Promise.allSettled([
     stuurLedenBevestiging(lead),
-    stuurLedenDoorNaarZonneplaneet(lead),
   ]);
-  const mailNamen = ["bevestiging aan lid", "doorzending naar Zonneplaneet"];
+  const mailNamen = ["bevestiging aan lid"];
 
   mailResultaten.forEach((mailResultaat, index) => {
     if (mailResultaat.status === "rejected") {
@@ -320,7 +338,7 @@ export async function stuurContact(
     lead = await bewaarContactbericht(bericht);
   } catch (fout) {
     console.error(
-      "Contactbericht opslaan mislukt; er is geen mail verstuurd.",
+      "Contactbericht opslaan mislukt; er is niets naar Web3Forms gestuurd.",
       fout,
     );
     return {
@@ -330,17 +348,19 @@ export async function stuurContact(
     };
   }
 
-  const mailResultaten = await Promise.allSettled([stuurContactbericht(lead)]);
-  const mailNamen = ["contactbericht naar Zonneplaneet Actie"];
-
-  mailResultaten.forEach((mailResultaat, index) => {
-    if (mailResultaat.status === "rejected") {
-      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
-        leadId: lead.id,
-        fout: mailResultaat.reason,
-      });
-    }
-  });
+  try {
+    await stuurContactViaWeb3Forms(lead);
+  } catch (fout) {
+    console.error("Contactbericht versturen via Web3Forms mislukt.", {
+      leadId: lead.id,
+      fout,
+    });
+    return {
+      success: false,
+      message:
+        "Je bericht kon niet worden verstuurd. Probeer het later opnieuw.",
+    };
+  }
 
   return { success: true, meetConversie: true };
 }
@@ -475,7 +495,7 @@ export async function meldReferralAan(
     lead = await bewaarReferralLead(aanmelding);
   } catch (fout) {
     console.error(
-      "Referral opslaan mislukt; er zijn geen mails verstuurd.",
+      "Referral opslaan mislukt; er is niets naar Web3Forms gestuurd.",
       fout,
     );
     return {
@@ -485,13 +505,25 @@ export async function meldReferralAan(
     };
   }
 
+  try {
+    await stuurReferralViaWeb3Forms(lead);
+  } catch (fout) {
+    console.error("Referral versturen via Web3Forms mislukt.", {
+      leadId: lead.id,
+      fout,
+    });
+    return {
+      success: false,
+      message:
+        "Je aanmelding kon niet worden verstuurd. Probeer het later opnieuw.",
+    };
+  }
+
   const mailResultaten = await Promise.allSettled([
-    stuurReferralNaarZonneplaneet(lead),
     stuurReferralBevestigingAandrager(lead),
     stuurReferralBevestigingAangedragene(lead),
   ]);
   const mailNamen = [
-    "referral naar Zonneplaneet Actie",
     "bevestiging aan aandrager",
     "bevestiging aan aangedragene",
   ];

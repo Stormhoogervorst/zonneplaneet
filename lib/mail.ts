@@ -4,19 +4,12 @@ import { Resend } from "resend";
 import type { Club } from "@/lib/clubs";
 import type {
   ActieLead,
-  ContactLead,
   Lead,
   LedenLead,
   PartnerLead,
   ReferralLead,
 } from "@/lib/leads";
-import {
-  contactRolLabels,
-  ledenInteresseLabels,
-  referralInteresseLabels,
-  vervolgstapLabels,
-  type Aanmelding,
-} from "@/lib/validatie";
+import type { Aanmelding } from "@/lib/validatie";
 
 const interesseLabels: Record<Aanmelding["interesse"], string> = {
   panelen: "Zonnepanelen",
@@ -129,36 +122,6 @@ export async function stuurLedenBevestiging(lead: LedenLead): Promise<void> {
   }
 }
 
-export async function stuurLedenDoorNaarZonneplaneet(
-  lead: LedenLead,
-): Promise<void> {
-  const { resend, van, zonneplaneet } = getMailConfig();
-  const resultaat = await resend.emails.send({
-    from: van,
-    to: zonneplaneet,
-    ...(lead.email ? { replyTo: lead.email } : {}),
-    subject: `Nieuwe aanmelding via ${lead.clubnaam} — ${vervolgstapLabels[lead.vervolgstap]}`,
-    text: [
-      `Via: ${lead.clubnaam} (${lead.clubplaats})`,
-      `Actie: ${lead.actie}`,
-      `Vervolgstap: ${vervolgstapLabels[lead.vervolgstap]}`,
-      "",
-      `Voornaam: ${lead.voornaam}`,
-      `Achternaam: ${lead.achternaam}`,
-      `Telefoon: ${lead.telefoon}`,
-      lead.email
-        ? `E-mail: ${lead.email}`
-        : "E-mail: niet opgegeven. Neem contact op via telefoon.",
-      `Interesse: ${ledenInteresseLabels[lead.interesse]}`,
-      `Lead-id: ${lead.id}`,
-    ].join("\n"),
-  });
-
-  if (resultaat.error) {
-    throw new Error(`Doorzendmail mislukt: ${resultaat.error.message}`);
-  }
-}
-
 export async function stuurPartnerAanmelding(lead: PartnerLead): Promise<void> {
   const { resend, van } = getMailConfig();
   const resultaat = await resend.emails.send({
@@ -182,38 +145,6 @@ export async function stuurPartnerAanmelding(lead: PartnerLead): Promise<void> {
   if (resultaat.error) {
     throw new Error(
       `Mail over clubaanmelding mislukt: ${resultaat.error.message}`,
-    );
-  }
-}
-
-/* De gekozen rol staat in de onderwerpregel: daaraan is te zien of het bericht
-   naar de clubwerving of naar de leden-afhandeling moet. */
-export async function stuurContactbericht(lead: ContactLead): Promise<void> {
-  const { resend, van } = getMailConfig();
-  const resultaat = await resend.emails.send({
-    from: van,
-    to: van,
-    replyTo: lead.email,
-    subject: `Nieuw contactbericht: ${contactRolLabels[lead.rol]}`,
-    text: [
-      "Nieuw bericht via het contactformulier",
-      "",
-      `Voornaam: ${lead.voornaam}`,
-      `Achternaam: ${lead.achternaam}`,
-      `E-mail: ${lead.email}`,
-      `Telefoon: ${lead.telefoon === "" ? "niet opgegeven" : lead.telefoon}`,
-      `Ik ben: ${contactRolLabels[lead.rol]}`,
-      "",
-      "Bericht:",
-      lead.bericht,
-      "",
-      `Lead-id: ${lead.id}`,
-    ].join("\n"),
-  });
-
-  if (resultaat.error) {
-    throw new Error(
-      `Mail over contactbericht mislukt: ${resultaat.error.message}`,
     );
   }
 }
@@ -244,48 +175,6 @@ export async function stuurActieAanmelding(lead: ActieLead): Promise<void> {
   if (resultaat.error) {
     throw new Error(
       `Mail over actie-aanmelding mislukt: ${resultaat.error.message}`,
-    );
-  }
-}
-
-export async function stuurReferralNaarZonneplaneet(
-  lead: ReferralLead,
-): Promise<void> {
-  const { resend, van } = getMailConfig();
-  const resultaat = await resend.emails.send({
-    from: van,
-    to: van,
-    replyTo: lead.aandragerEmail,
-    subject: `Referral — ${volledigeNaam(lead)} via ${lead.aandragerNaam}`,
-    text: [
-      "Nieuwe referral via het aanmeldformulier",
-      "",
-      "Aandrager",
-      `Naam: ${lead.aandragerNaam}`,
-      `E-mail: ${lead.aandragerEmail}`,
-      `Telefoon: ${
-        lead.aandragerTelefoon === ""
-          ? "niet opgegeven"
-          : lead.aandragerTelefoon
-      }`,
-      "",
-      "Aangedragene",
-      `Voornaam: ${lead.voornaam}`,
-      `Achternaam: ${lead.achternaam}`,
-      `E-mail: ${lead.email}`,
-      `Telefoon: ${lead.telefoon}`,
-      `Plaats: ${lead.plaats}`,
-      `Interesse: ${referralInteresseLabels[lead.interesse]}`,
-      `Opmerking: ${lead.opmerking === "" ? "geen" : lead.opmerking}`,
-      "",
-      "Toestemming om gegevens door te geven: ja",
-      `Lead-id: ${lead.id}`,
-    ].join("\n"),
-  });
-
-  if (resultaat.error) {
-    throw new Error(
-      `Referralmail naar ons mislukt: ${resultaat.error.message}`,
     );
   }
 }

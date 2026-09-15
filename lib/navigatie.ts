@@ -9,6 +9,7 @@ export type NavigatieLink = {
  */
 export const navigatie: NavigatieLink[] = [
   { label: "Clubactie", href: "/clubactie" },
+  { label: "Voor leden", href: "/leden" },
   { label: "Referral", href: "/referral" },
   { label: "Over Zonneplaneet", href: "/over-zonneplaneet" },
 ];
