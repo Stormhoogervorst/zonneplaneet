@@ -131,6 +131,9 @@ export type LedenAanmeldVeld = keyof LedenAanmelding;
 
 export type AanmeldState = {
   success: boolean;
+  magVerzenden?: boolean;
+  leadId?: string;
+  lead?: unknown;
   message?: string;
   clubcode?: string;
   meetConversie?: boolean;
@@ -220,6 +223,9 @@ export type ContactVeld = keyof Contactbericht;
 
 export type ContactState = {
   success: boolean;
+  magVerzenden?: boolean;
+  leadId?: string;
+  lead?: unknown;
   message?: string;
   meetConversie?: boolean;
   errors?: Partial<Record<ContactVeld, string[]>>;
@@ -228,6 +234,9 @@ export type ContactState = {
 /** De vorm van de action-state die `ContactFormulier` leest. */
 export type FormulierState = {
   success: boolean;
+  magVerzenden?: boolean;
+  leadId?: string;
+  lead?: unknown;
   message?: string;
   meetConversie?: boolean;
   errors?: Partial<Record<string, string[]>>;

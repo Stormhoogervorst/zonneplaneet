@@ -70,7 +70,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
 
       <ClubVertrouwen club={club} />
 
-      <AanmeldFormulier clubslug={slug} clubcode={club.code} />
+      <AanmeldFormulier
+        clubslug={slug}
+        clubcode={club.code}
+        clubnaam={club.naam}
+      />
 
       <LedenWatJeKuntKopen />
 

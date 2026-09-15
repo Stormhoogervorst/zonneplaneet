@@ -5,7 +5,7 @@ const stappen = [
     nummer: "01",
     titel: "Aanmelden",
     beschrijving:
-      "Het lid meldt zich aan op de clubpagina en krijgt meteen een bevestiging met de clubcode.",
+      "Het lid meldt zich aan op de clubpagina. Wij nemen binnen twee werkdagen contact op.",
   },
   {
     nummer: "02",

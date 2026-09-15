@@ -87,6 +87,7 @@ export default function ContactPage() {
         titel="Stuur een bericht"
         paneel="navy"
         velden={velden}
+        verborgenVelden={[{ naam: "actie", waarde: "contact" }]}
         action={stuurContact}
         beginState={{ success: false }}
         knopLabel="Stuur mijn bericht"

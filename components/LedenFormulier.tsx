@@ -37,7 +37,7 @@ const velden: FormulierVeld[] = [
     label: "E-mailadres (optioneel)",
     soort: "email",
     autoComplete: "email",
-    hulptekst: "Vul je e-mailadres in als je een bevestiging wilt ontvangen.",
+    hulptekst: "Vul je e-mailadres in als we je ook per mail mogen bereiken.",
   },
   {
     naam: "interesse",

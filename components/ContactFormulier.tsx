@@ -1,10 +1,65 @@
 "use client";
 
 import Image from "next/image";
-import { useActionState, useEffect, useRef, type ReactNode } from "react";
+import {
+  useActionState,
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import { logWeb3FormsGelukt, logWeb3FormsMislukt } from "@/app/aanmelden/actions";
 import { Knop } from "@/components/ui";
 import { meetPlausibleEvent } from "@/lib/plausible";
 import type { FormulierState } from "@/lib/validatie";
+import { verstuurViaWeb3Forms } from "@/lib/web3forms";
+
+const VERZENDFOUT = "Verzenden is mislukt. Probeer het later opnieuw.";
+
+const web3formsOnderweg = new Set<string>();
+const web3formsAfgerond = new Set<string>();
+
+async function verstuurWeb3FormsVanuitFormulier(
+  leadId: string,
+  lead: unknown,
+  formulier: HTMLFormElement,
+  opBezig: (waarde: boolean) => void,
+  opGelukt: () => void,
+  opFout: (melding: string) => void,
+): Promise<void> {
+  if (web3formsAfgerond.has(leadId) || web3formsOnderweg.has(leadId)) {
+    return;
+  }
+
+  web3formsOnderweg.add(leadId);
+  opBezig(true);
+  opFout("");
+
+  try {
+    const formulierData = new FormData(formulier);
+    const actie = String(formulierData.get("actie") ?? "");
+    await verstuurViaWeb3Forms(formulierData, leadId);
+    web3formsAfgerond.add(leadId);
+    try {
+      await logWeb3FormsGelukt(leadId, actie);
+    } catch (logFout) {
+      console.error(logFout);
+    }
+    opGelukt();
+  } catch (fout) {
+    web3formsOnderweg.delete(leadId);
+    console.error(fout);
+    opFout(VERZENDFOUT);
+    try {
+      await logWeb3FormsMislukt(lead);
+    } catch (logFout) {
+      console.error(logFout);
+    }
+  } finally {
+    opBezig(false);
+  }
+}
 
 /**
  * De sectie met een foto links en een formulier rechts. `/partner` gebruikt het
@@ -165,6 +220,10 @@ export function ContactFormulier({
   plausibleProps,
 }: ContactFormulierProps) {
   const [state, formAction, pending] = useActionState(action, beginState);
+  const [web3Bezig, setWeb3Bezig] = useState(false);
+  const [web3Gelukt, setWeb3Gelukt] = useState(false);
+  const [web3Fout, setWeb3Fout] = useState("");
+  const formulierRef = useRef<HTMLFormElement>(null);
   const conversieGemeten = useRef(false);
   const stijl = stijlen[paneel];
   const titelId = `${id}-titel`;
@@ -172,13 +231,60 @@ export function ContactFormulier({
     ...(blokken ?? []),
     ...(velden && velden.length > 0 ? [{ velden }] : []),
   ];
+  const toonBevestiging = state.success || web3Gelukt;
+  const bezig = pending || web3Bezig;
+  const foutmelding = web3Fout || state.message;
 
   useEffect(() => {
-    if (state.success && state.meetConversie && !conversieGemeten.current) {
+    if (!state.magVerzenden || !state.leadId || web3Gelukt) {
+      return;
+    }
+
+    const formulier = formulierRef.current;
+    if (!formulier) {
+      return;
+    }
+
+    void verstuurWeb3FormsVanuitFormulier(
+      state.leadId,
+      state.lead,
+      formulier,
+      setWeb3Bezig,
+      () => setWeb3Gelukt(true),
+      setWeb3Fout,
+    );
+  }, [state.lead, state.leadId, state.magVerzenden, web3Gelukt]);
+
+  useEffect(() => {
+    const magMeten =
+      web3Gelukt || (state.success && Boolean(state.meetConversie));
+    if (magMeten && !conversieGemeten.current) {
       meetPlausibleEvent(plausibleEvent, plausibleProps);
       conversieGemeten.current = true;
     }
-  }, [plausibleEvent, plausibleProps, state.meetConversie, state.success]);
+  }, [
+    plausibleEvent,
+    plausibleProps,
+    state.meetConversie,
+    state.success,
+    web3Gelukt,
+  ]);
+
+  function bijVerzenden(event: FormEvent<HTMLFormElement>) {
+    if (!state.magVerzenden || !state.leadId || web3Gelukt) {
+      return;
+    }
+
+    event.preventDefault();
+    void verstuurWeb3FormsVanuitFormulier(
+      state.leadId,
+      state.lead,
+      event.currentTarget,
+      setWeb3Bezig,
+      () => setWeb3Gelukt(true),
+      setWeb3Fout,
+    );
+  }
 
   return (
     <section
@@ -203,7 +309,7 @@ export function ContactFormulier({
         <div
           className={`flex min-w-0 flex-col justify-center px-8 py-16 md:w-1/2 md:px-16 md:py-24 ${stijl.vlak}`}
         >
-          {state.success ? (
+          {toonBevestiging ? (
             <div role="status" aria-live="polite">
               <h2 id={titelId} className={`text-display-m ${stijl.titel}`}>
                 {bevestiging.titel}
@@ -213,7 +319,13 @@ export function ContactFormulier({
               </p>
             </div>
           ) : (
-            <form action={formAction} className={stijl.formulier} noValidate>
+            <form
+              ref={formulierRef}
+              action={formAction}
+              onSubmit={bijVerzenden}
+              className={stijl.formulier}
+              noValidate
+            >
               <h2
                 id={titelId}
                 className={`mb-12 text-display-m ${stijl.titel}`}
@@ -468,20 +580,20 @@ export function ContactFormulier({
 
               <hr className={`mt-14 border-t ${stijl.scheiding}`} />
 
-              {state.message && (
+              {foutmelding ? (
                 <p role="alert" className={`mt-8 text-sm ${stijl.fout}`}>
-                  {state.message}
+                  {foutmelding}
                 </p>
-              )}
+              ) : null}
 
               <div className="mt-12 flex flex-col gap-4 sm:flex-row sm:items-center sm:gap-6">
                 <Knop
                   type="submit"
                   variant={stijl.knop}
-                  disabled={pending}
+                  disabled={bezig}
                   className="h-14 w-full disabled:opacity-60 md:w-auto"
                 >
-                  {pending ? knopBezigLabel : knopLabel}
+                  {bezig ? knopBezigLabel : knopLabel}
                 </Knop>
                 {bijKnop}
               </div>

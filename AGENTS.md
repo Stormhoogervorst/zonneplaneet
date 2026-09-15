@@ -101,9 +101,12 @@ Elke geïndexeerde pagina krijgt een eigen title en description via de Metadata 
 wordt toegevoegd aan app/sitemap.ts. Clubpagina's nooit in de sitemap.
 
 FORMULIEREN EN LEADS
-Alle formulieren lopen via een server action met Zod-validatie en een honeypotveld
-'website'. Opslaan gebeurt altijd vóór het versturen van mail. Geen client-side fetch
-naar een API-route. Vraag nooit meer velden uit dan nodig; elk extra veld kost conversie.
+Alle formulieren lopen via een server action met Zod-validatie en een
+honeypotveld 'website'. Validatie gebeurt op de server. Verzending gaat vanuit
+de browser naar Web3Forms. Er is geen eigen opslag. Leads staan in Web3Forms.
+Een mislukte verzending is alleen in de Vercel-logs terug te vinden, met prefix
+[LEAD-NIET-VERZONDEN]. Vraag nooit meer velden uit dan nodig; elk extra veld
+kost conversie.
 
 NEDERLANDSE TEKST
 Je-vorm, geen u. Korte zinnen. Geen uitroeptekens, geen superlatieven als "de beste"

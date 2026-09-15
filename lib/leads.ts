@@ -47,6 +47,14 @@ export type ReferralLead = ReferralAanmelding & {
   aangemaaktOp: string;
 };
 
+export function logLeadVerzonden(leadId: string, actie: string): void {
+  console.info(`Lead verzonden ${leadId} ${actie}`);
+}
+
+export function logLeadNietVerzonden(lead: unknown): void {
+  console.error("[LEAD-NIET-VERZONDEN]", JSON.stringify(lead));
+}
+
 export async function bewaarLead(aanmelding: Aanmelding): Promise<Lead> {
   const lead: Lead = {
     ...aanmelding,
@@ -55,9 +63,6 @@ export async function bewaarLead(aanmelding: Aanmelding): Promise<Lead> {
     status: "aangemeld",
     bedrag: null,
   };
-
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  console.info("Tijdelijke leadopslag, nog niet in een database:", lead);
 
   return lead;
 }
@@ -73,9 +78,6 @@ export async function bewaarLedenLead(
     bedrag: null,
   };
 
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  console.info("Tijdelijke leadopslag, nog niet in een database:", lead);
-
   return lead;
 }
 
@@ -87,12 +89,6 @@ export async function bewaarPartnerLead(
     id: randomUUID(),
     aangemaaktOp: new Date().toISOString(),
   };
-
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  console.info(
-    "Tijdelijke opslag van partneraanmelding, nog niet in een database:",
-    lead,
-  );
 
   return lead;
 }
@@ -106,12 +102,6 @@ export async function bewaarContactbericht(
     aangemaaktOp: new Date().toISOString(),
   };
 
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  console.info(
-    "Tijdelijke opslag van contactbericht, nog niet in een database:",
-    lead,
-  );
-
   return lead;
 }
 
@@ -124,12 +114,6 @@ export async function bewaarActieLead(
     aangemaaktOp: new Date().toISOString(),
   };
 
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  console.info(
-    "Tijdelijke opslag van actie-aanmelding, nog niet in een database:",
-    lead,
-  );
-
   return lead;
 }
 
@@ -141,15 +125,6 @@ export async function bewaarReferralLead(
     id: randomUUID(),
     aangemaaktOp: new Date().toISOString(),
   };
-
-  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  // De rij gaat over de aangedragene (voornaam, achternaam, email, telefoon).
-  // De aandrager komt in aandrager_naam, aandrager_email en aandrager_telefoon;
-  // zie db/004_referral.sql. Naamsplitsing: db/005_naamvelden.sql.
-  console.info(
-    "Tijdelijke opslag van referral, nog niet in een database:",
-    lead,
-  );
 
   return lead;
 }

@@ -32,7 +32,7 @@ const velden: FormulierVeld[] = [
     label: "E-mailadres (optioneel)",
     soort: "email",
     autoComplete: "email",
-    hulptekst: "Vul je e-mailadres in als je een bevestiging wilt ontvangen.",
+    hulptekst: "Vul je e-mailadres in als we je ook per mail mogen bereiken.",
   },
   {
     naam: "telefoon",
@@ -73,11 +73,13 @@ const velden: FormulierVeld[] = [
 type AanmeldFormulierProps = {
   clubslug: string;
   clubcode: string;
+  clubnaam: string;
 };
 
 export function AanmeldFormulier({
   clubslug,
   clubcode,
+  clubnaam,
 }: AanmeldFormulierProps) {
   return (
     <ContactFormulier
@@ -87,8 +89,10 @@ export function AanmeldFormulier({
       paneel="navy"
       velden={velden}
       verborgenVelden={[
+        { naam: "actie", waarde: "clubactie" },
         { naam: "clubslug", waarde: clubslug },
         { naam: "clubcode", waarde: clubcode },
+        { naam: "clubnaam", waarde: clubnaam },
       ]}
       action={meldAan}
       beginState={{ success: false }}

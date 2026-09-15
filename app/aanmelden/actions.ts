@@ -8,22 +8,14 @@ import {
   bewaarLedenLead,
   bewaarPartnerLead,
   bewaarReferralLead,
+  logLeadNietVerzonden,
+  logLeadVerzonden,
 } from "@/lib/leads";
 import {
   stuurActieAanmelding,
-  stuurBevestiging,
-  stuurDoorNaarZonneplaneet,
-  stuurLedenBevestiging,
   stuurPartnerAanmelding,
-  stuurReferralBevestigingAangedragene,
-  stuurReferralBevestigingAandrager,
 } from "@/lib/mail";
 import { magAanmelden } from "@/lib/rate-limit";
-import {
-  stuurContactViaWeb3Forms,
-  stuurLedenViaWeb3Forms,
-  stuurReferralViaWeb3Forms,
-} from "@/lib/web3forms";
 import {
   aanmeldingSchema,
   actieAanmeldingSchema,
@@ -100,7 +92,10 @@ export async function meldAan(
   try {
     lead = await bewaarLead(aanmelding);
   } catch (fout) {
-    console.error("Lead opslaan mislukt; er zijn geen mails verstuurd.", fout);
+    console.error(
+      "Lead opslaan mislukt; er is niets naar Web3Forms gestuurd.",
+      fout,
+    );
     return {
       success: false,
       message:
@@ -108,25 +103,12 @@ export async function meldAan(
     };
   }
 
-  const mailResultaten = await Promise.allSettled([
-    stuurBevestiging(lead),
-    stuurDoorNaarZonneplaneet(lead, club),
-  ]);
-  const mailNamen = ["bevestiging aan lid", "doorzending naar Zonneplaneet"];
-
-  mailResultaten.forEach((mailResultaat, index) => {
-    if (mailResultaat.status === "rejected") {
-      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
-        leadId: lead.id,
-        fout: mailResultaat.reason,
-      });
-    }
-  });
-
   return {
-    success: true,
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
     clubcode: lead.clubcode,
-    meetConversie: true,
   };
 }
 
@@ -190,35 +172,12 @@ export async function meldLidAan(
     };
   }
 
-  try {
-    await stuurLedenViaWeb3Forms(lead);
-  } catch (fout) {
-    console.error("Leden-aanmelding versturen via Web3Forms mislukt.", {
-      leadId: lead.id,
-      fout,
-    });
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden verstuurd. Probeer het later opnieuw.",
-    };
-  }
-
-  const mailResultaten = await Promise.allSettled([
-    stuurLedenBevestiging(lead),
-  ]);
-  const mailNamen = ["bevestiging aan lid"];
-
-  mailResultaten.forEach((mailResultaat, index) => {
-    if (mailResultaat.status === "rejected") {
-      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
-        leadId: lead.id,
-        fout: mailResultaat.reason,
-      });
-    }
-  });
-
-  return { success: true, meetConversie: true };
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
 }
 
 export async function meldClubAan(
@@ -279,11 +238,13 @@ export async function meldClubAan(
 
   try {
     await stuurPartnerAanmelding(lead);
+    logLeadVerzonden(lead.id, "partner");
   } catch (fout) {
     console.error("Mail over partneraanmelding mislukt.", {
       leadId: lead.id,
       fout,
     });
+    logLeadNietVerzonden(lead);
   }
 
   return { success: true, meetConversie: true };
@@ -348,21 +309,12 @@ export async function stuurContact(
     };
   }
 
-  try {
-    await stuurContactViaWeb3Forms(lead);
-  } catch (fout) {
-    console.error("Contactbericht versturen via Web3Forms mislukt.", {
-      leadId: lead.id,
-      fout,
-    });
-    return {
-      success: false,
-      message:
-        "Je bericht kon niet worden verstuurd. Probeer het later opnieuw.",
-    };
-  }
-
-  return { success: true, meetConversie: true };
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
 }
 
 export async function meldActieAan(
@@ -425,9 +377,11 @@ export async function meldActieAan(
 
   const mailResultaten = await Promise.allSettled([stuurActieAanmelding(lead)]);
   const mailNamen = ["actie-aanmelding naar Zonneplaneet Actie"];
+  let actieVerzonden = true;
 
   mailResultaten.forEach((mailResultaat, index) => {
     if (mailResultaat.status === "rejected") {
+      actieVerzonden = false;
       console.error(`Mail mislukt: ${mailNamen[index]}.`, {
         leadId: lead.id,
         actie: lead.actie,
@@ -435,6 +389,12 @@ export async function meldActieAan(
       });
     }
   });
+
+  if (actieVerzonden) {
+    logLeadVerzonden(lead.id, lead.actie);
+  } else {
+    logLeadNietVerzonden(lead);
+  }
 
   return { success: true, meetConversie: true };
 }
@@ -505,37 +465,21 @@ export async function meldReferralAan(
     };
   }
 
-  try {
-    await stuurReferralViaWeb3Forms(lead);
-  } catch (fout) {
-    console.error("Referral versturen via Web3Forms mislukt.", {
-      leadId: lead.id,
-      fout,
-    });
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden verstuurd. Probeer het later opnieuw.",
-    };
-  }
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
+}
 
-  const mailResultaten = await Promise.allSettled([
-    stuurReferralBevestigingAandrager(lead),
-    stuurReferralBevestigingAangedragene(lead),
-  ]);
-  const mailNamen = [
-    "bevestiging aan aandrager",
-    "bevestiging aan aangedragene",
-  ];
+export async function logWeb3FormsGelukt(
+  leadId: string,
+  actie: string,
+): Promise<void> {
+  logLeadVerzonden(leadId, actie);
+}
 
-  mailResultaten.forEach((mailResultaat, index) => {
-    if (mailResultaat.status === "rejected") {
-      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
-        leadId: lead.id,
-        fout: mailResultaat.reason,
-      });
-    }
-  });
-
-  return { success: true, meetConversie: true };
+export async function logWeb3FormsMislukt(lead: unknown): Promise<void> {
+  logLeadNietVerzonden(lead);
 }
