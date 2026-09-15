@@ -5,7 +5,7 @@ const stappen = [
     nummer: "01",
     titel: "Aanmelden",
     beschrijving:
-      "Je vult het formulier op de pagina van je club in en krijgt meteen een bevestiging met je clubcode.",
+      "Je vult het formulier in. We nemen binnen twee werkdagen contact op.",
   },
   {
     nummer: "02",
@@ -33,7 +33,7 @@ export function LedenHoeHetWerkt() {
       eyebrow="HOE HET WERKT"
       headingId="hoe-het-werkt"
       titel="Van aanmelding tot installatie"
-      alinea="Je meldt je aan op de pagina van je club. De rest gaat vanzelf."
+      alinea="Je meldt je aan via het formulier. De rest gaat vanzelf."
       stappen={stappen}
     />
   );

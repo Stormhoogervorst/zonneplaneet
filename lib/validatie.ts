@@ -2,15 +2,57 @@ import { z } from "zod";
 
 export const interesses = ["panelen", "batterij", "beide", "laadpaal"] as const;
 
+export const ledenInteresses = [
+  "zonnepanelen",
+  "thuisbatterij",
+  "warmtepomp",
+  "laadpaal",
+  "weet-ik-nog-niet",
+] as const;
+
+export const ledenInteresseLabels: Record<
+  (typeof ledenInteresses)[number],
+  string
+> = {
+  zonnepanelen: "Zonnepanelen",
+  thuisbatterij: "Thuisbatterij",
+  warmtepomp: "Warmtepomp",
+  laadpaal: "Laadpaal",
+  "weet-ik-nog-niet": "Weet ik nog niet",
+};
+
+export const vervolgstappen = ["afspraak", "showroom", "informatie"] as const;
+
+export const vervolgstapLabels: Record<(typeof vervolgstappen)[number], string> =
+  {
+    afspraak: "Maak een afspraak",
+    showroom: "Bezoek de showroom",
+    informatie: "Stuur me eerst informatie",
+  };
+
+export type Vervolgstap = (typeof vervolgstappen)[number];
+
+function naamDeel(leegMelding: string) {
+  return z.string({ error: leegMelding }).trim().min(1, leegMelding);
+}
+
+const geldigEmailadres = z
+  .string()
+  .trim()
+  .email("Vul een geldig e-mailadres in.");
+
+/** Leeg wordt `null`; een ingevulde waarde moet een geldig adres zijn. */
+export const optioneelEmailSchema = z
+  .string()
+  .trim()
+  .transform((waarde) => (waarde === "" ? undefined : waarde))
+  .pipe(geldigEmailadres.optional())
+  .transform((waarde) => waarde ?? null);
+
 export const aanmeldingSchema = z.object({
-  naam: z
-    .string({ error: "Vul je naam in." })
-    .trim()
-    .min(2, "Vul je volledige naam in."),
-  email: z
-    .string({ error: "Vul je e-mailadres in." })
-    .trim()
-    .email("Vul een geldig e-mailadres in."),
+  voornaam: naamDeel("Vul je voornaam in."),
+  achternaam: naamDeel("Vul je achternaam in."),
+  email: optioneelEmailSchema,
   telefoon: z
     .string({ error: "Vul je telefoonnummer in." })
     .trim()
@@ -46,6 +88,46 @@ export const aanmeldingSchema = z.object({
 
 export type Aanmelding = z.infer<typeof aanmeldingSchema>;
 export type AanmeldVeld = keyof Aanmelding;
+
+export const ledenAanmeldingSchema = z.object({
+  voornaam: naamDeel("Vul je voornaam in."),
+  achternaam: naamDeel("Vul je achternaam in."),
+  telefoon: z
+    .string({ error: "Vul je telefoonnummer in." })
+    .trim()
+    .refine(
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
+    ),
+  email: optioneelEmailSchema,
+  interesse: z.enum(ledenInteresses, {
+    error: "Kies waar je interesse in hebt.",
+  }),
+  clubnaam: z
+    .string({ error: "Vul de naam van je vereniging in." })
+    .trim()
+    .min(2, "Vul de naam van je vereniging in."),
+  clubplaats: z
+    .string({ error: "Vul de plaats van je vereniging in." })
+    .trim()
+    .min(2, "Vul de plaats van je vereniging in."),
+  vervolgstap: z.enum(vervolgstappen, {
+    error: "Kies wat je wilt.",
+  }),
+  actie: z.literal("clubactie", {
+    error:
+      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
+  }),
+  akkoord: z
+    .boolean({ error: "Geef toestemming om je gegevens te gebruiken." })
+    .refine(
+      (akkoord) => akkoord,
+      "Geef toestemming om je gegevens te gebruiken.",
+    ),
+});
+
+export type LedenAanmelding = z.infer<typeof ledenAanmeldingSchema>;
+export type LedenAanmeldVeld = keyof LedenAanmelding;
 
 export type AanmeldState = {
   success: boolean;
@@ -107,10 +189,8 @@ export const contactRolLabels: Record<(typeof contactRollen)[number], string> =
   };
 
 export const contactSchema = z.object({
-  naam: z
-    .string({ error: "Vul je naam in." })
-    .trim()
-    .min(2, "Vul je volledige naam in."),
+  voornaam: naamDeel("Vul je voornaam in."),
+  achternaam: naamDeel("Vul je achternaam in."),
   email: z
     .string({ error: "Vul je e-mailadres in." })
     .trim()
@@ -156,10 +236,8 @@ export type FormulierState = {
 export const actieTypen = ["cashback", "winactie"] as const;
 
 export const actieAanmeldingSchema = z.object({
-  naam: z
-    .string({ error: "Vul je naam in." })
-    .trim()
-    .min(2, "Vul je volledige naam in."),
+  voornaam: naamDeel("Vul je voornaam in."),
+  achternaam: naamDeel("Vul je achternaam in."),
   email: z
     .string({ error: "Vul je e-mailadres in." })
     .trim()
@@ -239,10 +317,10 @@ export const referralSchema = z.object({
         /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
       "Vul een geldig Nederlands telefoonnummer in, of laat dit veld leeg.",
     ),
-  naam: z
-    .string({ error: "Vul de naam in van de persoon die je aandraagt." })
-    .trim()
-    .min(2, "Vul de volledige naam in van de persoon die je aandraagt."),
+  voornaam: naamDeel("Vul de voornaam in van de persoon die je aandraagt."),
+  achternaam: naamDeel(
+    "Vul de achternaam in van de persoon die je aandraagt.",
+  ),
   email: z
     .string({
       error: "Vul het e-mailadres in van de persoon die je aandraagt.",

@@ -14,18 +14,25 @@ const interesseLabels: Record<(typeof interesses)[number], string> = {
 
 const velden: FormulierVeld[] = [
   {
-    naam: "naam",
-    label: "Naam",
+    naam: "voornaam",
+    label: "Voornaam",
     soort: "tekst",
-    autoComplete: "name",
+    autoComplete: "given-name",
+    verplicht: true,
+  },
+  {
+    naam: "achternaam",
+    label: "Achternaam",
+    soort: "tekst",
+    autoComplete: "family-name",
     verplicht: true,
   },
   {
     naam: "email",
-    label: "E-mailadres",
+    label: "E-mailadres (optioneel)",
     soort: "email",
     autoComplete: "email",
-    verplicht: true,
+    hulptekst: "Vul je e-mailadres in als je een bevestiging wilt ontvangen.",
   },
   {
     naam: "telefoon",

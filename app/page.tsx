@@ -12,7 +12,7 @@ export const metadata: Metadata = {
       "Voordeel op zonnepanelen, thuisbatterijen en laadpalen | Zonneplaneet Actie",
   },
   description:
-    "Via je sportvereniging, via cashback of via de winactie. Wij leveren en installeren.",
+    "Via je sportvereniging of via referral. Wij leveren en installeren.",
 };
 
 export default function Home() {
@@ -20,8 +20,14 @@ export default function Home() {
     <main data-hero-balk data-installateur>
       {/* TODO: Bevestig de overkoepelende hero-kop, subregel, knoptekst, title en description. */}
       <Hero
-        kop="Voordeel op zonnepanelen, thuisbatterijen en laadpalen"
-        subregel="Via je sportvereniging, via cashback of via de winactie. Wij leveren en installeren."
+        kop={
+          <>
+            Voordeel op zonnepanelen,
+            <br />
+            thuisbatterijen en laadpalen
+          </>
+        }
+        subregel="Via je sportvereniging of via referral. Wij leveren en installeren."
         knoptekst="Bekijk de acties"
         knoplink="#acties"
         foto="/zonnepanelen-bedrijfsdak.jpg"
@@ -31,10 +37,7 @@ export default function Home() {
       <HomepageActiekaarten />
       <SectieSaldering kop="Op 1 januari 2027 stopt de salderingsregeling. Wat dat voor je energierekening betekent, hangt vooral af van hoeveel stroom je zelf direct gebruikt." />
       <SectieInstallateur />
-      <HomepageContact
-        tag="MEER WETEN"
-        titel="Benieuwd welke actie bij jou past?"
-      />
+      <HomepageContact titel="Benieuwd welke actie bij jou past?" />
     </main>
   );
 }

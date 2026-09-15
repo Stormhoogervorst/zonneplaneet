@@ -1,34 +1,31 @@
 import type { Metadata } from "next";
-import { ClubKiezer } from "@/components/ClubKiezer";
+import { ContactKop } from "@/components/ContactKop";
 import { LedenFaq } from "@/components/LedenFaq";
-import { LedenHero } from "@/components/LedenHero";
+import { LedenFormulier } from "@/components/LedenFormulier";
 import { LedenHoeHetWerkt } from "@/components/LedenHoeHetWerkt";
-import { LedenStatement } from "@/components/LedenStatement";
-import { LedenWatJeKrijgt } from "@/components/LedenWatJeKrijgt";
 import { LedenWatJeKuntKopen } from "@/components/LedenWatJeKuntKopen";
-import {
-  SectieInstallateur,
-  installateurAlineaVoorClubs,
-} from "@/components/SectieInstallateur";
 import {
   SectieSaldering,
   salderingKopVoorClubs,
 } from "@/components/SectieSaldering";
 
 export const metadata: Metadata = {
-  title: "Zonnepanelen kopen via je club",
+  title: "Sponsor je club",
   description:
-    "Ben je lid van een aangesloten vereniging, dan koop je zonnepanelen, een thuisbatterij of een laadpaal met ledenkorting. Zoek je club en meld je aan.",
+    "Vul je gegevens in en geef aan bij welke vereniging je hoort. We nemen binnen twee werkdagen contact op. Gaat het tot een aanschaf komen, dan maken we een vast bedrag over aan je club.",
 };
 
 export default function LedenPage() {
   return (
-    <main data-installateur data-donker-einde>
-      <LedenHero />
+    <main>
+      <ContactKop
+        headingId="leden-kop-titel"
+        eyebrow="VOOR LEDEN"
+        titel="Sponsor je club"
+        alinea="Vul je gegevens in en geef aan bij welke vereniging je hoort. We nemen binnen twee werkdagen contact op. Gaat het tot een aanschaf komen, dan maken we een vast bedrag over aan je club."
+      />
 
-      <LedenStatement />
-
-      <LedenWatJeKrijgt />
+      <LedenFormulier />
 
       <LedenWatJeKuntKopen />
 
@@ -36,11 +33,7 @@ export default function LedenPage() {
 
       <SectieSaldering kop={salderingKopVoorClubs} />
 
-      <SectieInstallateur alinea={installateurAlineaVoorClubs} />
-
       <LedenFaq />
-
-      <ClubKiezer />
     </main>
   );
 }

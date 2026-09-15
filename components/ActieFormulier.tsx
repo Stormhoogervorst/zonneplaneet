@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { meldActieAan } from "@/app/aanmelden/actions";
 import {
   ContactFormulier,
@@ -8,10 +7,17 @@ import type { ActieType } from "@/lib/validatie";
 
 const velden: FormulierVeld[] = [
   {
-    naam: "naam",
-    label: "Naam",
+    naam: "voornaam",
+    label: "Voornaam",
     soort: "tekst",
-    autoComplete: "name",
+    autoComplete: "given-name",
+    verplicht: true,
+  },
+  {
+    naam: "achternaam",
+    label: "Achternaam",
+    soort: "tekst",
+    autoComplete: "family-name",
     verplicht: true,
   },
   {
@@ -49,8 +55,6 @@ type ActieFormulierProps = {
 };
 
 export function ActieFormulier({ actie }: ActieFormulierProps) {
-  const isWinactie = actie === "winactie";
-
   return (
     <ContactFormulier
       id={`${actie}-formulier`}
@@ -60,19 +64,9 @@ export function ActieFormulier({ actie }: ActieFormulierProps) {
       verborgenVelden={[{ naam: "actie", waarde: actie }]}
       action={meldActieAan}
       beginState={{ success: false }}
-      knopLabel={isWinactie ? "Doe mee" : "Meld me aan"}
+      knopLabel="Meld me aan"
       knopBezigLabel="Aanmelden…"
       naschrift="TODO"
-      bijKnop={
-        isWinactie ? (
-          <Link
-            href="/actievoorwaarden"
-            className="text-sm text-tag underline underline-offset-4"
-          >
-            Lees de actievoorwaarden
-          </Link>
-        ) : undefined
-      }
       bevestiging={{
         titel: "Aanmelding ontvangen",
         tekst: "We hebben je gegevens ontvangen.",
@@ -81,7 +75,7 @@ export function ActieFormulier({ actie }: ActieFormulierProps) {
         src: "/windmolens-schapen.webp",
         alt: "Rij windmolens langs een dijk met schapen in het gras ervoor",
       }}
-      plausibleEvent={isWinactie ? "WinactieAanmelding" : "CashbackAanmelding"}
+      plausibleEvent="CashbackAanmelding"
     />
   );
 }

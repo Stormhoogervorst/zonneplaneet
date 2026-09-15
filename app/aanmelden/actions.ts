@@ -5,6 +5,7 @@ import {
   bewaarActieLead,
   bewaarContactbericht,
   bewaarLead,
+  bewaarLedenLead,
   bewaarPartnerLead,
   bewaarReferralLead,
 } from "@/lib/leads";
@@ -13,6 +14,8 @@ import {
   stuurBevestiging,
   stuurContactbericht,
   stuurDoorNaarZonneplaneet,
+  stuurLedenBevestiging,
+  stuurLedenDoorNaarZonneplaneet,
   stuurPartnerAanmelding,
   stuurReferralBevestigingAangedragene,
   stuurReferralBevestigingAandrager,
@@ -23,6 +26,7 @@ import {
   aanmeldingSchema,
   actieAanmeldingSchema,
   contactSchema,
+  ledenAanmeldingSchema,
   normaliseerTelefoon,
   partnerAanmeldingSchema,
   referralSchema,
@@ -56,8 +60,9 @@ export async function meldAan(
   }
 
   const resultaat = aanmeldingSchema.safeParse({
-    naam: formData.get("naam"),
-    email: formData.get("email"),
+    voornaam: formData.get("voornaam"),
+    achternaam: formData.get("achternaam"),
+    email: formData.get("email") ?? "",
     telefoon: formData.get("telefoon"),
     postcode: formData.get("postcode"),
     interesse: formData.get("interesse"),
@@ -121,6 +126,81 @@ export async function meldAan(
     clubcode: lead.clubcode,
     meetConversie: true,
   };
+}
+
+export async function meldLidAan(
+  prevState: FormulierState,
+  formData: FormData,
+): Promise<FormulierState> {
+  void prevState;
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.trim() !== "") {
+    return { success: true };
+  }
+
+  if (!(await magAanmelden("lidaanmelding"))) {
+    return {
+      success: false,
+      message:
+        "Je hebt te vaak geprobeerd je aan te melden. Wacht even en probeer het later opnieuw.",
+    };
+  }
+
+  const resultaat = ledenAanmeldingSchema.safeParse({
+    voornaam: formData.get("voornaam"),
+    achternaam: formData.get("achternaam"),
+    telefoon: formData.get("telefoon"),
+    email: formData.get("email") ?? "",
+    interesse: formData.get("interesse"),
+    clubnaam: formData.get("clubnaam"),
+    clubplaats: formData.get("clubplaats"),
+    vervolgstap: formData.get("vervolgstap"),
+    actie: formData.get("actie"),
+    akkoord: formData.get("akkoord") === "on",
+  });
+
+  if (!resultaat.success) {
+    return {
+      success: false,
+      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
+      errors: resultaat.error.flatten().fieldErrors,
+    };
+  }
+
+  const aanmelding = {
+    ...resultaat.data,
+    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
+  };
+
+  let lead;
+  try {
+    lead = await bewaarLedenLead(aanmelding);
+  } catch (fout) {
+    console.error("Lead opslaan mislukt; er zijn geen mails verstuurd.", fout);
+    return {
+      success: false,
+      message:
+        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
+    };
+  }
+
+  const mailResultaten = await Promise.allSettled([
+    stuurLedenBevestiging(lead),
+    stuurLedenDoorNaarZonneplaneet(lead),
+  ]);
+  const mailNamen = ["bevestiging aan lid", "doorzending naar Zonneplaneet"];
+
+  mailResultaten.forEach((mailResultaat, index) => {
+    if (mailResultaat.status === "rejected") {
+      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
+        leadId: lead.id,
+        fout: mailResultaat.reason,
+      });
+    }
+  });
+
+  return { success: true, meetConversie: true };
 }
 
 export async function meldClubAan(
@@ -211,7 +291,8 @@ export async function stuurContact(
   }
 
   const resultaat = contactSchema.safeParse({
-    naam: formData.get("naam"),
+    voornaam: formData.get("voornaam"),
+    achternaam: formData.get("achternaam"),
     email: formData.get("email"),
     telefoon: formData.get("telefoon") ?? "",
     rol: formData.get("rol"),
@@ -284,7 +365,8 @@ export async function meldActieAan(
   }
 
   const resultaat = actieAanmeldingSchema.safeParse({
-    naam: formData.get("naam"),
+    voornaam: formData.get("voornaam"),
+    achternaam: formData.get("achternaam"),
     email: formData.get("email"),
     telefoon: formData.get("telefoon"),
     postcode: formData.get("postcode"),
@@ -360,7 +442,8 @@ export async function meldReferralAan(
     aandragerNaam: formData.get("aandragerNaam"),
     aandragerEmail: formData.get("aandragerEmail"),
     aandragerTelefoon: formData.get("aandragerTelefoon") ?? "",
-    naam: formData.get("naam"),
+    voornaam: formData.get("voornaam"),
+    achternaam: formData.get("achternaam"),
     email: formData.get("email"),
     telefoon: formData.get("telefoon"),
     plaats: formData.get("plaats"),

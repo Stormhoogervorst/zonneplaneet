@@ -44,11 +44,11 @@ export default function PrivacyPage() {
           Als iemand jou bij ons aandraagt
         </h2>
         <p className="mt-4">
-          Via het referralformulier kan iemand jouw naam, e-mailadres,
-          telefoonnummer en plaats doorgeven, plus waar jij mogelijk interesse
-          in hebt en een eventuele opmerking. We slaan die gegevens op samen met
-          de naam, het e-mailadres en het telefoonnummer van de persoon die jou
-          aandraagt.
+          Via het referralformulier kan iemand jouw voornaam, achternaam,
+          e-mailadres, telefoonnummer en plaats doorgeven, plus waar jij
+          mogelijk interesse in hebt en een eventuele opmerking. We slaan die
+          gegevens op samen met de naam, het e-mailadres en het telefoonnummer
+          van de persoon die jou aandraagt.
         </p>
         <p className="mt-4">
           We sturen jou altijd een bericht, zodat je weet hoe we aan je gegevens

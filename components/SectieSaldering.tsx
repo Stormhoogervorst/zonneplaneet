@@ -65,6 +65,18 @@ function ThuisbatterijIcoon() {
   );
 }
 
+function EuroMuntIcoon() {
+  return (
+    <svg {...svgProps}>
+      <ellipse cx="36" cy="30" rx="20" ry="11" />
+      <path d="M16 30v8c0 6.05 9 11 20 11s20-4.95 20-11v-8" />
+      <ellipse cx="36" cy="30" rx="15.5" ry="8.25" />
+      <path d="M42.5 24a7.2 6.2 0 1 0 0 12.4" />
+      <path d="M27.5 28.2h13.5M27.5 32.2h12.5" />
+    </svg>
+  );
+}
+
 const salderingsRijen = [
   {
     titel: "Salderen stopt",
@@ -90,6 +102,14 @@ const salderingsRijen = [
     beschrijving:
       "Een thuisbatterij slaat stroom op die je overdag opwekt, zodat je hem 's avonds zelf gebruikt in plaats van teruglevert. Of dat in jouw situatie uit kan, hangt af van je verbruik, je dak en je energiecontract.",
   },
+  {
+    titel: "Terugverdienen",
+    icoon: <EuroMuntIcoon />,
+    /* TODO: Maximaal leenbedrag van de Energiebespaarlening bij het Warmtefonds
+       verifiëren; de bronnen lopen uiteen. Tot die tijd geen maximumbedrag noemen. */
+    beschrijving:
+      "Verduurzamen hoef je niet uit eigen zak te betalen. Via de Energiebespaarlening van het Nationaal Warmtefonds leen je tegen 0% rente bij een gezamenlijk verzamelinkomen tot €60.000. Daarboven gold in 2026 een rente tussen circa 3,7% en 4,3%. Wat het in jouw situatie kost, hangt af van je inkomen, het leenbedrag en de looptijd.",
+  },
 ];
 
 export const salderingKopVoorClubs =
@@ -107,6 +127,14 @@ export function SectieSaldering({
       id="salderen-deadline"
       kop={kop}
       rijen={salderingsRijen}
-    />
+    >
+      <p className="text-[0.8125rem] leading-[1.6] text-body-grijs">
+        Rentetarieven Nationaal Warmtefonds, peildatum 2026. Actuele voorwaarden
+        op{" "}
+        <a href="https://www.warmtefonds.nl" className="underline">
+          warmtefonds.nl
+        </a>.
+      </p>
+    </Rijenlijst>
   );
 }

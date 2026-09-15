@@ -31,10 +31,17 @@ const aandragerVelden: FormulierVeld[] = [
 
 const aangedrageneVelden: FormulierVeld[] = [
   {
-    naam: "naam",
-    label: "Naam",
+    naam: "voornaam",
+    label: "Voornaam",
     soort: "tekst",
-    autoComplete: "section-aangedragene name",
+    autoComplete: "section-aangedragene given-name",
+    verplicht: true,
+  },
+  {
+    naam: "achternaam",
+    label: "Achternaam",
+    soort: "tekst",
+    autoComplete: "section-aangedragene family-name",
     verplicht: true,
   },
   {
@@ -94,7 +101,6 @@ const blokken: FormulierBlok[] = [
 ];
 
 export function ReferralFormulier() {
-  // TODO: Tekst over een vergoeding voor de aandrager toevoegen als die vaststaat.
   return (
     <ContactFormulier
       id="referral-formulier"
@@ -107,7 +113,24 @@ export function ReferralFormulier() {
       beginState={{ success: false }}
       knopLabel="Draag deze persoon aan"
       knopBezigLabel="Versturen…"
-      naschrift="We nemen binnen twee werkdagen contact op met degene die je hebt aangedragen."
+      naschrift={
+        <>
+          <p>
+            Je ontvangt €200 zodra degene die je aandraagt de installatie heeft
+            laten uitvoeren.
+          </p>
+          <div className="mt-4 space-y-1 text-[0.875rem] leading-[1.6] text-white/70">
+            <p>Je ontvangt het bedrag na installatie, niet bij aanmelding.</p>
+            <p>
+              De persoon die je aandraagt mag nog niet bij ons bekend zijn.
+            </p>
+            {/* TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn? */}
+            <p>
+              TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn?
+            </p>
+          </div>
+        </>
+      }
       bevestiging={{
         titel: "Aanmelding ontvangen",
         tekst:

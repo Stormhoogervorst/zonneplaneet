@@ -5,7 +5,14 @@ type ContactKopProps = {
   eyebrow: string;
   headingId: string;
   titel: string;
+  /** Standaard de grote displaykop; `l` is een trede kleiner, voor langere titels. */
+  titelMaat?: "xl" | "l";
 };
+
+const titelMaatClasses = {
+  xl: "text-[clamp(2.5rem,7vw,5.5rem)] leading-none tracking-[-0.02em]",
+  l: "text-display-l",
+} as const;
 
 /**
  * Compact kopblok: de kop links, de tag en de toelichting rechts. `/contact`
@@ -24,6 +31,7 @@ export function ContactKop({
   eyebrow,
   headingId,
   titel,
+  titelMaat = "xl",
 }: ContactKopProps) {
   return (
     <section
@@ -35,7 +43,7 @@ export function ContactKop({
 
         <h1
           id={headingId}
-          className="mt-8 min-w-0 text-[clamp(2.5rem,7vw,5.5rem)] leading-none font-normal tracking-[-0.02em] text-navy md:col-start-1 md:row-span-2 md:row-start-1 md:mt-0 md:self-end"
+          className={`mt-8 min-w-0 font-normal text-navy md:col-start-1 md:row-span-2 md:row-start-1 md:mt-0 md:self-end ${titelMaatClasses[titelMaat]}`}
         >
           {titel}
         </h1>

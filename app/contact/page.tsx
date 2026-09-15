@@ -21,10 +21,17 @@ export const metadata: Metadata = {
 
 const velden: FormulierVeld[] = [
   {
-    naam: "naam",
-    label: "Naam",
+    naam: "voornaam",
+    label: "Voornaam",
     soort: "tekst",
-    autoComplete: "name",
+    autoComplete: "given-name",
+    verplicht: true,
+  },
+  {
+    naam: "achternaam",
+    label: "Achternaam",
+    soort: "tekst",
+    autoComplete: "family-name",
     verplicht: true,
   },
   {

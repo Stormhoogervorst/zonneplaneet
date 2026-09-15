@@ -5,6 +5,7 @@ import type {
   Aanmelding,
   ActieAanmelding,
   Contactbericht,
+  LedenAanmelding,
   PartnerAanmelding,
   ReferralAanmelding,
 } from "@/lib/validatie";
@@ -13,6 +14,13 @@ export type LeadStatus =
   "aangemeld" | "offerte" | "getekend" | "geinstalleerd" | "afgevallen";
 
 export type Lead = Aanmelding & {
+  id: string;
+  aangemaaktOp: string;
+  status: LeadStatus;
+  bedrag: number | null;
+};
+
+export type LedenLead = LedenAanmelding & {
   id: string;
   aangemaaktOp: string;
   status: LeadStatus;
@@ -41,6 +49,23 @@ export type ReferralLead = ReferralAanmelding & {
 
 export async function bewaarLead(aanmelding: Aanmelding): Promise<Lead> {
   const lead: Lead = {
+    ...aanmelding,
+    id: randomUUID(),
+    aangemaaktOp: new Date().toISOString(),
+    status: "aangemeld",
+    bedrag: null,
+  };
+
+  // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
+  console.info("Tijdelijke leadopslag, nog niet in een database:", lead);
+
+  return lead;
+}
+
+export async function bewaarLedenLead(
+  aanmelding: LedenAanmelding,
+): Promise<LedenLead> {
+  const lead: LedenLead = {
     ...aanmelding,
     id: randomUUID(),
     aangemaaktOp: new Date().toISOString(),
@@ -118,9 +143,9 @@ export async function bewaarReferralLead(
   };
 
   // TODO: Vervang deze tijdelijke log door een database-insert die voltooid is voordat deze functie terugkeert.
-  // De rij gaat over de aangedragene (naam, email, telefoon). De aandrager
-  // komt in aandrager_naam, aandrager_email en aandrager_telefoon; zie
-  // db/004_referral.sql.
+  // De rij gaat over de aangedragene (voornaam, achternaam, email, telefoon).
+  // De aandrager komt in aandrager_naam, aandrager_email en aandrager_telefoon;
+  // zie db/004_referral.sql. Naamsplitsing: db/005_naamvelden.sql.
   console.info(
     "Tijdelijke opslag van referral, nog niet in een database:",
     lead,

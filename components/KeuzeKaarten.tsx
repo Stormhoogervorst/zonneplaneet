@@ -85,7 +85,13 @@ export type KeuzeKaart = {
 
 export function KeuzeKaarten({ kaarten }: { kaarten: KeuzeKaart[] }) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 md:gap-[2px] lg:grid-cols-3">
+    <div
+      className={`grid gap-3 sm:grid-cols-2 md:gap-[2px] ${
+        kaarten.length > 2
+          ? "lg:grid-cols-3"
+          : "mx-auto w-full max-w-5xl"
+      }`}
+    >
       {kaarten.map(({ id, titel, beschrijving, href, Icoon }) => {
         const inhoud = (
           <>

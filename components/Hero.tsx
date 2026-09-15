@@ -1,11 +1,12 @@
 import Image, { type StaticImageData } from "next/image";
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { HeaderBalk } from "@/components/HeaderBalk";
 
 type HeroGedeeld = {
   knoplink: string;
   knoptekst: string;
-  kop: string;
+  kop: ReactNode;
   /** Optioneel beeld boven de kop, bijvoorbeeld een clublogo van 64px hoog. */
   logo?: { alt: string; src: string };
   subregel: string;
@@ -90,7 +91,7 @@ export function Hero(props: HeroProps) {
           className={
             compact
               ? "mx-auto max-w-[22ch] [overflow-wrap:normal] text-[clamp(1.875rem,5vw,3.5rem)] leading-[1.05] font-normal tracking-[-0.02em] text-balance hyphens-none [word-break:normal] text-navy"
-              : "mx-auto max-w-[17ch] [overflow-wrap:normal] text-[clamp(2.25rem,6.5vw,5.5rem)] leading-[1.05] font-normal tracking-[-0.02em] text-balance hyphens-none [word-break:normal] text-white"
+              : "mx-auto max-w-[30ch] [overflow-wrap:normal] text-[clamp(2.25rem,6.5vw,5.5rem)] leading-[1.05] font-normal tracking-[-0.02em] hyphens-none [word-break:normal] text-white"
           }
         >
           {kop}

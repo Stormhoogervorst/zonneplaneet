@@ -6,12 +6,15 @@ import type {
   ActieLead,
   ContactLead,
   Lead,
+  LedenLead,
   PartnerLead,
   ReferralLead,
 } from "@/lib/leads";
 import {
   contactRolLabels,
+  ledenInteresseLabels,
   referralInteresseLabels,
+  vervolgstapLabels,
   type Aanmelding,
 } from "@/lib/validatie";
 
@@ -21,6 +24,10 @@ const interesseLabels: Record<Aanmelding["interesse"], string> = {
   beide: "Zonnepanelen en thuisbatterij",
   laadpaal: "Laadpaal",
 };
+
+function volledigeNaam(persoon: { voornaam: string; achternaam: string }) {
+  return `${persoon.voornaam} ${persoon.achternaam}`;
+}
 
 function afzender(van: string): string {
   const tussen = van.match(/<([^>]+)>/);
@@ -43,13 +50,17 @@ function getMailConfig() {
 }
 
 export async function stuurBevestiging(lead: Lead): Promise<void> {
+  if (!lead.email) {
+    return;
+  }
+
   const { resend, van } = getMailConfig();
   const resultaat = await resend.emails.send({
     from: van,
     to: lead.email,
     subject: `Je aanmelding via ${lead.clubcode}`,
     text: [
-      `Hoi ${lead.naam},`,
+      `Hoi ${lead.voornaam},`,
       "",
       "We hebben je aanmelding ontvangen.",
       `Je clubcode is ${lead.clubcode}. Noem deze code als we je bellen.`,
@@ -72,17 +83,73 @@ export async function stuurDoorNaarZonneplaneet(
   const resultaat = await resend.emails.send({
     from: van,
     to: zonneplaneet,
-    replyTo: lead.email,
+    ...(lead.email ? { replyTo: lead.email } : {}),
     subject: `Nieuwe aanmelding via ${club.naam}`,
     text: [
       `Via: ${club.naam} — ledenvoordeel van toepassing`,
       "",
-      `Naam: ${lead.naam}`,
+      `Voornaam: ${lead.voornaam}`,
+      `Achternaam: ${lead.achternaam}`,
       `Telefoon: ${lead.telefoon}`,
-      `E-mail: ${lead.email}`,
+      `E-mail: ${lead.email ?? "niet opgegeven. Neem contact op via telefoon."}`,
       `Postcode: ${lead.postcode}`,
       `Interesse: ${interesseLabels[lead.interesse]}`,
       `Clubcode: ${lead.clubcode}`,
+      `Lead-id: ${lead.id}`,
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(`Doorzendmail mislukt: ${resultaat.error.message}`);
+  }
+}
+
+export async function stuurLedenBevestiging(lead: LedenLead): Promise<void> {
+  if (!lead.email) {
+    return;
+  }
+
+  const { resend, van } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: lead.email,
+    subject: "We hebben je aanmelding ontvangen",
+    text: [
+      `Hoi ${lead.voornaam},`,
+      "",
+      "We hebben je aanmelding ontvangen.",
+      "We nemen binnen twee werkdagen contact met je op.",
+      "",
+      "Je zit nergens aan vast tot je een offerte tekent.",
+    ].join("\n"),
+  });
+
+  if (resultaat.error) {
+    throw new Error(`Bevestigingsmail mislukt: ${resultaat.error.message}`);
+  }
+}
+
+export async function stuurLedenDoorNaarZonneplaneet(
+  lead: LedenLead,
+): Promise<void> {
+  const { resend, van, zonneplaneet } = getMailConfig();
+  const resultaat = await resend.emails.send({
+    from: van,
+    to: zonneplaneet,
+    ...(lead.email ? { replyTo: lead.email } : {}),
+    subject: `Nieuwe aanmelding via ${lead.clubnaam} — ${vervolgstapLabels[lead.vervolgstap]}`,
+    text: [
+      `Via: ${lead.clubnaam} (${lead.clubplaats})`,
+      `Actie: ${lead.actie}`,
+      `Vervolgstap: ${vervolgstapLabels[lead.vervolgstap]}`,
+      "",
+      `Voornaam: ${lead.voornaam}`,
+      `Achternaam: ${lead.achternaam}`,
+      `Telefoon: ${lead.telefoon}`,
+      lead.email
+        ? `E-mail: ${lead.email}`
+        : "E-mail: niet opgegeven. Neem contact op via telefoon.",
+      `Interesse: ${ledenInteresseLabels[lead.interesse]}`,
       `Lead-id: ${lead.id}`,
     ].join("\n"),
   });
@@ -131,7 +198,8 @@ export async function stuurContactbericht(lead: ContactLead): Promise<void> {
     text: [
       "Nieuw bericht via het contactformulier",
       "",
-      `Naam: ${lead.naam}`,
+      `Voornaam: ${lead.voornaam}`,
+      `Achternaam: ${lead.achternaam}`,
       `E-mail: ${lead.email}`,
       `Telefoon: ${lead.telefoon === "" ? "niet opgegeven" : lead.telefoon}`,
       `Ik ben: ${contactRolLabels[lead.rol]}`,
@@ -163,7 +231,8 @@ export async function stuurActieAanmelding(lead: ActieLead): Promise<void> {
       `Nieuwe aanmelding via de ${lead.actie}-pagina`,
       "",
       `Actie: ${lead.actie}`,
-      `Naam: ${lead.naam}`,
+      `Voornaam: ${lead.voornaam}`,
+      `Achternaam: ${lead.achternaam}`,
       `E-mail: ${lead.email}`,
       `Telefoon: ${lead.telefoon}`,
       `Postcode: ${lead.postcode}`,
@@ -187,7 +256,7 @@ export async function stuurReferralNaarZonneplaneet(
     from: van,
     to: van,
     replyTo: lead.aandragerEmail,
-    subject: `Referral — ${lead.naam} via ${lead.aandragerNaam}`,
+    subject: `Referral — ${volledigeNaam(lead)} via ${lead.aandragerNaam}`,
     text: [
       "Nieuwe referral via het aanmeldformulier",
       "",
@@ -201,7 +270,8 @@ export async function stuurReferralNaarZonneplaneet(
       }`,
       "",
       "Aangedragene",
-      `Naam: ${lead.naam}`,
+      `Voornaam: ${lead.voornaam}`,
+      `Achternaam: ${lead.achternaam}`,
       `E-mail: ${lead.email}`,
       `Telefoon: ${lead.telefoon}`,
       `Plaats: ${lead.plaats}`,
@@ -223,7 +293,8 @@ export async function stuurReferralNaarZonneplaneet(
 export async function stuurReferralBevestigingAandrager(
   lead: ReferralLead,
 ): Promise<void> {
-  // TODO: Tekst over een vergoeding voor de aandrager toevoegen als die vaststaat.
+  // TODO: Noem de €200-beloning hier, met de voorwaarde dat diegene de
+  // installatie heeft laten uitvoeren. Uitbetalingstekst volgt.
   const { resend, van } = getMailConfig();
   const resultaat = await resend.emails.send({
     from: van,
@@ -233,7 +304,7 @@ export async function stuurReferralBevestigingAandrager(
       `Hoi ${lead.aandragerNaam},`,
       "",
       "Bedankt. We hebben je aanmelding ontvangen.",
-      `We nemen binnen twee werkdagen contact op met ${lead.naam}, de persoon die je hebt aangedragen.`,
+      `We nemen binnen twee werkdagen contact op met ${volledigeNaam(lead)}, de persoon die je hebt aangedragen.`,
     ].join("\n"),
   });
 
@@ -253,7 +324,7 @@ export async function stuurReferralBevestigingAangedragene(
     to: lead.email,
     subject: "Iemand heeft je bij ons aangedragen",
     text: [
-      `Hoi ${lead.naam},`,
+      `Hoi ${lead.voornaam},`,
       "",
       `${lead.aandragerNaam} heeft je naam bij Zonneplaneet Actie achtergelaten.`,
       "We nemen binnen twee werkdagen contact met je op.",

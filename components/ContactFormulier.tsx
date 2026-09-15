@@ -8,7 +8,7 @@ import type { FormulierState } from "@/lib/validatie";
 
 /**
  * De sectie met een foto links en een formulier rechts. `/partner` gebruikt het
- * ijsblauwe paneel, `/contact`, `/cashback`, `/winactie` en `/referral` het navy
+ * ijsblauwe paneel, `/contact` en `/referral` het navy
  * paneel. Alles wat per pagina verschilt komt via props binnen; er is geen
  * tweede variant van dit blok.
  */
@@ -21,6 +21,8 @@ type VeldGedeeld = {
   verplicht?: boolean;
   /** Over beide kolommen in plaats van één, vanaf md. */
   volleBreedte?: boolean;
+  /** Korte toelichting onder het veld, bijvoorbeeld bij een optioneel e-mailadres. */
+  hulptekst?: string;
 };
 
 export type FormulierVeld =
@@ -30,6 +32,10 @@ export type FormulierVeld =
       soort: "keuze";
       /** Tekst van de lege eerste optie, zodat de bezoeker zelf kiest. */
       leegLabel: string;
+      keuzes: ReadonlyArray<{ waarde: string; label: string }>;
+    })
+  | (VeldGedeeld & {
+      soort: "radio";
       keuzes: ReadonlyArray<{ waarde: string; label: string }>;
     })
   | (VeldGedeeld & { soort: "vinkje" });
@@ -54,7 +60,7 @@ type ContactFormulierProps = {
   beginState: FormulierState;
   knopLabel: string;
   knopBezigLabel: string;
-  naschrift: string;
+  naschrift: ReactNode;
   bevestiging: { titel: string; tekst: string };
   foto: { src: string; alt: string };
   plausibleEvent: string;
@@ -252,7 +258,14 @@ export function ContactFormulier({
                     {blok.velden.map((veld) => {
                       const veldId = `${id}-${veld.naam}`;
                       const foutId = `${veldId}-fout`;
+                      const hulpId = `${veldId}-hulp`;
                       const fout = state.errors?.[veld.naam]?.[0];
+                      const beschrijving = [
+                        veld.hulptekst ? hulpId : undefined,
+                        fout ? foutId : undefined,
+                      ]
+                        .filter(Boolean)
+                        .join(" ");
 
                       if (veld.soort === "vinkje") {
                         return (
@@ -270,7 +283,9 @@ export function ContactFormulier({
                                 required={veld.verplicht}
                                 autoComplete="off"
                                 aria-invalid={Boolean(fout)}
-                                aria-describedby={fout ? foutId : undefined}
+                                aria-describedby={
+                                  beschrijving || undefined
+                                }
                                 className={`mt-1 size-5 shrink-0 accent-oranje ${stijl.veldTekst}`}
                               />
                               <label
@@ -292,6 +307,57 @@ export function ContactFormulier({
                         );
                       }
 
+                      if (veld.soort === "radio") {
+                        return (
+                          <fieldset
+                            key={veld.naam}
+                            className={`min-w-0 ${
+                              veld.volleBreedte ? "md:col-span-2" : ""
+                            }`}
+                            aria-invalid={Boolean(fout)}
+                            aria-describedby={beschrijving || undefined}
+                          >
+                            <legend
+                              className={`${labelClasses} ${stijl.label}`}
+                            >
+                              {veld.label}
+                            </legend>
+                            <div className="flex flex-col">
+                              {veld.keuzes.map((keuze) => {
+                                const keuzeId = `${veldId}-${keuze.waarde}`;
+                                return (
+                                  <label
+                                    key={keuze.waarde}
+                                    htmlFor={keuzeId}
+                                    className={`flex min-h-12 cursor-pointer items-center gap-3 ${stijl.naschrift}`}
+                                  >
+                                    <input
+                                      id={keuzeId}
+                                      name={veld.naam}
+                                      type="radio"
+                                      value={keuze.waarde}
+                                      required={veld.verplicht}
+                                      className="size-5 shrink-0 accent-oranje"
+                                    />
+                                    <span className="text-[0.9375rem] leading-[1.6]">
+                                      {keuze.label}
+                                    </span>
+                                  </label>
+                                );
+                              })}
+                            </div>
+                            {fout ? (
+                              <p
+                                id={foutId}
+                                className={`mt-3 text-sm ${stijl.fout}`}
+                              >
+                                {fout}
+                              </p>
+                            ) : null}
+                          </fieldset>
+                        );
+                      }
+
                       const veldClassName = `${veldClasses} ${stijl.veldTekst} ${
                         fout ? stijl.veldRandFout : stijl.veldRand
                       }`;
@@ -301,7 +367,7 @@ export function ContactFormulier({
                         required: veld.verplicht,
                         autoComplete: veld.autoComplete,
                         "aria-invalid": Boolean(fout),
-                        "aria-describedby": fout ? foutId : undefined,
+                        "aria-describedby": beschrijving || undefined,
                       };
 
                       return (
@@ -376,6 +442,15 @@ export function ContactFormulier({
                             />
                           )}
 
+                          {veld.hulptekst ? (
+                            <p
+                              id={hulpId}
+                              className={`mt-3 text-sm ${stijl.naschrift}`}
+                            >
+                              {veld.hulptekst}
+                            </p>
+                          ) : null}
+
                           {fout && (
                             <p
                               id={foutId}
@@ -411,7 +486,7 @@ export function ContactFormulier({
                 {bijKnop}
               </div>
 
-              <p className={`mt-6 text-sm ${stijl.naschrift}`}>{naschrift}</p>
+              <div className={`mt-6 text-sm ${stijl.naschrift}`}>{naschrift}</div>
             </form>
           )}
         </div>

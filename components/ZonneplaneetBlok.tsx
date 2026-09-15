@@ -32,11 +32,8 @@ export function ZonneplaneetBlok({
         </p>
         {/* TODO: Vul het gecontroleerde KvK-nummer van Zonneplaneet in. */}
         <p className="mt-4">KvK-nummer: nog in te vullen</p>
-        <Link
-          className="mt-4 inline-block underline"
-          href="/over-zonneplaneet/reviews"
-        >
-          Bekijk reviews van Zonneplaneet
+        <Link className="mt-4 inline-block underline" href="/over-zonneplaneet">
+          Over Zonneplaneet
         </Link>
       </div>
     </section>

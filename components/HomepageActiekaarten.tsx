@@ -1,5 +1,4 @@
 import {
-  HuisbatterijIcoon,
   KeuzeKaarten,
   LaadpaalIcoon,
   ZonnepaneelIcoon,
@@ -16,17 +15,11 @@ const actiekaarten: KeuzeKaart[] = [
     Icoon: ZonnepaneelIcoon,
   },
   {
-    id: "actie-cashback",
-    titel: "Cashback",
-    beschrijving: "TODO: één zin over de cashback-actie.",
-    href: "/cashback",
-    Icoon: HuisbatterijIcoon,
-  },
-  {
-    id: "actie-winactie",
-    titel: "Winactie",
-    beschrijving: "TODO: één zin over de winactie.",
-    href: "/winactie",
+    id: "actie-referral",
+    titel: "Referral",
+    beschrijving:
+      "Draag iemand aan. Gaat diegene over tot aanschaf, dan ontvang jij €200 na de installatie.",
+    href: "/referral",
     Icoon: LaadpaalIcoon,
   },
 ];

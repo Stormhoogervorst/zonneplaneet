@@ -130,23 +130,6 @@ body:has(main[data-hero-balk]) .site-header {
   display: none;
 }
 
-/* Uitklapmenu in de hoofdnavigatie: zonder JS zichtbaar bij hover of
-   focus-within, met JS alleen als data-open staat. */
-.nav-item-met-kinderen .nav-submenu {
-  display: none;
-}
-
-.nav-item-met-kinderen[data-open] .nav-submenu {
-  display: block;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .nav-item-met-kinderen:not([data-js]):hover .nav-submenu,
-  .nav-item-met-kinderen:not([data-js]):focus-within .nav-submenu {
-    display: block;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

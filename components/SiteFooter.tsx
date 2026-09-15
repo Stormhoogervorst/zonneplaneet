@@ -25,16 +25,6 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
-              <Link href="/cashback" className="text-body-l">
-                Cashback
-              </Link>
-            </li>
-            <li>
-              <Link href="/winactie" className="text-body-l">
-                Winactie
-              </Link>
-            </li>
-            <li>
               <Link href="/leden" className="text-body-l">
                 Voor leden
               </Link>

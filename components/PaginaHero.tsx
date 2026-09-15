@@ -11,7 +11,7 @@ type PaginaHeroProps = {
 
 /**
  * Het lichte kopblok, optioneel met een volle-breedtefoto eronder. `/partner`,
- * `/leden`, `/cashback` en `/winactie` tonen de foto; `/clubs` gebruikt alleen
+ * `/leden` toont de foto; `/clubs` gebruikt alleen
  * het kopblok en zet daaronder het zoekvlak.
  *
  * Onder md: kop, tag, alinea. Vanaf md: tag en alinea links, kop rechts.
