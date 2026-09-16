@@ -40,6 +40,52 @@ type HeroVol = HeroInhoud &
 
 type HeroProps = HeroUitgelijnd | HeroVol;
 
+const STER_PAD =
+  "M12 2.6 14.86 8.9l6.84.79-5.1 4.47 1.45 6.73L12 17.72l-6.05 3.17 1.45-6.73-5.1-4.47 6.84-.79L12 2.6Z";
+
+function Ster({ half = false }: { half?: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" className="size-[16px]" aria-hidden="true">
+      {half ? (
+        <>
+          <path d={STER_PAD} fill="currentColor" opacity="0.28" />
+          <path
+            d={STER_PAD}
+            fill="currentColor"
+            clipPath="url(#hero-ster-helft)"
+          />
+          <defs>
+            <clipPath id="hero-ster-helft">
+              <rect width="12" height="24" />
+            </clipPath>
+          </defs>
+        </>
+      ) : (
+        <path d={STER_PAD} fill="currentColor" />
+      )}
+    </svg>
+  );
+}
+
+function HeroBeoordeling({ klasse }: { klasse: string }) {
+  return (
+    <p className={`flex flex-wrap items-center gap-x-2 gap-y-1 ${klasse}`}>
+      {/* TODO: Bevestig bron en peildatum van het cijfer 4,2. */}
+      <span>Beoordeeld met een 4,2 gemiddeld</span>
+      <span
+        aria-hidden="true"
+        className="inline-flex items-center gap-0.5 text-oranje"
+      >
+        <Ster />
+        <Ster />
+        <Ster />
+        <Ster />
+        <Ster half />
+      </span>
+    </p>
+  );
+}
+
 function UitgelijndeHero({
   alt,
   foto,
@@ -127,6 +173,10 @@ function UitgelijndeHero({
                 </span>
               </div>
             ) : null}
+
+            {compact ? null : (
+              <HeroBeoordeling klasse="mt-6 text-body text-body-donker" />
+            )}
           </div>
         </div>
       </div>
@@ -171,10 +221,10 @@ export function Hero(props: HeroProps) {
         sizes="100vw"
         className="object-cover"
       />
-      {/* Eén egale laag: de kop staat gecentreerd, dus het contrast moet overal gelijk zijn */}
+      {/* Eén egale laag. 0.42 haalt 2,55:1 op het lichtste punt; 0.62 haalt 4,55:1. */}
       <div
         aria-hidden="true"
-        className={`absolute inset-0 ${props.overlayKlasse ?? "bg-[rgba(7,39,55,0.45)]"}`}
+        className={`absolute inset-0 ${props.overlayKlasse ?? "bg-[rgba(7,39,55,0.62)]"}`}
       />
 
       {/* Bovenbalk: doorzichtig over de foto. */}
@@ -184,6 +234,8 @@ export function Hero(props: HeroProps) {
 
       {/* Onder md links uitgelijnd; vanaf md gecentreerd zoals eerder. */}
       <div className="absolute inset-0 z-10 flex flex-col items-start justify-center px-6 pt-[104px] text-left md:items-center md:px-8 md:text-center">
+        <HeroBeoordeling klasse="mb-8 text-[0.9375rem] text-tag md:justify-center" />
+
         <h1
           id="hero-titel"
           className="w-full min-w-0 text-balance text-[clamp(2.5rem,9vw,4.5rem)] leading-[1.0] font-normal tracking-[-0.02em] text-white"

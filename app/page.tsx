@@ -24,7 +24,7 @@ export default function Home() {
         knoplink="#acties"
         foto="/zonnepanelen-bedrijfsdak.jpg"
         alt="Lange rijen zonnepanelen op het dak van een bedrijfshal onder een lichte hemel"
-        overlayKlasse="bg-[rgba(7,39,55,0.65)]"
+        overlayKlasse="bg-[rgba(7,39,55,0.62)]"
       />
       <HomepageActiekaarten />
       <SectieSaldering kop="Op 1 januari 2027 stopt de salderingsregeling. Wat dat voor je energierekening betekent, hangt vooral af van hoeveel stroom je zelf direct gebruikt." />
