@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { stuurContact } from "@/app/aanmelden/actions";
+import { Boekingssectie } from "@/components/Boekingssectie";
 import {
   ContactFormulier,
   type FormulierVeld,
 } from "@/components/ContactFormulier";
 import { ContactKop } from "@/components/ContactKop";
-import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
 import { contactRolLabels, contactRollen } from "@/lib/validatie";
 
 export const metadata: Metadata = {
@@ -82,7 +82,7 @@ export default function ContactPage() {
         alinea="Stel je vraag over de clubactie. Ben je lid van een vereniging, dan helpen we je op weg met je aanmelding. Ben je bestuurslid, dan kijken we samen wat de actie voor je club betekent."
       />
 
-      <ShowroomAfspraak />
+      <Boekingssectie />
 
       {/* Foto links, navy paneel met het formulier rechts. */}
       <ContactFormulier

@@ -39,6 +39,31 @@ export default function PrivacyPage() {
         {/* TODO: Laat de verwerking van persoonsgegevens juridisch controleren. */}
       </section>
 
+      <section aria-labelledby="afspraak" className="mt-12">
+        <h2 id="afspraak" className="text-2xl font-semibold">
+          Afspraak inplannen via Cal.com
+        </h2>
+        <p className="mt-4">
+          Op de contactpagina kun je zelf een gesprek van ongeveer 30 minuten
+          inplannen. De agenda wordt geladen via Cal.com, een externe dienst.
+        </p>
+        <p className="mt-4">
+          Als je een moment kiest, verwerkt Cal.com de gegevens die je in het
+          boekingsformulier invult. Dat gaat in ieder geval om je naam, je
+          e-mailadres en het gekozen tijdstip. Cal.com kan ook technische
+          gegevens vastleggen, zoals je IP-adres en browsergegevens. Die
+          verwerking loopt via Cal.com, niet via onze eigen formulieren.
+        </p>
+        {/* TODO: Laat juridisch controleren welke velden het 30-minuten-event
+           exact uitvraagt, de grondslag, de bewaartermijn, de
+           verwerkersovereenkomst met Cal.com en of de embed cookies of
+           vergelijkbare technieken plaatst. */}
+        <p className="mt-4">
+          Wil je geen afspraak via Cal.com, gebruik dan het contactformulier op
+          dezelfde pagina.
+        </p>
+      </section>
+
       <section aria-labelledby="referral" className="mt-12">
         <h2 id="referral" className="text-2xl font-semibold">
           Als iemand jou bij ons aandraagt

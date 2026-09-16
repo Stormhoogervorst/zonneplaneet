@@ -47,7 +47,7 @@ const velden = [
 
 /**
  * Volbreed navy blok met een kort afspraakformulier. Zelfde component op
- * `/over-zonneplaneet` en `/contact`; geen tweede variant.
+ * `/over-zonneplaneet` en de productpagina's; geen tweede variant.
  */
 export function ShowroomAfspraak() {
   const [state, formAction, pending] = useActionState(planShowroomAfspraak, {
