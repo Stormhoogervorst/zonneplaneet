@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { Hero } from "@/components/Hero";
+import { LaadpaalApp } from "@/components/LaadpaalApp";
 import { PaginaStatement } from "@/components/PaginaStatement";
 import { IconMunten, IconPosterQr, IconSlot } from "@/components/RijIconen";
 import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
@@ -52,12 +52,6 @@ const techniekKaarten = [
   },
 ];
 
-const appPunten = [
-  "Bekijk de status van je laadsessie",
-  "Plan een laadmoment",
-  "Volg hoeveel energie je auto gebruikt",
-];
-
 /* Zelfde vier stappen als op /zonnepanelen. */
 const stappen = [
   {
@@ -88,26 +82,16 @@ const stappen = [
 
 export default function LaadpaalPage() {
   return (
-    <main data-hero-balk>
+    <main data-hero-balk data-geen-vertrouwensblok>
       <Hero
-        compact
+        uitgelijnd
         kop="Slim en comfortabel laden bij je thuis"
         subregel="Laad je elektrische auto eenvoudig op je eigen oprit. Met een slimme laadoplossing heb je altijd een laadpunt binnen handbereik en bepaal je zelf wanneer je auto wordt opgeladen."
         knoptekst="Gratis advies aanvragen"
         knoplink="/contact"
+        foto="/zonnepanelen-bedrijfsdak.jpg"
+        alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"
       />
-
-      {/* Foto: /zonnepanelen-woningen.jpg. Er is geen aparte laadpaalfoto in /public. */}
-      <div className="relative aspect-[4/3] w-full md:aspect-[21/9]">
-        <Image
-          src="/zonnepanelen-woningen.jpg"
-          alt="Rij nieuwbouwwoningen met zonnepanelen op de dakvlakken"
-          fill
-          loading="lazy"
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
 
       <Rijenlijst
         eyebrow="LAADPAAL"
@@ -155,25 +139,7 @@ export default function LaadpaalPage() {
         stappen={stappen}
       />
 
-      <PaginaStatement
-        headingId="laadpaal-app"
-        eyebrow="APP"
-        tekst="Via de app beheer je je laadpaal vanaf je telefoon."
-      >
-        <ul className="mt-12 grid list-none grid-cols-1 gap-8 md:grid-cols-3 md:gap-10">
-          {appPunten.map((punt) => (
-            <li
-              key={punt}
-              className="max-w-[28ch] text-[1.0625rem] leading-[1.6] font-semibold text-navy"
-            >
-              {punt}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-10 max-w-[46ch] text-[1.0625rem] leading-[1.6] text-body-donker">
-          Meldingen houden je op de hoogte van actieve en afgeronde sessies.
-        </p>
-      </PaginaStatement>
+      <LaadpaalApp />
 
       <ShowroomAfspraak />
 

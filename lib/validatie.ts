@@ -176,6 +176,7 @@ export const partnerAanmeldingSchema = z.object({
     .number({ error: "Vul in hoeveel leden je club heeft." })
     .int("Vul het aantal leden in als een heel getal.")
     .positive("Vul een aantal groter dan nul in."),
+  opmerking: z.string().trim(),
 });
 
 export type PartnerAanmelding = z.infer<typeof partnerAanmeldingSchema>;

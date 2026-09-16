@@ -123,10 +123,6 @@ export function ReferralFormulier() {
           <div className="mt-4 space-y-1 text-[0.875rem] leading-[1.6] text-white/70">
             <p>Je ontvangt het bedrag na installatie, niet bij aanmelding.</p>
             <p>De persoon die je aandraagt mag nog niet bij ons bekend zijn.</p>
-            {/* TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn? */}
-            <p>
-              TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn?
-            </p>
           </div>
         </>
       }

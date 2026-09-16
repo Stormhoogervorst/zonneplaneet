@@ -20,6 +20,23 @@ import { verstuurViaWeb3Forms } from "@/lib/web3forms";
 
 const VERZENDFOUT = "Verzenden is mislukt. Probeer het later opnieuw.";
 
+/** Lege strings en TODO-placeholders mogen nooit als naschrift in beeld. */
+function zichtbaarNaschrift(naschrift: ReactNode | undefined): ReactNode | null {
+  if (naschrift == null || naschrift === false) {
+    return null;
+  }
+
+  if (typeof naschrift === "string") {
+    const tekst = naschrift.trim();
+    if (tekst === "" || /^TODO\b/i.test(tekst)) {
+      return null;
+    }
+    return tekst;
+  }
+
+  return naschrift;
+}
+
 const web3formsOnderweg = new Set<string>();
 const web3formsAfgerond = new Set<string>();
 
@@ -237,6 +254,7 @@ export function ContactFormulier({
   const toonBevestiging = state.success || web3Gelukt;
   const bezig = pending || web3Bezig;
   const foutmelding = web3Fout || state.message;
+  const naschriftInhoud = zichtbaarNaschrift(naschrift);
 
   useEffect(() => {
     if (!state.magVerzenden || !state.leadId || web3Gelukt) {
@@ -600,9 +618,9 @@ export function ContactFormulier({
                 {bijKnop}
               </div>
 
-              {naschrift ? (
+              {naschriftInhoud ? (
                 <div className={`mt-6 text-sm ${stijl.naschrift}`}>
-                  {naschrift}
+                  {naschriftInhoud}
                 </div>
               ) : null}
             </form>

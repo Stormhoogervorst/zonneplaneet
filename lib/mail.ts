@@ -39,6 +39,7 @@ export async function stuurPartnerAanmelding(lead: PartnerLead): Promise<void> {
       `E-mail: ${lead.email}`,
       `Telefoon: ${lead.telefoon}`,
       `Aantal leden: ${lead.ledenaantal}`,
+      ...(lead.opmerking ? [`Opmerking: ${lead.opmerking}`] : []),
       `Lead-id: ${lead.id}`,
     ].join("\n"),
   });

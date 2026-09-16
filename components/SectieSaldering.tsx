@@ -105,10 +105,8 @@ const salderingsRijen = [
   {
     titel: "Terugverdienen",
     icoon: <EuroMuntIcoon />,
-    /* TODO: Maximaal leenbedrag van de Energiebespaarlening bij het Warmtefonds
-       verifiëren; de bronnen lopen uiteen. Tot die tijd geen maximumbedrag noemen. */
     beschrijving:
-      "Verduurzamen hoef je niet uit eigen zak te betalen. Via de Energiebespaarlening van het Nationaal Warmtefonds leen je tegen 0% rente bij een gezamenlijk verzamelinkomen tot €60.000. Daarboven gold in 2026 een rente tussen circa 3,7% en 4,3%. Wat het in jouw situatie kost, hangt af van je inkomen, het leenbedrag en de looptijd.",
+      "Via de Energiebespaarlening van het Nationaal Warmtefonds leen je tussen €1.000 en €29.000 tegen 0% rente bij een gezamenlijk verzamelinkomen tot €60.000. Daarboven gold in 2026 een rente tussen circa 3,7% en 4,3%. Wat het in jouw situatie kost, hangt af van je inkomen, het leenbedrag en de looptijd.",
   },
 ];
 

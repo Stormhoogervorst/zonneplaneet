@@ -18,6 +18,17 @@ type HeroCompact = HeroGedeeld & {
   alt?: never;
   foto?: never;
   overlayKlasse?: never;
+  uitgelijnd?: never;
+};
+
+type HeroUitgelijnd = Omit<HeroGedeeld, "logo"> & {
+  alt: string;
+  compact?: never;
+  foto: StaticImageData | string;
+  logo?: never;
+  overlayKlasse?: never;
+  /** Tweekoloms hero: kop links, tekst en knop rechts, foto eronder. */
+  uitgelijnd: true;
 };
 
 type HeroVol = HeroGedeeld & {
@@ -25,11 +36,84 @@ type HeroVol = HeroGedeeld & {
   compact?: false;
   foto: StaticImageData | string;
   overlayKlasse?: string;
+  uitgelijnd?: never;
 };
 
-type HeroProps = HeroCompact | HeroVol;
+type HeroProps = HeroCompact | HeroUitgelijnd | HeroVol;
+
+function UitgelijndeHero({
+  alt,
+  foto,
+  knoplink,
+  knoptekst,
+  kop,
+  subregel,
+}: HeroUitgelijnd) {
+  return (
+    <section aria-labelledby="hero-titel">
+      <div className="bg-salderingsvlak">
+        <HeaderBalk ondergrond="licht" />
+        <div className="mx-auto max-w-[1440px] px-8 pt-24 pb-14 md:flex md:items-end md:justify-between md:gap-16 md:px-16 md:pt-32 md:pb-20">
+          <div className="min-w-0 md:w-[52%] md:shrink-0">
+            <h1
+              id="hero-titel"
+              className="text-[clamp(2rem,5vw,4.25rem)] leading-[1.05] font-normal tracking-[-0.02em] text-navy"
+            >
+              {kop}
+            </h1>
+          </div>
+
+          <div className="mt-8 min-w-0 md:mt-0 md:w-[38%]">
+            <p className="text-[1.0625rem] leading-[1.6] text-body-donker">
+              {subregel}
+            </p>
+
+            {/* Knoprij: de oranje cirkel staat los naast de pil, niet erin */}
+            <div className="mt-8 flex items-center justify-start gap-2 md:gap-3">
+              <Link
+                href={knoplink}
+                className="flex h-13 items-center rounded-full bg-oranje px-6 text-xl font-semibold text-navy md:h-14 md:px-8"
+              >
+                {knoptekst}
+              </Link>
+              <span
+                aria-hidden="true"
+                className="flex size-12 shrink-0 items-center justify-center rounded-full bg-oranje text-navy md:size-14"
+              >
+                <svg viewBox="0 0 24 24" fill="none" className="size-5">
+                  <path
+                    d="M7 17 17 7m0 0H9m8 0v8"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="relative aspect-[4/3] w-full md:aspect-[21/9]">
+        <Image
+          src={foto}
+          alt={alt}
+          fill
+          preload
+          sizes="100vw"
+          className="object-cover"
+        />
+      </div>
+    </section>
+  );
+}
 
 export function Hero(props: HeroProps) {
+  if (props.uitgelijnd) {
+    return <UitgelijndeHero {...props} />;
+  }
+
   const { knoplink, knoptekst, kop, logo, subregel } = props;
   const compact = props.compact === true;
 

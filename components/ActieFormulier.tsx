@@ -66,7 +66,6 @@ export function ActieFormulier({ actie }: ActieFormulierProps) {
       beginState={{ success: false }}
       knopLabel="Meld me aan"
       knopBezigLabel="Aanmelden…"
-      naschrift="TODO"
       bevestiging={{
         titel: "Aanmelding ontvangen",
         tekst: "We hebben je gegevens ontvangen.",

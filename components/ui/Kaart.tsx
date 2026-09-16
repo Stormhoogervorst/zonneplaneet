@@ -5,8 +5,13 @@ type KaartProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 export function Kaart({ children, className = "", ...props }: KaartProps) {
+  const heeftAchtergrond = /(^|\s)bg-/.test(className);
+
   return (
-    <div className={`rounded-3xl bg-vlak p-6 md:p-8 ${className}`} {...props}>
+    <div
+      className={`rounded-3xl p-6 md:p-8 ${heeftAchtergrond ? "" : "bg-vlak"} ${className}`}
+      {...props}
+    >
       {children}
     </div>
   );

@@ -2,6 +2,7 @@ import { Accordeon, Tag } from "@/components/ui";
 
 export type FaqVraag = {
   antwoord: string;
+  standaardOpen?: boolean;
   vraag: string;
 };
 
@@ -14,14 +15,18 @@ type FaqSectieProps = {
 /**
  * Smaller container dan de overige paginasecties: een FAQ leest slecht over
  * volle breedte. Kopblok gecentreerd, accordeon als rijen met haarlijnen.
- * Alle items staan dicht bij het laden.
+ * Items staan dicht bij het laden, tenzij `standaardOpen` is gezet.
+ * JSON-LD neemt alleen vragen met een antwoord op.
  */
 export function FaqSectie({ eyebrow, headingId, vragen }: FaqSectieProps) {
+  const vragenMetAntwoord = vragen.filter(
+    (item) => item.antwoord.trim() !== "",
+  );
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     inLanguage: "nl-NL",
-    mainEntity: vragen.map(({ vraag, antwoord }) => ({
+    mainEntity: vragenMetAntwoord.map(({ vraag, antwoord }) => ({
       "@type": "Question",
       name: vraag,
       acceptedAnswer: {
@@ -56,7 +61,7 @@ export function FaqSectie({ eyebrow, headingId, vragen }: FaqSectieProps) {
           </h2>
         </div>
 
-        <Accordeon variant="lijnen" items={vragen} />
+        <Accordeon variant="lijnen" items={vragenMetAntwoord} />
       </div>
     </section>
   );

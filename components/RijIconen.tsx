@@ -1,8 +1,9 @@
 type IconProps = { className?: string };
 
 /*
- * Iconen voor de rijenlijsten. Zelfde scherpe, isometrische lijnstijl als de
- * salderingssectie: viewBox 72x72, projectie op 30 graden, streekdikte 1.25.
+ * Isometrische lijniconen voor rijenlijsten en icoontegels. Zelfde scherpe
+ * lijnstijl als de salderingssectie: viewBox 72x72, projectie op 30 graden,
+ * streekdikte 1.25.
  * De vorm erft currentColor, dus de tekstkleur van het vlak bepaalt de kleur.
  * Gebruik: <IconEnvelop className="size-16 text-navy" />
  * Altijd aria-hidden; de rijtitel draagt de betekenis.
@@ -56,6 +57,48 @@ export function IconSlot({ className }: IconProps) {
       <path d="M29 32.4V21a7 7 0 0 1 14 0v11.4" />
       <path d="M32.5 32.4V21a3.5 3.5 0 0 1 7 0v11.4" />
       <path d="M41.5 43.5 46.7 40.5 46.7 46.5 41.5 49.5Z" />
+    </svg>
+  );
+}
+
+/** Telefoon met een laadindicator: staand toestel, scherm en bliksem. */
+export function IconTelefoonLaden({ className }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path d="M24 10 50 25 50 62 24 47Z" />
+      <path d="M24 10 26.6 8.5 52.6 23.5 50 25" />
+      <path d="M52.6 23.5 52.6 60.5 50 62" />
+      <path d="M28 17 46 27.4 46 51.4 28 41Z" />
+      <path d="M41 22 32 35 38 35 31 49" />
+    </svg>
+  );
+}
+
+/** Klok: liggende schijf met wijzers, dezelfde cilinder als de munten. */
+export function IconKlok({ className }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <ellipse cx="36" cy="32" rx="22" ry="11" />
+      <path d="M14 32v8a22 11 0 0 0 44 0v-8" />
+      <path d="M36 32 36 21" />
+      <path d="M36 32 50 38" />
+    </svg>
+  );
+}
+
+/** Staafgrafiek: drie isometrische kolommen van verschillende hoogte. */
+export function IconStaafgrafiek({ className }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path d="M20 32 30 37.8 20 43.6 10 37.8Z" />
+      <path d="M10 37.8v16M20 43.6v16M30 37.8v16" />
+      <path d="M10 53.8 20 59.6 30 53.8" />
+      <path d="M36 20 46 25.8 36 31.6 26 25.8Z" />
+      <path d="M26 25.8v28M36 31.6v28M46 25.8v28" />
+      <path d="M26 53.8 36 59.6 46 53.8" />
+      <path d="M52 12 62 17.8 52 23.6 42 17.8Z" />
+      <path d="M42 17.8v36M52 23.6v36M62 17.8v36" />
+      <path d="M42 53.8 52 59.6 62 53.8" />
     </svg>
   );
 }

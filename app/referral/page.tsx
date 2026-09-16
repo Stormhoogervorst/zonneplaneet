@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 
 export default function ReferralPage() {
   return (
-    <main data-donker-einde data-geen-vertrouwensblok>
+    <main data-geen-vertrouwensblok>
       <ContactKop
         headingId="referral-kop-titel"
         eyebrow="REFERRAL"

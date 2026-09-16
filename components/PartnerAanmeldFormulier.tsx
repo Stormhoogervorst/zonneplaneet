@@ -46,9 +46,6 @@ const velden: FormulierVeld[] = [
     autoComplete: "tel",
     verplicht: true,
   },
-  /* TODO: `opmerking` staat niet in partnerAanmeldingSchema en gaat daardoor
-     niet mee naar de opslag of de mail. Voeg het veld toe aan de validatie, de
-     server action en de mailtemplate, of haal dit veld weg. */
   {
     naam: "opmerking",
     label: "Opmerking (optioneel)",

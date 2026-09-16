@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { FaqSectie } from "@/components/FaqSectie";
 import { Hero } from "@/components/Hero";
 import { KaartenMetGraphics } from "@/components/KaartenMetGraphics";
@@ -90,34 +89,66 @@ const vragen = [
       "Waarom is een thuisbatterij interessant nu de salderingsregeling stopt?",
     antwoord:
       "Vanaf 1 januari 2027 stopt de salderingsregeling. Daardoor wordt het belangrijker om een groter deel van je eigen zonne-energie direct te gebruiken of te bewaren. Met een thuisbatterij sla je overtollige zonnestroom op voor een later moment. Welke voordelen dat oplevert, hangt af van je verbruik, je zonnepanelen en de gekozen capaciteit.",
+    standaardOpen: true,
   },
-  /* TODO: Slaat de batterij mijn stroom op als de zon schijnt? */
-  /* TODO: Is een aparte omvormer nodig? */
-  /* TODO: Hoeveel energie past er in een thuisbatterij? */
+  {
+    vraag: "Slaat de batterij mijn stroom op als de zon schijnt?",
+    antwoord:
+      "De batterij slaat op wat je op dat moment niet zelf verbruikt. Draait de wasmachine terwijl de zon schijnt, dan gaat die stroom eerst naar je huis. Wat overblijft gaat naar de batterij, en pas als die vol is lever je terug aan het net.",
+  },
+  {
+    vraag: "Is een aparte omvormer nodig?",
+    antwoord:
+      "Ja. Een thuisbatterij wordt altijd geleverd met een eigen omvormer, los van de omvormer van je zonnepanelen. Die zet opgeslagen gelijkstroom om naar wisselstroom voor gebruik in huis, en andersom. Het vermogen bepaalt hoe snel de batterij laadt en ontlaadt, doorgaans tussen 4,4 kW en 10 kW.",
+  },
+  {
+    vraag: "Hoeveel energie past er in een thuisbatterij?",
+    antwoord:
+      "Dat verschilt per model. Welke capaciteit bij jou past, hangt af van je verbruik, de opbrengst van je zonnepanelen en hoe je de batterij wilt gebruiken. Een grotere batterij is niet automatisch beter: als je hem nooit leeg krijgt, betaal je voor capaciteit die je niet benut. In het adviesgesprek rekenen we dit voor jouw situatie uit.",
+  },
+  {
+    vraag: "Heb ik zonnepanelen nodig voor een thuisbatterij?",
+    antwoord:
+      "Niet per se. Met zonnepanelen sla je je eigen opgewekte stroom op. Zonder zonnepanelen kan een batterij nog steeds nut hebben bij een dynamisch energiecontract: je laadt dan op momenten dat stroom goedkoper is en gebruikt die energie later. Of dat in jouw geval uitkomt, hangt af van je verbruik en je contract.",
+  },
+  {
+    vraag: "Waar komt de batterij te staan?",
+    antwoord:
+      "Meestal op een praktische plek uit het zicht, zoals de zolder, de garage of de bijkeuken. Vanuit de batterij loopt een kabel naar je meterkast, waar een aparte groep wordt geplaatst. Zo blijft je elektrische installatie veilig en stabiel.",
+  },
+  {
+    vraag: "Is een thuisbatterij veilig?",
+    antwoord:
+      "Onze thuisbatterijen werken met LFP-technologie. Die staat bekend om een lange levensduur, een hoog veiligheidsniveau en goede thermische stabiliteit. De installatie wordt uitgevoerd door gecertificeerde monteurs en na aansluiting gecontroleerd en gebruiksklaar opgeleverd.",
+  },
+  {
+    vraag: "Heb ik bij stroomuitval nog stroom uit mijn batterij?",
+    antwoord:
+      "Niet automatisch. Een standaardinstallatie schakelt bij een storing uit, omdat er geen stroom het net op mag gaan terwijl monteurs eraan werken. Wil je bij stroomuitval wél stroom in huis houden, dan is daar een aparte voorziening voor nodig. Vraag ernaar in het adviesgesprek.",
+  },
+  {
+    vraag: "Kan ik een thuisbatterij financieren?",
+    antwoord:
+      "Ja. Via de Energiebespaarlening van het Nationaal Warmtefonds kun je voor een thuisbatterij maximaal €8.500 lenen. Bij een gezamenlijk verzamelinkomen tot €60.000 is de rente 0%. Actuele voorwaarden staan op warmtefonds.nl.",
+  },
+  /* TODO: "Hoe lang gaat een thuisbatterij mee?" — tekst aanleveren, inclusief
+     de garantietermijn en het aantal laadcycli. */
+  /* TODO: "Wat kost een thuisbatterij?" — tekst aanleveren. Geen
+     terugverdientijd, besparingsbedragen of rendementsclaims. */
 ];
 
 export default function ThuisbatterijPage() {
   return (
-    <main data-hero-balk>
+    <main data-hero-balk data-geen-vertrouwensblok>
       <Hero
-        compact
+        uitgelijnd
         kop="Meer grip op je eigen energie"
         subregel="Met een thuisbatterij bewaar je energie om deze op een ander moment in huis te gebruiken. Zo benut je meer van je eigen opgewekte stroom en stem je je energiegebruik beter af op jouw huishouden."
         knoptekst="Gratis advies aanvragen"
         knoplink="/contact"
+        foto="/thuisbatterij-installatie.jpg"
+        alt="Zonnepanelen en thuisbatterijen gemonteerd tegen een lichte wand"
       />
-
-      {/* Foto: /thuisbatterij-installatie.jpg */}
-      <div className="relative aspect-[4/3] w-full md:aspect-[21/9]">
-        <Image
-          src="/thuisbatterij-installatie.jpg"
-          alt="Zonnepanelen en thuisbatterijen gemonteerd tegen een lichte wand"
-          fill
-          loading="lazy"
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
 
       <Rijenlijst
         eyebrow="THUISBATTERIJ"

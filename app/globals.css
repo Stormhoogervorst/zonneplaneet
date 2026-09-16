@@ -90,20 +90,9 @@
 }
 
 /* Pagina's met `data-installateur` tonen `SectieInstallateur` zelf. Het
-   vertrouwensblok in de footer zou Zonneplaneet daar dubbel noemen, en zo'n
-   pagina eindigt in een vol vlak: de footer sluit er direct op aan. */
+   vertrouwensblok in de footer zou Zonneplaneet daar dubbel noemen. */
 body:has(main[data-installateur]) .site-footer-trust {
   display: none;
-}
-
-body:has(main[data-installateur]) .site-footer {
-  margin-top: 0;
-}
-
-/* Een pagina die zelf in een donker vlak eindigt, sluit direct op de footer
-   aan: de witte marge zou daar een naad tussen twee donkere vlakken worden. */
-body:has(main[data-donker-einde]) .site-footer {
-  margin-top: 0;
 }
 
 /* Pagina's die het vertrouwensblok niet in de footer willen, zonder dat ze

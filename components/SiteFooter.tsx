@@ -4,7 +4,7 @@ import { ZonneplaneetBlok } from "@/components/ZonneplaneetBlok";
 
 export function SiteFooter() {
   return (
-    <footer className="site-footer mt-12 overflow-hidden bg-navy text-white">
+    <footer className="site-footer overflow-hidden bg-navy text-white">
       <div className="site-footer-trust">
         <ZonneplaneetBlok headingId="zonneplaneet-vertrouwen-footer" />
       </div>

@@ -13,7 +13,6 @@ import {
   logLeadVerzonden,
 } from "@/lib/leads";
 import { stuurActieAanmelding, stuurPartnerAanmelding } from "@/lib/mail";
-import { magAanmelden } from "@/lib/rate-limit";
 import {
   aanmeldingSchema,
   actieAanmeldingSchema,
@@ -41,14 +40,6 @@ export async function meldAan(
     return {
       success: true,
       clubcode: typeof clubcode === "string" ? clubcode : undefined,
-    };
-  }
-
-  if (!(await magAanmelden("lidaanmelding"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak geprobeerd je aan te melden. Wacht even en probeer het later opnieuw.",
     };
   }
 
@@ -122,14 +113,6 @@ export async function meldLidAan(
     return { success: true };
   }
 
-  if (!(await magAanmelden("lidaanmelding"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak geprobeerd je aan te melden. Wacht even en probeer het later opnieuw.",
-    };
-  }
-
   const resultaat = ledenAanmeldingSchema.safeParse({
     voornaam: formData.get("voornaam"),
     achternaam: formData.get("achternaam"),
@@ -190,14 +173,6 @@ export async function meldClubAan(
     return { success: true };
   }
 
-  if (!(await magAanmelden("partneraanmelding"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak geprobeerd je club aan te melden. Wacht even en probeer het later opnieuw.",
-    };
-  }
-
   const resultaat = partnerAanmeldingSchema.safeParse({
     clubnaam: formData.get("clubnaam"),
     plaats: formData.get("plaats"),
@@ -205,6 +180,7 @@ export async function meldClubAan(
     email: formData.get("email"),
     telefoon: formData.get("telefoon"),
     ledenaantal: formData.get("ledenaantal"),
+    opmerking: formData.get("opmerking") ?? "",
   });
 
   if (!resultaat.success) {
@@ -258,14 +234,6 @@ export async function stuurContact(
   const website = formData.get("website");
   if (typeof website === "string" && website.trim() !== "") {
     return { success: true };
-  }
-
-  if (!(await magAanmelden("contactbericht"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak een bericht verstuurd. Wacht even en probeer het later opnieuw.",
-    };
   }
 
   const resultaat = contactSchema.safeParse({
@@ -322,14 +290,6 @@ export async function meldActieAan(
   const website = formData.get("website");
   if (typeof website === "string" && website.trim() !== "") {
     return { success: true };
-  }
-
-  if (!(await magAanmelden("actieaanmelding"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak geprobeerd je aan te melden. Wacht even en probeer het later opnieuw.",
-    };
   }
 
   const resultaat = actieAanmeldingSchema.safeParse({
@@ -406,14 +366,6 @@ export async function meldReferralAan(
     return { success: true };
   }
 
-  if (!(await magAanmelden("referral"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak geprobeerd iemand aan te dragen. Wacht even en probeer het later opnieuw.",
-    };
-  }
-
   const resultaat = referralSchema.safeParse({
     aandragerNaam: formData.get("aandragerNaam"),
     aandragerEmail: formData.get("aandragerEmail"),
@@ -475,14 +427,6 @@ export async function planShowroomAfspraak(
   const website = formData.get("website");
   if (typeof website === "string" && website.trim() !== "") {
     return { success: true };
-  }
-
-  if (!(await magAanmelden("showroomafspraak"))) {
-    return {
-      success: false,
-      message:
-        "Je hebt te vaak een afspraak aangevraagd. Wacht even en probeer het later opnieuw.",
-    };
   }
 
   const resultaat = showroomAfspraakSchema.safeParse({

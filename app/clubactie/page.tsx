@@ -19,7 +19,13 @@ export default function ClubactiePage() {
   return (
     <main data-hero-balk data-installateur>
       <Hero
-        kop="Ledenvoordeel voor zonne-energie"
+        kop={
+          <>
+            Ledenvoordeel
+            <br />
+            voor zonne-energie
+          </>
+        }
         subregel="Voor leden van sportverenigingen."
         knoptekst="Bekijk de opties"
         knoplink="#kies-onderdeel"

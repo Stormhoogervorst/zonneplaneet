@@ -74,7 +74,7 @@ const velden: FormulierVeld[] = [
 
 export default function ContactPage() {
   return (
-    <main data-donker-einde data-geen-vertrouwensblok>
+    <main data-geen-vertrouwensblok>
       <ContactKop
         headingId="contact-kop-titel"
         eyebrow="NEEM CONTACT OP"
