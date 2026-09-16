@@ -54,7 +54,6 @@ export default function OverZonneplaneetPage() {
       <Hero
         uitgelijnd
         kop="Over Zonneplaneet"
-        slogan="Samen naar een duurzaam huis"
         subregel="Zonneplaneet helpt huishoudens en bedrijven bij het maken van praktische keuzes voor hun energiegebruik. Met zonnepanelen, thuisbatterijen en andere energieoplossingen kijken we naar wat past bij de locatie, het verbruik en de wensen van de klant."
         foto="/zonnepanelen-bedrijfsdak.jpg"
         alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"

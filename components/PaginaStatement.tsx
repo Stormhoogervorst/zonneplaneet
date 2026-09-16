@@ -5,6 +5,7 @@ type PaginaStatementProps = {
   headingId: string;
   tekst: string;
   children?: ReactNode;
+  className?: string;
   eyebrow?: string;
   knopHref?: ComponentProps<typeof Knop>["href"];
   knopLabel?: string;
@@ -19,6 +20,7 @@ export function PaginaStatement({
   headingId,
   tekst,
   children,
+  className = "py-20 md:py-28",
   eyebrow,
   knopHref,
   knopLabel,
@@ -26,7 +28,7 @@ export function PaginaStatement({
   return (
     <section
       aria-labelledby={headingId}
-      className="bg-salderingsvlak py-20 md:py-28"
+      className={`bg-salderingsvlak ${className}`}
     >
       <div className="mx-auto max-w-[1440px] px-8 md:px-16">
         {eyebrow ? <Tag>{eyebrow}</Tag> : null}

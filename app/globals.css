@@ -68,6 +68,13 @@
   outline-offset: 4px;
 }
 
+/* Op de homepage-actieblokken hoort een navy ring van 2px met 2px offset.
+   Tailwind-utilities staan in een laag en komen niet boven de globale ring. */
+.actie-keuzeblok:focus-visible {
+  outline: 2px solid var(--color-navy);
+  outline-offset: 2px;
+}
+
 /* Bij autofill zet de browser een eigen achtergrond en tekstkleur op een
    invoerveld. De lange transitie houdt die achtergrond weg, zodat het
    ijsblauwe paneel doorloopt, en de navy tekstkleur blijft staan. */

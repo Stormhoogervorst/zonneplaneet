@@ -35,3 +35,44 @@ export function GraphicLaadpaal({ className }: GraphicProps) {
   );
 }
 
+// Liggend blok met twee pijlen heen en weer — omzetting gelijk- en wisselstroom
+export function GraphicOmvormer({ className }: GraphicProps) {
+  return (
+    <svg {...basis} className={className}>
+      <rect
+        x="8"
+        y="32"
+        width="104"
+        height="56"
+        rx="16"
+        fill="#5A7180"
+        opacity="0.45"
+      />
+      <rect x="20" y="40" width="50" height="14" rx="4" fill="#E94E12" />
+      <polygon points="66,34 96,47 66,60" fill="#E94E12" />
+      <rect x="50" y="66" width="50" height="14" rx="4" fill="#5A7180" />
+      <polygon points="54,60 24,73 54,86" fill="#5A7180" />
+    </svg>
+  );
+}
+
+// Staand blok met drie groepen — de bovenste actief
+export function GraphicMeterkast({ className }: GraphicProps) {
+  return (
+    <svg {...basis} className={className}>
+      <rect
+        x="34"
+        y="14"
+        width="52"
+        height="92"
+        rx="14"
+        fill="#5A7180"
+        opacity="0.45"
+      />
+      <rect x="44" y="34" width="32" height="10" rx="3" fill="#E94E12" />
+      <rect x="44" y="55" width="32" height="10" rx="3" fill="#5A7180" />
+      <rect x="44" y="76" width="32" height="10" rx="3" fill="#5A7180" />
+    </svg>
+  );
+}
+

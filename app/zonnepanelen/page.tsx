@@ -128,11 +128,13 @@ export default function ZonnepanelenPage() {
         id="zonnepanelen-voordelen"
         kop="Ook met veranderende regels blijft zonne-energie voordelig."
         rijen={rijen}
+        className="pt-20 pb-8 md:pt-28 md:pb-10"
       />
 
       <PaginaStatement
         headingId="zonnepanelen-techniek"
         eyebrow="TECHNIEK"
+        className="pt-8 pb-20 md:pt-10 md:pb-28"
         tekst="Onze glas-glas zonnepanelen combineren een hoog vermogen met een sterke constructie. Met micro-omvormers werkt ieder paneel afzonderlijk, zodat verschillen in schaduw of ligging minder invloed hebben op de rest van het systeem."
       />
 

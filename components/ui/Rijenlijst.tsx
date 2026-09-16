@@ -25,6 +25,7 @@ type RijenlijstProps = {
   eyebrow: string;
   kop: string;
   rijen: RijenlijstRij[];
+  className?: string;
   /** Optionele inhoud onder de rijen, bijvoorbeeld een knop. */
   children?: ReactNode;
 };
@@ -34,10 +35,11 @@ export function Rijenlijst({
   eyebrow,
   kop,
   rijen,
+  className = "py-20 md:py-28",
   children,
 }: RijenlijstProps) {
   return (
-    <section aria-labelledby={id} className="bg-salderingsvlak py-20 md:py-28">
+    <section aria-labelledby={id} className={`bg-salderingsvlak ${className}`}>
       <div className="mx-auto max-w-[1440px] px-8 md:px-16">
         <div className="mb-20">
           <Tag>{eyebrow}</Tag>

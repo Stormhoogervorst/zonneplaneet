@@ -17,8 +17,6 @@ type HeroInhoud = {
   kop: ReactNode;
   /** Optioneel beeld boven de kop, bijvoorbeeld een clublogo van 64px hoog. */
   logo?: { alt: string; src: string };
-  /** Extra regel onder de h1 in de linkerkolom. */
-  slogan?: string;
   subregel: string;
 };
 
@@ -38,7 +36,6 @@ type HeroVol = HeroInhoud &
     overlayKlasse?: string;
     uitgelijnd?: never;
     logo?: never;
-    slogan?: never;
   };
 
 type HeroProps = HeroUitgelijnd | HeroVol;
@@ -50,7 +47,6 @@ function UitgelijndeHero({
   knoptekst,
   kop,
   logo,
-  slogan,
   subregel,
 }: HeroUitgelijnd) {
   const compact = Boolean(logo);
@@ -88,12 +84,6 @@ function UitgelijndeHero({
             >
               {kop}
             </h1>
-
-            {slogan ? (
-              <p className="mt-4 text-[1.5rem] leading-snug font-normal text-navy">
-                {slogan}
-              </p>
-            ) : null}
           </div>
 
           <div

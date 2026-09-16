@@ -5,7 +5,7 @@ type StatKaartProps = {
 
 export function StatKaart({ getal, label }: StatKaartProps) {
   return (
-    <div className="rounded-3xl bg-keuzekaart p-8">
+    <div className="bg-keuzekaart p-8">
       <p className="text-[clamp(2.25rem,3.5vw,3.5rem)] leading-none font-normal text-navy">
         {getal}
       </p>
