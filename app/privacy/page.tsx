@@ -44,8 +44,9 @@ export default function PrivacyPage() {
           Afspraak inplannen via Cal.com
         </h2>
         <p className="mt-4">
-          Op de contactpagina kun je zelf een gesprek van ongeveer 30 minuten
-          inplannen. De agenda wordt geladen via Cal.com, een externe dienst.
+          Op onder meer de contactpagina, Over Zonneplaneet en de productpagina's
+          kun je zelf een gesprek van ongeveer 30 minuten inplannen. De agenda
+          wordt geladen via Cal.com, een externe dienst.
         </p>
         <p className="mt-4">
           Als je een moment kiest, verwerkt Cal.com de gegevens die je in het
@@ -60,7 +61,7 @@ export default function PrivacyPage() {
            vergelijkbare technieken plaatst. */}
         <p className="mt-4">
           Wil je geen afspraak via Cal.com, gebruik dan het contactformulier op
-          dezelfde pagina.
+          de contactpagina.
         </p>
       </section>
 

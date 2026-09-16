@@ -371,31 +371,6 @@ export const referralSchema = z.object({
 export type ReferralAanmelding = z.infer<typeof referralSchema>;
 export type ReferralVeld = keyof ReferralAanmelding;
 
-export const showroomAfspraakSchema = z.object({
-  naam: z
-    .string({ error: "Vul je naam in." })
-    .trim()
-    .min(2, "Vul je volledige naam in."),
-  telefoon: z
-    .string({ error: "Vul je telefoonnummer in." })
-    .trim()
-    .refine(
-      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
-      "Vul een geldig Nederlands telefoonnummer in.",
-    ),
-  woonplaats: z
-    .string({ error: "Vul je woonplaats in." })
-    .trim()
-    .min(2, "Vul je woonplaats in."),
-  actie: z.literal("showroom", {
-    error:
-      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
-  }),
-});
-
-export type ShowroomAfspraak = z.infer<typeof showroomAfspraakSchema>;
-export type ShowroomAfspraakVeld = keyof ShowroomAfspraak;
-
 export function normaliseerTelefoon(telefoon: string): string {
   let nummer = telefoon.trim().replace(/[()\s.-]/g, "");
 

@@ -18,7 +18,8 @@ en primitives bij volgende ontwerprondes; maak geen lokale varianten opnieuw.
 Voeg geen dependencies toe: geen UI-library, geen icon-library, geen form-library
 en geen animatiebibliotheek. Vraag het als je denkt er een nodig te hebben.
 Goedgekeurde uitzondering: `@calcom/embed-react`, alleen voor de
-showroomboeking op `/contact` (`components/Boekingsmodule.tsx`).
+showroomboeking op `/contact`, `/over-zonneplaneet`, `/zonnepanelen`,
+`/thuisbatterij` en `/laadpaal` (`components/Boekingsmodule.tsx`).
 Gebruik semantische HTML: één h1 per pagina, section met een kop erboven, button voor
 acties en a voor navigatie. Geef elke sectie een herkenbare naam in de code, zodat de
 designronde secties kan vervangen in plaats van pagina's te herschrijven.
@@ -166,7 +167,7 @@ Een mislukte verzending is alleen in de Vercel-logs terug te vinden, met prefix
 [LEAD-NIET-VERZONDEN]. Vraag nooit meer velden uit dan nodig; elk extra veld
 kost conversie.
 Drie publieke keys, per formuliertype:
-- `NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY` — contact en showroomafspraak
+- `NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY` — contact
 - `NEXT_PUBLIC_WEB3FORMS_LEDEN_KEY` — clubactie/leden
 - `NEXT_PUBLIC_WEB3FORMS_REFERRAL_KEY` — referral
 De JSON-body voor Web3Forms komt uit `web3formsBodyUitFormulier` in

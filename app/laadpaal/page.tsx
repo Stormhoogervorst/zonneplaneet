@@ -3,7 +3,7 @@ import { Hero } from "@/components/Hero";
 import { LaadpaalApp } from "@/components/LaadpaalApp";
 import { PaginaStatement } from "@/components/PaginaStatement";
 import { IconMunten, IconPosterQr, IconSlot } from "@/components/RijIconen";
-import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
+import { SectieAfspraak } from "@/components/SectieAfspraak";
 import { Tijdlijn } from "@/components/Tijdlijn";
 import { Rijenlijst, rijenlijstIcoonClasses } from "@/components/ui";
 
@@ -141,7 +141,7 @@ export default function LaadpaalPage() {
 
       <LaadpaalApp />
 
-      <ShowroomAfspraak />
+      <SectieAfspraak headingId="laadpaal-afspraak" />
 
       <PaginaStatement
         headingId="laadpaal-contact"

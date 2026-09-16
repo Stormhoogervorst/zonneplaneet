@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Hero } from "@/components/Hero";
 import { PaginaStatement } from "@/components/PaginaStatement";
 import { Samenwerkingspartners } from "@/components/Samenwerkingspartners";
-import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
+import { SectieAfspraak } from "@/components/SectieAfspraak";
+import { SectieShowroom } from "@/components/SectieShowroom";
 import {
   IconEnvelop,
   IconPosterQr,
@@ -59,11 +60,7 @@ export default function OverZonneplaneetPage() {
         alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"
       />
 
-      <PaginaStatement
-        headingId="over-begeleiding-titel"
-        eyebrow="VAN ADVIES TOT INSTALLATIE"
-        tekst="Bij Zonneplaneet begeleiden we het hele traject. Van het eerste contact en een passend advies tot de installatie en ondersteuning daarna."
-      />
+      <SectieShowroom />
 
       <Rijenlijst
         eyebrow="WAAR WIJ VOOR STAAN"
@@ -74,7 +71,10 @@ export default function OverZonneplaneetPage() {
 
       <Samenwerkingspartners />
 
-      <ShowroomAfspraak />
+      <SectieAfspraak
+        headingId="over-zonneplaneet-afspraak"
+        kop="Kom langs in een van onze showrooms"
+      />
 
       <PaginaStatement
         headingId="over-energie-thuis-titel"

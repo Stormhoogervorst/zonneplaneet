@@ -182,24 +182,24 @@ export function Hero(props: HeroProps) {
         <HeaderBalk ondergrond="donker" />
       </div>
 
-      {/* Gecentreerde inhoud: de pt houdt de kop vrij van de bovenbalk op korte schermen. */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center px-6 pt-[104px] text-center md:px-8">
+      {/* Onder md links uitgelijnd; vanaf md gecentreerd zoals eerder. */}
+      <div className="absolute inset-0 z-10 flex flex-col items-start justify-center px-6 pt-[104px] text-left md:items-center md:px-8 md:text-center">
         <h1
           id="hero-titel"
-          className="mx-auto max-w-[30ch] [overflow-wrap:normal] text-[clamp(2.25rem,6.5vw,5.5rem)] leading-[1.05] font-normal tracking-[-0.02em] hyphens-none [word-break:normal] text-white"
+          className="w-full min-w-0 text-balance text-[clamp(2.5rem,9vw,4.5rem)] leading-[1.0] font-normal tracking-[-0.02em] text-white"
         >
           {kop}
         </h1>
 
-        <p className="mx-auto mt-8 max-w-[46ch] text-[1.125rem] leading-[1.6] text-[rgba(255,255,255,0.9)]">
+        <p className="mt-6 max-w-[34ch] text-left text-[1.125rem] leading-[1.6] text-[rgba(255,255,255,0.9)] md:mx-auto md:mt-8 md:max-w-[46ch] md:text-center">
           {subregel}
         </p>
 
         {/* Knoprij: de oranje cirkel staat los naast de pil, niet erin */}
-        <div className="mt-10 flex items-center justify-center gap-2 md:gap-3">
+        <div className="mt-10 flex items-center justify-start gap-2 md:justify-center md:gap-3">
           <Link
             href={knoplink}
-            className="flex h-13 items-center rounded-full bg-oranje px-6 text-xl font-semibold text-navy md:h-14 md:px-8"
+            className="flex h-13 w-auto items-center rounded-full bg-oranje px-6 text-xl font-semibold text-navy md:h-14 md:px-8"
           >
             {knoptekst}
           </Link>

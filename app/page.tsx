@@ -5,29 +5,21 @@ import { HomepageContact } from "@/components/HomepageContact";
 import { SectieInstallateur } from "@/components/SectieInstallateur";
 import { SectieSaldering } from "@/components/SectieSaldering";
 
-/* TODO: Bevestig de overkoepelende title en description. */
 export const metadata: Metadata = {
   title: {
-    absolute:
-      "Voordeel op zonnepanelen, thuisbatterijen en laadpalen | Zonneplaneet ACTIE",
+    absolute: "Voordeel op duurzame energie | Zonneplaneet ACTIE",
   },
   description:
-    "Via je sportvereniging of via referral. Wij leveren en installeren.",
+    "Zonnepanelen, thuisbatterijen, warmtepompen en laadpalen. Via je sportvereniging of via referral.",
 };
 
 export default function Home() {
   return (
     <main data-hero-balk data-installateur>
-      {/* TODO: Bevestig de overkoepelende hero-kop, subregel, knoptekst, title en description. */}
+      {/* TODO: Bevestig de overkoepelende knoptekst. */}
       <Hero
-        kop={
-          <>
-            Voordeel op zonnepanelen,
-            <br />
-            thuisbatterijen en laadpalen
-          </>
-        }
-        subregel="Via je sportvereniging of via referral. Wij leveren en installeren."
+        kop="Voordeel op duurzame energie"
+        subregel="Zonnepanelen, thuisbatterijen, warmtepompen en laadpalen. Via je sportvereniging of via referral."
         knoptekst="Bekijk de acties"
         knoplink="#acties"
         foto="/zonnepanelen-bedrijfsdak.jpg"

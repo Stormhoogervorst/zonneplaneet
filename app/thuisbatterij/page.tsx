@@ -9,7 +9,7 @@ import {
   GraphicThuisbatterij,
 } from "@/components/ProductGraphics";
 import { IconMunten, IconShowroom, IconSlot } from "@/components/RijIconen";
-import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
+import { SectieAfspraak } from "@/components/SectieAfspraak";
 import { Tijdlijn } from "@/components/Tijdlijn";
 import { Rijenlijst, rijenlijstIcoonClasses } from "@/components/ui";
 
@@ -181,7 +181,7 @@ export default function ThuisbatterijPage() {
         vragen={vragen}
       />
 
-      <ShowroomAfspraak />
+      <SectieAfspraak headingId="thuisbatterij-afspraak" />
 
       <PaginaStatement
         headingId="thuisbatterij-contact"

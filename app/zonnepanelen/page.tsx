@@ -3,7 +3,7 @@ import { FaqSectie } from "@/components/FaqSectie";
 import { Hero } from "@/components/Hero";
 import { PaginaStatement } from "@/components/PaginaStatement";
 import { IconMunten, IconShowroom, IconSlot } from "@/components/RijIconen";
-import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
+import { SectieAfspraak } from "@/components/SectieAfspraak";
 import { Tijdlijn } from "@/components/Tijdlijn";
 import { Rijenlijst, rijenlijstIcoonClasses, StatKaart } from "@/components/ui";
 
@@ -188,7 +188,7 @@ export default function ZonnepanelenPage() {
         vragen={vragen}
       />
 
-      <ShowroomAfspraak />
+      <SectieAfspraak headingId="zonnepanelen-afspraak" />
 
       <PaginaStatement
         headingId="zonnepanelen-contact"

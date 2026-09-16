@@ -8,7 +8,6 @@ import {
   bewaarLedenLead,
   bewaarPartnerLead,
   bewaarReferralLead,
-  bewaarShowroomAfspraak,
   logLeadNietVerzonden,
   logLeadVerzonden,
 } from "@/lib/leads";
@@ -21,7 +20,6 @@ import {
   normaliseerTelefoon,
   partnerAanmeldingSchema,
   referralSchema,
-  showroomAfspraakSchema,
   type AanmeldState,
   type ContactState,
   type FormulierState,
@@ -407,60 +405,6 @@ export async function meldReferralAan(
       success: false,
       message:
         "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
-}
-
-export async function planShowroomAfspraak(
-  prevState: FormulierState,
-  formData: FormData,
-): Promise<FormulierState> {
-  void prevState;
-
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
-    return { success: true };
-  }
-
-  const resultaat = showroomAfspraakSchema.safeParse({
-    naam: formData.get("naam"),
-    telefoon: formData.get("telefoon"),
-    woonplaats: formData.get("woonplaats"),
-    actie: formData.get("actie"),
-  });
-
-  if (!resultaat.success) {
-    return {
-      success: false,
-      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
-      errors: resultaat.error.flatten().fieldErrors,
-    };
-  }
-
-  const aanmelding = {
-    ...resultaat.data,
-    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
-  };
-
-  let lead;
-  try {
-    lead = await bewaarShowroomAfspraak(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Showroomafspraak opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je bericht kon niet worden opgeslagen. Probeer het later opnieuw.",
     };
   }
 

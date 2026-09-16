@@ -8,7 +8,6 @@ import type {
   LedenAanmelding,
   PartnerAanmelding,
   ReferralAanmelding,
-  ShowroomAfspraak,
 } from "@/lib/validatie";
 
 export type LeadStatus =
@@ -44,11 +43,6 @@ export type ActieLead = ActieAanmelding & {
 };
 
 export type ReferralLead = ReferralAanmelding & {
-  id: string;
-  aangemaaktOp: string;
-};
-
-export type ShowroomLead = ShowroomAfspraak & {
   id: string;
   aangemaaktOp: string;
 };
@@ -127,18 +121,6 @@ export async function bewaarReferralLead(
   aanmelding: ReferralAanmelding,
 ): Promise<ReferralLead> {
   const lead: ReferralLead = {
-    ...aanmelding,
-    id: randomUUID(),
-    aangemaaktOp: new Date().toISOString(),
-  };
-
-  return lead;
-}
-
-export async function bewaarShowroomAfspraak(
-  aanmelding: ShowroomAfspraak,
-): Promise<ShowroomLead> {
-  const lead: ShowroomLead = {
     ...aanmelding,
     id: randomUUID(),
     aangemaaktOp: new Date().toISOString(),

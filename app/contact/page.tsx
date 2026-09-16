@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { stuurContact } from "@/app/aanmelden/actions";
-import { Boekingssectie } from "@/components/Boekingssectie";
+import { SectieAfspraak } from "@/components/SectieAfspraak";
 import {
   ContactFormulier,
   type FormulierVeld,
@@ -83,7 +83,7 @@ export default function ContactPage() {
         alt="Rij windmolens langs een dijk met schapen in het gras ervoor"
       />
 
-      <Boekingssectie />
+      <SectieAfspraak headingId="contact-afspraak" />
 
       {/* Foto links, navy paneel met het formulier rechts. */}
       <ContactFormulier
