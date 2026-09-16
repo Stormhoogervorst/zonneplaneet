@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ContactKop } from "@/components/ContactKop";
+import { Hero } from "@/components/Hero";
 import { LedenFaq } from "@/components/LedenFaq";
 import { LedenFormulier } from "@/components/LedenFormulier";
 import { LedenHoeHetWerkt } from "@/components/LedenHoeHetWerkt";
@@ -18,11 +18,13 @@ export const metadata: Metadata = {
 
 export default function LedenPage() {
   return (
-    <main data-geen-vertrouwensblok>
-      <ContactKop
-        headingId="leden-kop-titel"
-        titel="Sponsor je club"
-        alinea={ledenAlinea}
+    <main data-hero-balk data-geen-vertrouwensblok>
+      <Hero
+        uitgelijnd
+        kop="Sponsor je club"
+        subregel={ledenAlinea}
+        foto="/zonnepanelen-woningen.jpg"
+        alt="Rij nieuwbouwwoningen met zonnepanelen op de dakvlakken"
       />
 
       <LedenFormulier />

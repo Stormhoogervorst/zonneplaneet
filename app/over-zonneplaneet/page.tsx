@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
-import { ContactKop } from "@/components/ContactKop";
+import { Hero } from "@/components/Hero";
 import { PaginaStatement } from "@/components/PaginaStatement";
 import { Samenwerkingspartners } from "@/components/Samenwerkingspartners";
 import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
@@ -51,26 +50,15 @@ const rijen = [
 
 export default function OverZonneplaneetPage() {
   return (
-    <main data-geen-vertrouwensblok>
-      <ContactKop
-        headingId="over-zonneplaneet-kop-titel"
-        eyebrow="OVER ONS"
-        titel="Over Zonneplaneet"
+    <main data-hero-balk data-geen-vertrouwensblok>
+      <Hero
+        uitgelijnd
+        kop="Over Zonneplaneet"
         slogan="Samen naar een duurzaam huis"
-        alinea="Zonneplaneet helpt huishoudens en bedrijven bij het maken van praktische keuzes voor hun energiegebruik. Met zonnepanelen, thuisbatterijen en andere energieoplossingen kijken we naar wat past bij de locatie, het verbruik en de wensen van de klant."
+        subregel="Zonneplaneet helpt huishoudens en bedrijven bij het maken van praktische keuzes voor hun energiegebruik. Met zonnepanelen, thuisbatterijen en andere energieoplossingen kijken we naar wat past bij de locatie, het verbruik en de wensen van de klant."
+        foto="/zonnepanelen-bedrijfsdak.jpg"
+        alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"
       />
-
-      {/* Foto: /zonnepanelen-bedrijfsdak.jpg, breed landschap dat op 21/9 leesbaar blijft. */}
-      <div className="relative aspect-[4/3] w-full md:aspect-[21/9]">
-        <Image
-          src="/zonnepanelen-bedrijfsdak.jpg"
-          alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"
-          fill
-          loading="lazy"
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
 
       <PaginaStatement
         headingId="over-begeleiding-titel"

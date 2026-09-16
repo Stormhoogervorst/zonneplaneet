@@ -58,12 +58,14 @@ export default async function ClubPage({ params }: ClubPageProps) {
   return (
     <main data-hero-balk data-installateur>
       <Hero
-        compact
+        uitgelijnd
         logo={{ src: club.logo, alt: `Logo van ${club.naam}` }}
         kop={`Ledenvoordeel voor ${club.naam}`}
         subregel={`In ${club.plaats}. Korting op zonnepanelen en een thuisbatterij.`}
         knoptekst="Meld je aan"
         knoplink="#aanmelden"
+        foto="/zonnepanelen-woningen.jpg"
+        alt="Rij nieuwbouwwoningen met zonnepanelen op de dakvlakken"
       />
 
       <ClubAanbodVlak club={club} />

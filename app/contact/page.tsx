@@ -5,7 +5,7 @@ import {
   ContactFormulier,
   type FormulierVeld,
 } from "@/components/ContactFormulier";
-import { ContactKop } from "@/components/ContactKop";
+import { Hero } from "@/components/Hero";
 import { contactRolLabels, contactRollen } from "@/lib/validatie";
 
 export const metadata: Metadata = {
@@ -74,12 +74,13 @@ const velden: FormulierVeld[] = [
 
 export default function ContactPage() {
   return (
-    <main data-geen-vertrouwensblok>
-      <ContactKop
-        headingId="contact-kop-titel"
-        eyebrow="NEEM CONTACT OP"
-        titel="Contact"
-        alinea="Stel je vraag over de clubactie. Ben je lid van een vereniging, dan helpen we je op weg met je aanmelding. Ben je bestuurslid, dan kijken we samen wat de actie voor je club betekent."
+    <main data-hero-balk data-geen-vertrouwensblok>
+      <Hero
+        uitgelijnd
+        kop="Contact"
+        subregel="Stel je vraag over de clubactie. Ben je lid van een vereniging, dan helpen we je op weg met je aanmelding. Ben je bestuurslid, dan kijken we samen wat de actie voor je club betekent."
+        foto="/windmolens-schapen.webp"
+        alt="Rij windmolens langs een dijk met schapen in het gras ervoor"
       />
 
       <Boekingssectie />

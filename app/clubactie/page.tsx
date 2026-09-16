@@ -19,6 +19,7 @@ export default function ClubactiePage() {
   return (
     <main data-hero-balk data-installateur>
       <Hero
+        uitgelijnd
         kop={
           <>
             Ledenvoordeel

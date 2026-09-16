@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
+import { Hero } from "@/components/Hero";
 import { PartnerAanmeldFormulier } from "@/components/PartnerAanmeldFormulier";
 import { PartnerFaq } from "@/components/PartnerFaq";
-import { PartnerHero } from "@/components/PartnerHero";
 import { PartnerHoeHetLoopt } from "@/components/PartnerHoeHetLoopt";
 import { PartnerStatement } from "@/components/PartnerStatement";
 import { PartnerWatHetKost } from "@/components/PartnerWatHetKost";
@@ -10,6 +10,7 @@ import {
   SectieInstallateur,
   installateurAlineaVoorClubs,
 } from "@/components/SectieInstallateur";
+import { STANDAARD_VERGOEDING } from "@/lib/clubs";
 
 export const metadata: Metadata = {
   title: "Clubactie voor sportverenigingen",
@@ -19,8 +20,14 @@ export const metadata: Metadata = {
 
 export default function PartnerPage() {
   return (
-    <main data-installateur>
-      <PartnerHero />
+    <main data-hero-balk data-installateur>
+      <Hero
+        uitgelijnd
+        kop="Een actie die je clubkas laat meeprofiteren"
+        subregel={`Je vereniging deelt de actie met haar leden. Meer hoeft de club niet te doen. Elke installatie levert de clubkas ${STANDAARD_VERGOEDING} op, zonder kosten en zonder risico.`}
+        foto="/zonnepanelen-bedrijfsdak.jpg"
+        alt="Lange rijen zonnepanelen op het dak van een bedrijfshal"
+      />
 
       <PartnerStatement />
 
