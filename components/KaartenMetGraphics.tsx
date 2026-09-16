@@ -8,9 +8,11 @@ export type GraphicKaart = {
 
 type KaartenMetGraphicsProps = {
   headingId: string;
-  intro: string;
+  intro?: string;
   kaarten: GraphicKaart[];
   titel: string;
+  /** Standaard vierkant vanaf md. Zet uit bij langere kaartteksten. */
+  vierkanteKaarten?: boolean;
 };
 
 /**
@@ -22,6 +24,7 @@ export function KaartenMetGraphics({
   intro,
   kaarten,
   titel,
+  vierkanteKaarten = true,
 }: KaartenMetGraphicsProps) {
   return (
     <section
@@ -38,11 +41,13 @@ export function KaartenMetGraphics({
               {titel}
             </h2>
           </div>
-          <div className="min-w-0 md:w-[38%]">
-            <p className="text-[1.0625rem] leading-[1.6] text-body-donker">
-              {intro}
-            </p>
-          </div>
+          {intro ? (
+            <div className="min-w-0 md:w-[38%]">
+              <p className="text-[1.0625rem] leading-[1.6] text-body-donker">
+                {intro}
+              </p>
+            </div>
+          ) : null}
         </div>
 
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3 md:gap-[2px]">
@@ -50,7 +55,11 @@ export function KaartenMetGraphics({
             ({ titel: kaartTitel, graphic: Graphic, beschrijving }) => (
               <div
                 key={kaartTitel}
-                className="bg-keuzekaart px-10 py-12 md:flex md:aspect-square md:min-h-[420px] md:flex-col md:py-0"
+                className={
+                  vierkanteKaarten
+                    ? "bg-keuzekaart px-10 py-12 md:flex md:aspect-square md:min-h-[420px] md:flex-col md:py-0"
+                    : "bg-keuzekaart px-10 py-12 md:flex md:min-h-[420px] md:flex-col"
+                }
               >
                 <div className="md:flex md:flex-1 md:items-center md:justify-center">
                   <Graphic className="size-24 md:size-32" />

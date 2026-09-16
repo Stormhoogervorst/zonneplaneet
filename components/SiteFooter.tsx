@@ -1,7 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
+import { Woordmerk } from "@/components/Woordmerk";
 import { ZonneplaneetBlok } from "@/components/ZonneplaneetBlok";
-import logoZonneplaneet from "@/public/logo-zonneplaneet-wit.png";
 
 export function SiteFooter() {
   return (
@@ -11,22 +10,13 @@ export function SiteFooter() {
       </div>
 
       <div className="mx-auto grid max-w-5xl gap-12 px-5 py-20 md:grid-cols-[1fr_1.25fr] md:py-28">
-        <Image
-          src={logoZonneplaneet}
-          alt="Zonneplaneet"
-          className="h-12 w-auto"
-        />
+        <Woordmerk ondergrond="donker" klasseHoogte="h-12" alt="Zonneplaneet" />
 
         <nav aria-label="Voettekstnavigatie">
-          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-8 sm:grid-cols-3">
             <li>
               <Link href="/clubactie" className="text-body-l">
                 Clubactie
-              </Link>
-            </li>
-            <li>
-              <Link href="/leden" className="text-body-l">
-                Voor leden
               </Link>
             </li>
             <li>
@@ -70,7 +60,8 @@ export function SiteFooter() {
             y="220"
             className="fill-navy-licht font-sans text-[240px] font-normal tracking-[-0.06em]"
           >
-            Zonneplaneet Actie
+            {"Zonneplaneet "}
+            <tspan className="fill-oranje">ACTIE</tspan>
           </text>
         </svg>
       </div>

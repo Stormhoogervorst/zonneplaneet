@@ -5,13 +5,13 @@ const stappen = [
     nummer: "01",
     titel: "Aanmelden",
     beschrijving:
-      "Het lid meldt zich aan op de clubpagina. Wij nemen binnen twee werkdagen contact op.",
+      "Het lid meldt zich aan op de clubpagina. Wij nemen contact op.",
   },
   {
     nummer: "02",
     titel: "Offerte",
     beschrijving:
-      "We nemen binnen twee werkdagen contact op en zetten de ledenkorting op de offerte.",
+      "We nemen contact op en zetten de ledenkorting op de offerte.",
   },
   {
     nummer: "03",

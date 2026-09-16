@@ -104,7 +104,7 @@ export function LedenFormulier() {
       naschrift="Vrijblijvend. Je zit nergens aan vast tot je een offerte tekent."
       bevestiging={{
         titel: "Aanmelding ontvangen",
-        tekst: "We hebben je aanmelding ontvangen. We nemen binnen twee werkdagen contact op.",
+        tekst: "We hebben je bericht ontvangen. We nemen contact met je op.",
       }}
       foto={{
         src: "/zonnepanelen-woningen.jpg",

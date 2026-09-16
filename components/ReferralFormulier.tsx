@@ -23,9 +23,10 @@ const aandragerVelden: FormulierVeld[] = [
   },
   {
     naam: "aandragerTelefoon",
-    label: "Telefoonnummer (optioneel)",
+    label: "Telefoonnummer",
     soort: "telefoon",
     autoComplete: "tel",
+    verplicht: true,
   },
 ];
 
@@ -121,9 +122,7 @@ export function ReferralFormulier() {
           </p>
           <div className="mt-4 space-y-1 text-[0.875rem] leading-[1.6] text-white/70">
             <p>Je ontvangt het bedrag na installatie, niet bij aanmelding.</p>
-            <p>
-              De persoon die je aandraagt mag nog niet bij ons bekend zijn.
-            </p>
+            <p>De persoon die je aandraagt mag nog niet bij ons bekend zijn.</p>
             {/* TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn? */}
             <p>
               TODO: hoe wordt het bedrag uitbetaald, en binnen welke termijn?
@@ -133,8 +132,7 @@ export function ReferralFormulier() {
       }
       bevestiging={{
         titel: "Aanmelding ontvangen",
-        tekst:
-          "We hebben je aanmelding ontvangen. We nemen binnen twee werkdagen contact op met degene die je hebt aangedragen.",
+        tekst: "We hebben je bericht ontvangen. We nemen contact met je op.",
       }}
       foto={{
         src: "/windmolens-schapen.webp",

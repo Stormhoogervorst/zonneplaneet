@@ -4,7 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { Knop } from "@/components/ui";
-import { type NavigatieLink } from "@/lib/navigatie";
+import {
+  heeftKinderen,
+  isNavigatieHuidig,
+  type NavigatieItem,
+  type NavigatieLink,
+} from "@/lib/navigatie";
 
 const FOCUS_SELECTOR =
   'a[href], button:not([disabled]), summary, [tabindex]:not([tabindex="-1"])';
@@ -68,9 +73,28 @@ function KruisIcoon() {
   );
 }
 
+function Chevron() {
+  return (
+    <svg
+      viewBox="0 0 12 12"
+      aria-hidden="true"
+      className="size-4 shrink-0 transition-transform duration-200 group-open/sub:rotate-180"
+      fill="none"
+    >
+      <path
+        d="M2 4.25 6 8.25 10 4.25"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </svg>
+  );
+}
+
 function MobielLink({ href, label }: NavigatieLink) {
   const pathname = usePathname();
-  const huidig = pathname === href;
+  const huidig = isNavigatieHuidig(pathname, href);
 
   return (
     <Link
@@ -87,14 +111,37 @@ function MobielLink({ href, label }: NavigatieLink) {
   );
 }
 
+function MobielItemMetKinderen({
+  item,
+}: {
+  item: NavigatieItem & { kinderen: NavigatieLink[] };
+}) {
+  return (
+    <details className="group/sub">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[1.5rem] leading-tight font-normal [&::-webkit-details-marker]:hidden [&::marker]:hidden">
+        {item.label}
+        <Chevron />
+      </summary>
+      <ul className="mt-4 flex flex-col gap-4 pl-4">
+        {item.kinderen.map((kind) => (
+          <li key={kind.href}>
+            <MobielLink href={kind.href} label={kind.label} />
+          </li>
+        ))}
+      </ul>
+    </details>
+  );
+}
+
 export function MobielMenu({
   contact,
   items,
 }: {
   contact: NavigatieLink;
-  items: NavigatieLink[];
+  items: NavigatieItem[];
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const pathname = usePathname();
@@ -130,6 +177,14 @@ export function MobielMenu({
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
+        const nested =
+          overlayRef.current?.querySelector<HTMLDetailsElement>(
+            "details[open]",
+          );
+        if (nested) {
+          nested.open = false;
+          return;
+        }
         sluit();
         return;
       }
@@ -170,6 +225,7 @@ export function MobielMenu({
         <KruisIcoon />
       </summary>
       <div
+        ref={overlayRef}
         id={menuId}
         role="dialog"
         aria-modal={open ? true : undefined}
@@ -180,7 +236,11 @@ export function MobielMenu({
           <ul className="flex flex-col gap-6">
             {items.map((item) => (
               <li key={item.href}>
-                <MobielLink href={item.href} label={item.label} />
+                {heeftKinderen(item) ? (
+                  <MobielItemMetKinderen item={item} />
+                ) : (
+                  <MobielLink href={item.href} label={item.label} />
+                )}
               </li>
             ))}
             <li className="pt-4">

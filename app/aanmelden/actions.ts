@@ -8,13 +8,11 @@ import {
   bewaarLedenLead,
   bewaarPartnerLead,
   bewaarReferralLead,
+  bewaarShowroomAfspraak,
   logLeadNietVerzonden,
   logLeadVerzonden,
 } from "@/lib/leads";
-import {
-  stuurActieAanmelding,
-  stuurPartnerAanmelding,
-} from "@/lib/mail";
+import { stuurActieAanmelding, stuurPartnerAanmelding } from "@/lib/mail";
 import { magAanmelden } from "@/lib/rate-limit";
 import {
   aanmeldingSchema,
@@ -24,6 +22,7 @@ import {
   normaliseerTelefoon,
   partnerAanmeldingSchema,
   referralSchema,
+  showroomAfspraakSchema,
   type AanmeldState,
   type ContactState,
   type FormulierState,
@@ -273,7 +272,7 @@ export async function stuurContact(
     voornaam: formData.get("voornaam"),
     achternaam: formData.get("achternaam"),
     email: formData.get("email"),
-    telefoon: formData.get("telefoon") ?? "",
+    telefoon: formData.get("telefoon"),
     rol: formData.get("rol"),
     bericht: formData.get("bericht"),
   });
@@ -288,10 +287,7 @@ export async function stuurContact(
 
   const bericht = {
     ...resultaat.data,
-    telefoon:
-      resultaat.data.telefoon === ""
-        ? ""
-        : normaliseerTelefoon(resultaat.data.telefoon),
+    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
   };
 
   let lead;
@@ -421,7 +417,7 @@ export async function meldReferralAan(
   const resultaat = referralSchema.safeParse({
     aandragerNaam: formData.get("aandragerNaam"),
     aandragerEmail: formData.get("aandragerEmail"),
-    aandragerTelefoon: formData.get("aandragerTelefoon") ?? "",
+    aandragerTelefoon: formData.get("aandragerTelefoon"),
     voornaam: formData.get("voornaam"),
     achternaam: formData.get("achternaam"),
     email: formData.get("email"),
@@ -443,10 +439,7 @@ export async function meldReferralAan(
 
   const aanmelding = {
     ...resultaat.data,
-    aandragerTelefoon:
-      resultaat.data.aandragerTelefoon === ""
-        ? ""
-        : normaliseerTelefoon(resultaat.data.aandragerTelefoon),
+    aandragerTelefoon: normaliseerTelefoon(resultaat.data.aandragerTelefoon),
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
   };
 
@@ -462,6 +455,68 @@ export async function meldReferralAan(
       success: false,
       message:
         "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
+    };
+  }
+
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
+}
+
+export async function planShowroomAfspraak(
+  prevState: FormulierState,
+  formData: FormData,
+): Promise<FormulierState> {
+  void prevState;
+
+  const website = formData.get("website");
+  if (typeof website === "string" && website.trim() !== "") {
+    return { success: true };
+  }
+
+  if (!(await magAanmelden("showroomafspraak"))) {
+    return {
+      success: false,
+      message:
+        "Je hebt te vaak een afspraak aangevraagd. Wacht even en probeer het later opnieuw.",
+    };
+  }
+
+  const resultaat = showroomAfspraakSchema.safeParse({
+    naam: formData.get("naam"),
+    telefoon: formData.get("telefoon"),
+    woonplaats: formData.get("woonplaats"),
+    actie: formData.get("actie"),
+  });
+
+  if (!resultaat.success) {
+    return {
+      success: false,
+      message: "Controleer de gemarkeerde velden en probeer het opnieuw.",
+      errors: resultaat.error.flatten().fieldErrors,
+    };
+  }
+
+  const aanmelding = {
+    ...resultaat.data,
+    telefoon: normaliseerTelefoon(resultaat.data.telefoon),
+  };
+
+  let lead;
+  try {
+    lead = await bewaarShowroomAfspraak(aanmelding);
+  } catch (fout) {
+    console.error(
+      "Showroomafspraak opslaan mislukt; er is niets naar Web3Forms gestuurd.",
+      fout,
+    );
+    return {
+      success: false,
+      message:
+        "Je bericht kon niet worden opgeslagen. Probeer het later opnieuw.",
     };
   }
 

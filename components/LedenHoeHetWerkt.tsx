@@ -4,14 +4,12 @@ const stappen = [
   {
     nummer: "01",
     titel: "Aanmelden",
-    beschrijving:
-      "Je vult het formulier in. We nemen binnen twee werkdagen contact op.",
+    beschrijving: "Je vult het formulier in. We nemen contact op.",
   },
   {
     nummer: "02",
     titel: "Contact",
-    beschrijving:
-      "We bellen je binnen twee werkdagen om je situatie door te nemen.",
+    beschrijving: "We bellen je om je situatie door te nemen.",
   },
   {
     nummer: "03",

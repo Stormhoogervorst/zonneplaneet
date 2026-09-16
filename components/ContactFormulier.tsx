@@ -9,7 +9,10 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
-import { logWeb3FormsGelukt, logWeb3FormsMislukt } from "@/app/aanmelden/actions";
+import {
+  logWeb3FormsGelukt,
+  logWeb3FormsMislukt,
+} from "@/app/aanmelden/actions";
 import { Knop } from "@/components/ui";
 import { meetPlausibleEvent } from "@/lib/plausible";
 import type { FormulierState } from "@/lib/validatie";
@@ -23,7 +26,7 @@ const web3formsAfgerond = new Set<string>();
 async function verstuurWeb3FormsVanuitFormulier(
   leadId: string,
   lead: unknown,
-  formulier: HTMLFormElement,
+  formulierData: FormData,
   opBezig: (waarde: boolean) => void,
   opGelukt: () => void,
   opFout: (melding: string) => void,
@@ -37,7 +40,6 @@ async function verstuurWeb3FormsVanuitFormulier(
   opFout("");
 
   try {
-    const formulierData = new FormData(formulier);
     const actie = String(formulierData.get("actie") ?? "");
     await verstuurViaWeb3Forms(formulierData, leadId);
     web3formsAfgerond.add(leadId);
@@ -115,7 +117,7 @@ type ContactFormulierProps = {
   beginState: FormulierState;
   knopLabel: string;
   knopBezigLabel: string;
-  naschrift: ReactNode;
+  naschrift?: ReactNode;
   bevestiging: { titel: string; tekst: string };
   foto: { src: string; alt: string };
   plausibleEvent: string;
@@ -224,6 +226,7 @@ export function ContactFormulier({
   const [web3Gelukt, setWeb3Gelukt] = useState(false);
   const [web3Fout, setWeb3Fout] = useState("");
   const formulierRef = useRef<HTMLFormElement>(null);
+  const snapshotRef = useRef<FormData | null>(null);
   const conversieGemeten = useRef(false);
   const stijl = stijlen[paneel];
   const titelId = `${id}-titel`;
@@ -240,15 +243,15 @@ export function ContactFormulier({
       return;
     }
 
-    const formulier = formulierRef.current;
-    if (!formulier) {
+    const snapshot = snapshotRef.current;
+    if (!snapshot) {
       return;
     }
 
     void verstuurWeb3FormsVanuitFormulier(
       state.leadId,
       state.lead,
-      formulier,
+      snapshot,
       setWeb3Bezig,
       () => setWeb3Gelukt(true),
       setWeb3Fout,
@@ -271,6 +274,7 @@ export function ContactFormulier({
   ]);
 
   function bijVerzenden(event: FormEvent<HTMLFormElement>) {
+    snapshotRef.current = new FormData(event.currentTarget);
     if (!state.magVerzenden || !state.leadId || web3Gelukt) {
       return;
     }
@@ -279,7 +283,7 @@ export function ContactFormulier({
     void verstuurWeb3FormsVanuitFormulier(
       state.leadId,
       state.lead,
-      event.currentTarget,
+      snapshotRef.current,
       setWeb3Bezig,
       () => setWeb3Gelukt(true),
       setWeb3Fout,
@@ -395,9 +399,7 @@ export function ContactFormulier({
                                 required={veld.verplicht}
                                 autoComplete="off"
                                 aria-invalid={Boolean(fout)}
-                                aria-describedby={
-                                  beschrijving || undefined
-                                }
+                                aria-describedby={beschrijving || undefined}
                                 className={`mt-1 size-5 shrink-0 accent-oranje ${stijl.veldTekst}`}
                               />
                               <label
@@ -598,7 +600,11 @@ export function ContactFormulier({
                 {bijKnop}
               </div>
 
-              <div className={`mt-6 text-sm ${stijl.naschrift}`}>{naschrift}</div>
+              {naschrift ? (
+                <div className={`mt-6 text-sm ${stijl.naschrift}`}>
+                  {naschrift}
+                </div>
+              ) : null}
             </form>
           )}
         </div>

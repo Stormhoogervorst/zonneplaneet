@@ -2,7 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { ContactKop } from "@/components/ContactKop";
 import { PaginaStatement } from "@/components/PaginaStatement";
-import { IconEnvelop, IconPosterQr, IconSlot } from "@/components/RijIconen";
+import { Samenwerkingspartners } from "@/components/Samenwerkingspartners";
+import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
+import {
+  IconEnvelop,
+  IconPosterQr,
+  IconShowroom,
+  IconSlot,
+} from "@/components/RijIconen";
 import { Rijenlijst, rijenlijstIcoonClasses } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -26,7 +33,13 @@ const rijen = [
     titel: "Gecertificeerde monteurs",
     icoon: <IconSlot className={rijenlijstIcoonClasses} />,
     beschrijving:
-      "De installatie is bij ons in veilige handen. Onze monteurs zijn ervaren vakmensen en volledig gecertificeerd. Zij werken met oog voor kwaliteit, veiligheid en duurzaamheid. Zo ben je verzekerd van een betrouwbare installatie die jarenlang meegaat.",
+      "De installatie is bij ons in veilige handen. Onze monteurs zijn ervaren vakmensen en volledig gecertificeerd. Zij werken met oog voor kwaliteit, veiligheid en duurzaamheid. Zo ben je verzekerd van een betrouwbare installatie die jarenlang meegaat. Levering en installatie doorgaans binnen een maand.",
+  },
+  {
+    titel: "Eigen showrooms",
+    icoon: <IconShowroom className={rijenlijstIcoonClasses} />,
+    beschrijving:
+      "In onze showrooms bekijk je alles met eigen ogen en krijg je het volledig uitgelegd. Zo weet je precies waarvoor je kiest voordat je beslist.",
   },
   {
     titel: "Persoonlijk en overzichtelijk",
@@ -43,6 +56,7 @@ export default function OverZonneplaneetPage() {
         headingId="over-zonneplaneet-kop-titel"
         eyebrow="OVER ONS"
         titel="Over Zonneplaneet"
+        slogan="Samen naar een duurzaam huis"
         alinea="Zonneplaneet helpt huishoudens en bedrijven bij het maken van praktische keuzes voor hun energiegebruik. Met zonnepanelen, thuisbatterijen en andere energieoplossingen kijken we naar wat past bij de locatie, het verbruik en de wensen van de klant."
       />
 
@@ -67,9 +81,13 @@ export default function OverZonneplaneetPage() {
       <Rijenlijst
         eyebrow="WAAR WIJ VOOR STAAN"
         id="waar-wij-voor-staan"
-        kop="Duidelijke communicatie, goede producten en service die verder gaat dan de installatie."
+        kop="Duidelijke communicatie, maatwerk met goede producten en service die verder gaat dan de installatie."
         rijen={rijen}
       />
+
+      <Samenwerkingspartners />
+
+      <ShowroomAfspraak />
 
       <PaginaStatement
         headingId="over-energie-thuis-titel"

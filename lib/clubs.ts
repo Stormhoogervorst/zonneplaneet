@@ -4,6 +4,9 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { GERESERVEERDE_SLUGS } from "@/lib/routes";
 
+/** Vergoeding aan de club per uitgevoerde installatie. */
+export const STANDAARD_VERGOEDING = "€250";
+
 export type Club = {
   naam: string;
   code: string;

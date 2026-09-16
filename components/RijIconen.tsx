@@ -60,6 +60,20 @@ export function IconSlot({ className }: IconProps) {
   );
 }
 
+/** Eigen showrooms: een gebouw met een etalageruit op de voorzijde. */
+export function IconShowroom({ className }: IconProps) {
+  return (
+    <svg {...svgProps} className={className}>
+      <path d="M36 16 54 26.4 36 36.8 18 26.4Z" />
+      <path d="M18 26.4v20M36 36.8v20M54 26.4v20" />
+      <path d="M18 46.4 36 56.8 54 46.4" />
+      <path d="M20.9 30.5 33.1 37.5 33.1 49.1 20.9 42.1Z" />
+      <path d="M27 34v11.6" />
+      <path d="M20.9 35.1 33.1 42.1" />
+    </svg>
+  );
+}
+
 /** Geen kosten, geen risico: een stapel euromunten, zonder ontkennend teken. */
 export function IconMunten({ className }: IconProps) {
   return (

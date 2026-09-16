@@ -1,9 +1,10 @@
-import type { ComponentProps } from "react";
+import type { ComponentProps, ReactNode } from "react";
 import { Knop, Tag } from "@/components/ui";
 
 type PaginaStatementProps = {
   headingId: string;
   tekst: string;
+  children?: ReactNode;
   eyebrow?: string;
   knopHref?: ComponentProps<typeof Knop>["href"];
   knopLabel?: string;
@@ -17,6 +18,7 @@ type PaginaStatementProps = {
 export function PaginaStatement({
   headingId,
   tekst,
+  children,
   eyebrow,
   knopHref,
   knopLabel,
@@ -35,6 +37,8 @@ export function PaginaStatement({
         >
           {tekst}
         </h2>
+
+        {children}
 
         {knopHref && knopLabel ? (
           <Knop href={knopHref} variant="extern" metPijl className="mt-8">

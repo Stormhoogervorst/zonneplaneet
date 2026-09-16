@@ -68,11 +68,9 @@ export function PartnerAanmeldFormulier() {
       beginState={{ success: false }}
       knopLabel="Meld mijn club aan"
       knopBezigLabel="Aanmelden…"
-      naschrift="We nemen binnen twee werkdagen contact op."
       bevestiging={{
         titel: "Aanmelding ontvangen",
-        tekst:
-          "We hebben de gegevens van je club ontvangen. We bellen je binnen twee werkdagen om de vervolgstappen te bespreken.",
+        tekst: "We hebben je bericht ontvangen. We nemen contact met je op.",
       }}
       foto={{
         src: "/zonnepanelen-woningen.jpg",

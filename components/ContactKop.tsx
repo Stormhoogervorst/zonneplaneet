@@ -2,9 +2,11 @@ import { Tag } from "@/components/ui";
 
 type ContactKopProps = {
   alinea: string;
-  eyebrow: string;
+  eyebrow?: string;
   headingId: string;
   titel: string;
+  /** Extra regel direct onder de h1, bijvoorbeeld een slogan. */
+  slogan?: string;
   /** Standaard de grote displaykop; `l` is een trede kleiner, voor langere titels. */
   titelMaat?: "xl" | "l";
 };
@@ -31,6 +33,7 @@ export function ContactKop({
   eyebrow,
   headingId,
   titel,
+  slogan,
   titelMaat = "xl",
 }: ContactKopProps) {
   return (
@@ -39,16 +42,31 @@ export function ContactKop({
       className="-mt-[var(--hoogte-headerbalk)] bg-salderingsvlak pt-[calc(var(--hoogte-headerbalk)+10rem)] pb-20"
     >
       <div className="mx-auto grid max-w-[1440px] grid-cols-1 px-8 md:grid-cols-[45%_42%] md:justify-between md:gap-x-16 md:px-16">
-        <Tag className="font-mono md:col-start-2 md:row-start-1">{eyebrow}</Tag>
+        {eyebrow ? (
+          <Tag className="font-mono md:col-start-2 md:row-start-1">
+            {eyebrow}
+          </Tag>
+        ) : null}
 
-        <h1
-          id={headingId}
-          className={`mt-8 min-w-0 font-normal text-navy md:col-start-1 md:row-span-2 md:row-start-1 md:mt-0 md:self-end ${titelMaatClasses[titelMaat]}`}
+        <div
+          className={`mt-8 min-w-0 md:col-start-1 md:row-start-1 md:mt-0 md:self-end ${eyebrow ? "md:row-span-2" : ""}`}
         >
-          {titel}
-        </h1>
+          <h1
+            id={headingId}
+            className={`font-normal text-navy ${titelMaatClasses[titelMaat]}`}
+          >
+            {titel}
+          </h1>
+          {slogan ? (
+            <p className="mt-4 text-[1.5rem] leading-snug font-normal text-navy">
+              {slogan}
+            </p>
+          ) : null}
+        </div>
 
-        <p className="mt-8 min-w-0 max-w-[44ch] text-[1.0625rem] leading-[1.6] text-body-donker md:col-start-2 md:row-start-2">
+        <p
+          className={`mt-8 min-w-0 max-w-[44ch] text-[1.0625rem] leading-[1.6] text-body-donker md:col-start-2 ${eyebrow ? "md:row-start-2" : "md:row-start-1 md:self-end"}`}
+        >
           {alinea}
         </p>
       </div>

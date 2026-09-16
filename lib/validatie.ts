@@ -21,14 +21,22 @@ export const ledenInteresseLabels: Record<
   "weet-ik-nog-niet": "Weet ik nog niet",
 };
 
-export const vervolgstappen = ["afspraak", "showroom", "informatie"] as const;
+export const vervolgstappen = [
+  "bellen",
+  "showroom",
+  "thuisbezoek",
+  "informatie",
+] as const;
 
-export const vervolgstapLabels: Record<(typeof vervolgstappen)[number], string> =
-  {
-    afspraak: "Maak een afspraak",
-    showroom: "Bezoek de showroom",
-    informatie: "Stuur me eerst informatie",
-  };
+export const vervolgstapLabels: Record<
+  (typeof vervolgstappen)[number],
+  string
+> = {
+  bellen: "Ik wil gebeld worden voor meer informatie",
+  showroom: "Ik wil een afspraak in de showroom",
+  thuisbezoek: "Ik wil een bezoek bij mij thuis",
+  informatie: "Stuur me eerst informatie",
+};
 
 export type Vervolgstap = (typeof vervolgstappen)[number];
 
@@ -198,15 +206,12 @@ export const contactSchema = z.object({
     .string({ error: "Vul je e-mailadres in." })
     .trim()
     .email("Vul een geldig e-mailadres in."),
-  /* Optioneel: we hebben het e-mailadres al om te antwoorden. */
   telefoon: z
-    .string()
+    .string({ error: "Vul je telefoonnummer in." })
     .trim()
     .refine(
-      (telefoon) =>
-        telefoon === "" ||
-        /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
-      "Vul een geldig Nederlands telefoonnummer in, of laat dit veld leeg.",
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
     ),
   rol: z.enum(contactRollen, {
     error:
@@ -316,20 +321,15 @@ export const referralSchema = z.object({
     .string({ error: "Vul je e-mailadres in." })
     .trim()
     .email("Vul een geldig e-mailadres in."),
-  /* Optioneel: we bellen de aangedragene, niet de aandrager. */
   aandragerTelefoon: z
-    .string()
+    .string({ error: "Vul je telefoonnummer in." })
     .trim()
     .refine(
-      (telefoon) =>
-        telefoon === "" ||
-        /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
-      "Vul een geldig Nederlands telefoonnummer in, of laat dit veld leeg.",
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
     ),
   voornaam: naamDeel("Vul de voornaam in van de persoon die je aandraagt."),
-  achternaam: naamDeel(
-    "Vul de achternaam in van de persoon die je aandraagt.",
-  ),
+  achternaam: naamDeel("Vul de achternaam in van de persoon die je aandraagt."),
   email: z
     .string({
       error: "Vul het e-mailadres in van de persoon die je aandraagt.",
@@ -369,6 +369,31 @@ export const referralSchema = z.object({
 
 export type ReferralAanmelding = z.infer<typeof referralSchema>;
 export type ReferralVeld = keyof ReferralAanmelding;
+
+export const showroomAfspraakSchema = z.object({
+  naam: z
+    .string({ error: "Vul je naam in." })
+    .trim()
+    .min(2, "Vul je volledige naam in."),
+  telefoon: z
+    .string({ error: "Vul je telefoonnummer in." })
+    .trim()
+    .refine(
+      (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
+      "Vul een geldig Nederlands telefoonnummer in.",
+    ),
+  woonplaats: z
+    .string({ error: "Vul je woonplaats in." })
+    .trim()
+    .min(2, "Vul je woonplaats in."),
+  actie: z.literal("showroom", {
+    error:
+      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
+  }),
+});
+
+export type ShowroomAfspraak = z.infer<typeof showroomAfspraakSchema>;
+export type ShowroomAfspraakVeld = keyof ShowroomAfspraak;
 
 export function normaliseerTelefoon(telefoon: string): string {
   let nummer = telefoon.trim().replace(/[()\s.-]/g, "");

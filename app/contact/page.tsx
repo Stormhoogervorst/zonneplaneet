@@ -5,6 +5,7 @@ import {
   type FormulierVeld,
 } from "@/components/ContactFormulier";
 import { ContactKop } from "@/components/ContactKop";
+import { ShowroomAfspraak } from "@/components/ShowroomAfspraak";
 import { contactRolLabels, contactRollen } from "@/lib/validatie";
 
 export const metadata: Metadata = {
@@ -43,9 +44,10 @@ const velden: FormulierVeld[] = [
   },
   {
     naam: "telefoon",
-    label: "Telefoonnummer (optioneel)",
+    label: "Telefoonnummer",
     soort: "telefoon",
     autoComplete: "tel",
+    verplicht: true,
   },
   /* Dit veld bepaalt of een bericht naar de clubwerving of naar de
      leden-afhandeling gaat en scheelt daarmee een heen-en-weer. */
@@ -80,8 +82,9 @@ export default function ContactPage() {
         alinea="Stel je vraag over de clubactie. Ben je lid van een vereniging, dan helpen we je op weg met je aanmelding. Ben je bestuurslid, dan kijken we samen wat de actie voor je club betekent."
       />
 
-      {/* Foto links, navy paneel met het formulier rechts. Loopt over de volle
-          breedte en sluit direct aan op het kopblok. */}
+      <ShowroomAfspraak />
+
+      {/* Foto links, navy paneel met het formulier rechts. */}
       <ContactFormulier
         id="contact-formulier"
         titel="Stuur een bericht"
@@ -92,11 +95,9 @@ export default function ContactPage() {
         beginState={{ success: false }}
         knopLabel="Stuur mijn bericht"
         knopBezigLabel="Versturen…"
-        naschrift="We reageren binnen twee werkdagen."
         bevestiging={{
           titel: "Bericht ontvangen",
-          tekst:
-            "We hebben je bericht ontvangen en reageren binnen twee werkdagen.",
+          tekst: "We hebben je bericht ontvangen. We nemen contact met je op.",
         }}
         foto={{
           src: "/windmolens-schapen.webp",

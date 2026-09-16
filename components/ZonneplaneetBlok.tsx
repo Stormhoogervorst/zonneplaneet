@@ -1,6 +1,5 @@
-import Image from "next/image";
 import Link from "next/link";
-import logoZonneplaneet from "@/public/logo-zonneplaneet-wit.png";
+import { Woordmerk } from "@/components/Woordmerk";
 
 type ZonneplaneetBlokProps = {
   className?: string;
@@ -18,11 +17,7 @@ export function ZonneplaneetBlok({
     >
       <div className="mx-auto max-w-5xl">
         {/* Het logo is wit met transparantie en kan dus alleen op een donker vlak */}
-        <Image
-          src={logoZonneplaneet}
-          alt="Zonneplaneet"
-          className="h-8 w-auto"
-        />
+        <Woordmerk ondergrond="donker" klasseHoogte="h-8" alt="Zonneplaneet" />
         <h2 id={headingId} className="mt-4 text-2xl font-semibold">
           Wij leveren en installeren
         </h2>

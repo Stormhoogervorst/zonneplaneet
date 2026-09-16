@@ -1,13 +1,13 @@
 import { Tag } from "@/components/ui";
 
 export type TijdlijnStap = {
-  beschrijving: string;
+  beschrijving?: string;
   nummer: string;
   titel: string;
 };
 
 type TijdlijnProps = {
-  alinea: string;
+  alinea?: string;
   eyebrow: string;
   headingId: string;
   stappen: TijdlijnStap[];
@@ -41,12 +41,22 @@ export function Tijdlijn({
           >
             {titel}
           </h2>
-          <p className="mt-8 max-w-[46ch] text-[1.0625rem] leading-[1.6] text-body-donker">
-            {alinea}
-          </p>
+          {alinea ? (
+            <p className="mt-8 max-w-[46ch] text-[1.0625rem] leading-[1.6] text-body-donker">
+              {alinea}
+            </p>
+          ) : null}
         </div>
 
-        <ol className="grid list-none grid-cols-1 gap-12 md:grid-cols-4 md:items-start md:gap-10">
+        <ol
+          className={`grid list-none grid-cols-1 gap-12 md:items-start md:gap-10 ${
+            stappen.length === 3
+              ? "md:grid-cols-3"
+              : stappen.length === 5
+                ? "md:grid-cols-5"
+                : "md:grid-cols-4"
+          }`}
+        >
           {stappen.map(({ nummer, titel: stapTitel, beschrijving }, index) => (
             <li key={nummer} className="relative">
               <div className="mb-10 flex items-center gap-4">
@@ -73,9 +83,11 @@ export function Tijdlijn({
                 <h3 className="text-[1.75rem] font-normal text-navy">
                   {stapTitel}
                 </h3>
-                <p className="mt-5 text-[0.9375rem] leading-[1.6] text-body-donker">
-                  {beschrijving}
-                </p>
+                {beschrijving ? (
+                  <p className="mt-5 text-[0.9375rem] leading-[1.6] text-body-donker">
+                    {beschrijving}
+                  </p>
+                ) : null}
               </div>
             </li>
           ))}

@@ -10,5 +10,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: new URL("/clubactie", siteUrl).toString() },
     { url: new URL("/leden", siteUrl).toString() },
     { url: new URL("/partner", siteUrl).toString() },
+    { url: new URL("/zonnepanelen", siteUrl).toString() },
+    { url: new URL("/thuisbatterij", siteUrl).toString() },
+    { url: new URL("/laadpaal", siteUrl).toString() },
   ];
 }

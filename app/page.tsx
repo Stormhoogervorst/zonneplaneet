@@ -9,7 +9,7 @@ import { SectieSaldering } from "@/components/SectieSaldering";
 export const metadata: Metadata = {
   title: {
     absolute:
-      "Voordeel op zonnepanelen, thuisbatterijen en laadpalen | Zonneplaneet Actie",
+      "Voordeel op zonnepanelen, thuisbatterijen en laadpalen | Zonneplaneet ACTIE",
   },
   description:
     "Via je sportvereniging of via referral. Wij leveren en installeren.",
