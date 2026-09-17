@@ -80,8 +80,14 @@ const velden: FormulierVeld[] = [
   },
   {
     naam: "akkoord",
-    label:
-      "Ik geef toestemming om mijn gegevens te gebruiken voor mijn aanvraag.",
+    label: (
+      <>
+        Ik geef toestemming om mijn gegevens te gebruiken voor mijn aanvraag.{" "}
+        <a href="/voorwaarden" className="underline">
+          Ik ga akkoord met de actievoorwaarden.
+        </a>
+      </>
+    ),
     soort: "vinkje",
     verplicht: true,
     volleBreedte: true,

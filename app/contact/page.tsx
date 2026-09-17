@@ -6,6 +6,7 @@ import {
   type FormulierVeld,
 } from "@/components/ContactFormulier";
 import { Hero } from "@/components/Hero";
+import { SectieContactgegevens } from "@/components/SectieContactgegevens";
 import { contactRolLabels, contactRollen } from "@/lib/validatie";
 
 export const metadata: Metadata = {
@@ -84,6 +85,8 @@ export default function ContactPage() {
       />
 
       <SectieAfspraak headingId="contact-afspraak" />
+
+      <SectieContactgegevens />
 
       {/* Foto links, navy paneel met het formulier rechts. */}
       <ContactFormulier

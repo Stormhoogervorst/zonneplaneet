@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getArtikel, getArtikelSlugs, type Artikel } from "@/lib/artikelen";
+import { getSiteUrl } from "@/lib/site-url";
 
 type ArtikelPageProps = {
   params: Promise<{ artikel: string }>;
@@ -67,7 +68,7 @@ export default async function ArtikelPage({ params }: ArtikelPageProps) {
     notFound();
   }
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const siteUrl = getSiteUrl();
   const artikelUrl = new URL(`/kennisbank/${artikel.slug}`, siteUrl).toString();
   const jsonLd = {
     "@context": "https://schema.org",

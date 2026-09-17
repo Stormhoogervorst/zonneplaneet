@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Hero } from "@/components/Hero";
 import { LedenFaq } from "@/components/LedenFaq";
 import { LedenFormulier } from "@/components/LedenFormulier";
@@ -14,6 +15,9 @@ const ledenAlinea = `Jouw aanschaf van een duurzame energieoplossing levert jouw
 export const metadata: Metadata = {
   title: "Sponsor je club",
   description: ledenAlinea,
+  alternates: {
+    canonical: "/leden",
+  },
 };
 
 export default function LedenPage() {
@@ -22,7 +26,22 @@ export default function LedenPage() {
       <Hero
         uitgelijnd
         kop="Sponsor je club"
-        subregel={ledenAlinea}
+        subregel={
+          <>
+            Jouw aanschaf van een duurzame energieoplossing levert jouw
+            (sport)club{" "}
+            <Link href="/voorwaarden" className="underline">
+              {STANDAARD_VERGOEDING}
+            </Link>{" "}
+            op. Het enige wat jij hoeft te doen is je aanmelden. Je krijgt dan
+            meer informatie over het product waar je interesse in hebt, en ga je
+            tot aanschaf over, dan ontvangt jouw club{" "}
+            <Link href="/voorwaarden" className="underline">
+              {STANDAARD_VERGOEDING}
+            </Link>
+            .
+          </>
+        }
         foto="/zonnepanelen-woningen.jpg"
         alt="Rij nieuwbouwwoningen met zonnepanelen op de dakvlakken"
       />

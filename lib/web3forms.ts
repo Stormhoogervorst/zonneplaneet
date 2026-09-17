@@ -1,5 +1,6 @@
 import {
   contactRolLabels,
+  HONEYPOT_VELD,
   ledenInteresseLabels,
   referralInteresseLabels,
   vervolgstapLabels,
@@ -9,19 +10,30 @@ export const web3formsActies = [
   "contact",
   "clubactie",
   "referral",
+  "partner",
+  "cashback",
+  "winactie",
 ] as const;
 export type Web3FormsActie = (typeof web3formsActies)[number];
 
 const WEB3FORMS_URL = "https://api.web3forms.com/submit";
 
+const contactSleutel = process.env.NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY;
+
 const sleutels: Record<Web3FormsActie, string | undefined> = {
-  contact: process.env.NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY,
+  contact: contactSleutel,
+  partner: contactSleutel,
+  cashback: contactSleutel,
+  winactie: contactSleutel,
   clubactie: process.env.NEXT_PUBLIC_WEB3FORMS_LEDEN_KEY,
   referral: process.env.NEXT_PUBLIC_WEB3FORMS_REFERRAL_KEY,
 };
 
 const sleutelNamen: Record<Web3FormsActie, string> = {
   contact: "NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY",
+  partner: "NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY",
+  cashback: "NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY",
+  winactie: "NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY",
   clubactie: "NEXT_PUBLIC_WEB3FORMS_LEDEN_KEY",
   referral: "NEXT_PUBLIC_WEB3FORMS_REFERRAL_KEY",
 };
@@ -30,6 +42,9 @@ const vinkVeldenPerActie: Record<Web3FormsActie, readonly string[]> = {
   clubactie: ["akkoord"],
   referral: ["toestemming"],
   contact: [],
+  partner: [],
+  cashback: ["akkoord"],
+  winactie: ["akkoord"],
 };
 
 const interesseLabels: Record<string, string> = {
@@ -45,6 +60,9 @@ const actieLabels: Record<Web3FormsActie, string> = {
   contact: "Contact",
   clubactie: "Clubactie",
   referral: "Referral",
+  partner: "Partner",
+  cashback: "Cashback",
+  winactie: "Winactie",
 };
 
 const waardeLabels: Record<string, Record<string, string>> = {
@@ -78,6 +96,8 @@ const sleutelLabels: Record<string, string> = {
   toestemming: "Toestemming om gegevens door te geven",
   naam: "Naam",
   woonplaats: "Woonplaats",
+  contactpersoon: "Contactpersoon",
+  ledenaantal: "Aantal leden",
 };
 
 const referralSleutelLabels: Record<string, string> = {
@@ -96,7 +116,7 @@ function isWeb3FormsActie(actie: string): actie is Web3FormsActie {
 export function web3formsSleutel(actie: string): string {
   if (!isWeb3FormsActie(actie)) {
     throw new Error(
-      `Onbekend formuliertype "${actie}". Verwachte waarden: contact, clubactie of referral.`,
+      `Onbekend formuliertype "${actie}". Verwachte waarden: ${web3formsActies.join(", ")}.`,
     );
   }
 
@@ -111,7 +131,7 @@ export function web3formsSleutel(actie: string): string {
 }
 
 function isInternVeld(naam: string): boolean {
-  return naam === "website" || naam.startsWith("$");
+  return naam === HONEYPOT_VELD || naam.startsWith("$");
 }
 
 function isAangevinkt(waarde: string | undefined): boolean {
@@ -147,6 +167,16 @@ function onderwerpVoor(
       : "Referral";
   }
 
+  if (actie === "partner") {
+    return velden.clubnaam
+      ? `Nieuwe clubaanmelding: ${velden.clubnaam}`
+      : "Nieuwe clubaanmelding";
+  }
+
+  if (actie === "cashback" || actie === "winactie") {
+    return `Nieuwe aanmelding: ${actie}`;
+  }
+
   const club = velden.clubnaam || velden.clubcode;
   return club ? `Aanmelding clubactie — ${club}` : "Aanmelding clubactie";
 }
@@ -159,6 +189,13 @@ function afzender(
     return {
       ...(velden.aandragerNaam ? { from_name: velden.aandragerNaam } : {}),
       ...(velden.aandragerEmail ? { replyto: velden.aandragerEmail } : {}),
+    };
+  }
+
+  if (actie === "partner") {
+    return {
+      ...(velden.contactpersoon ? { from_name: velden.contactpersoon } : {}),
+      ...(velden.email ? { replyto: velden.email } : {}),
     };
   }
 
@@ -206,11 +243,11 @@ export function web3formsBodyUitFormulier(
   const actie = String(ruw.actie ?? "").trim();
   if (!isWeb3FormsActie(actie)) {
     throw new Error(
-      `Onbekend formuliertype "${actie}". Verwachte waarden: contact, clubactie of referral.`,
+      `Onbekend formuliertype "${actie}". Verwachte waarden: ${web3formsActies.join(", ")}.`,
     );
   }
 
-  delete ruw.website;
+  delete ruw[HONEYPOT_VELD];
   for (const naam of Object.keys(ruw)) {
     if (naam.startsWith("$")) {
       delete ruw[naam];

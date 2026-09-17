@@ -17,6 +17,9 @@ export const metadata: Metadata = {
   title: "Thuisbatterij",
   description:
     "Bewaar je eigen zonnestroom en gebruik die later in huis. Een thuisbatterij stemt opslag af op je verbruik, je panelen en je energiecontract.",
+  alternates: {
+    canonical: "/thuisbatterij",
+  },
 };
 
 const rijen = [

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { EMAIL } from "@/lib/bedrijf";
 
 export const metadata: Metadata = {
   title: "Privacy",
@@ -44,9 +45,9 @@ export default function PrivacyPage() {
           Afspraak inplannen via Cal.com
         </h2>
         <p className="mt-4">
-          Op onder meer de contactpagina, Over Zonneplaneet en de productpagina's
-          kun je zelf een gesprek van ongeveer 30 minuten inplannen. De agenda
-          wordt geladen via Cal.com, een externe dienst.
+          Op onder meer de contactpagina, Over Zonneplaneet en de
+          productpagina's kun je zelf een gesprek van ongeveer 30 minuten
+          inplannen. De agenda wordt geladen via Cal.com, een externe dienst.
         </p>
         <p className="mt-4">
           Als je een moment kiest, verwerkt Cal.com de gegevens die je in het
@@ -100,11 +101,12 @@ export default function PrivacyPage() {
           Je gegevens laten verwijderen
         </h2>
         <p className="mt-4">
-          Je kunt ons vragen je gegevens te verwijderen. Gebruik daarvoor de
-          contactgegevens van Zonneplaneet Actie. We laten je weten als we
-          bepaalde gegevens wettelijk moeten bewaren.
+          Je kunt ons vragen je gegevens te verwijderen. Mail daarvoor naar{" "}
+          <a className="underline" href={`mailto:${EMAIL}`}>
+            {EMAIL}
+          </a>
+          . We laten je weten als we bepaalde gegevens wettelijk moeten bewaren.
         </p>
-        {/* TODO: Voeg het gecontroleerde privacy-e-mailadres en de procedure voor verzoeken toe. */}
         {/* TODO: Laat rechten, uitzonderingen en reactietermijnen juridisch controleren. */}
       </section>
     </main>

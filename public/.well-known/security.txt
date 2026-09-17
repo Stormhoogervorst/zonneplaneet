@@ -1,0 +1,5 @@
+Contact: mailto:zonneplaneetactie@gmail.com
+Contact: https://zonneplaneetactie.nl/contact
+Expires: 2027-09-17T00:00:00.000Z
+Preferred-Languages: nl
+Canonical: https://zonneplaneetactie.nl/.well-known/security.txt

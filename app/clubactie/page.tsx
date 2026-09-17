@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   title: "Ledenvoordeel via je sportvereniging",
   description:
     "Lees hoe het ledenvoordeel via sportverenigingen werkt en vind informatie voor leden en clubbesturen.",
+  alternates: {
+    canonical: "/clubactie",
+  },
 };
 
 export default function ClubactiePage() {

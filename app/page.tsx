@@ -4,6 +4,7 @@ import { HomepageActiekaarten } from "@/components/HomepageActiekaarten";
 import { HomepageContact } from "@/components/HomepageContact";
 import { SectieInstallateur } from "@/components/SectieInstallateur";
 import { SectieSaldering } from "@/components/SectieSaldering";
+import { organizationJsonLd } from "@/lib/bedrijf";
 
 export const metadata: Metadata = {
   title: {
@@ -11,11 +12,22 @@ export const metadata: Metadata = {
   },
   description:
     "Zonnepanelen, thuisbatterijen, warmtepompen en laadpalen. Via je sportvereniging of via referral.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function Home() {
+  const jsonLd = organizationJsonLd();
+
   return (
     <main data-hero-balk data-installateur>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
       {/* TODO: Bevestig de overkoepelende knoptekst. */}
       <Hero
         kop="Voordeel op duurzame energie"

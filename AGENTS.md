@@ -116,7 +116,7 @@ app/ routes; app/[club] vangt alles op rootniveau af
 app/aanmelden/ server actions
 components/ gedeelde componenten
 content/clubs/ één JSON per club, de bron voor clubpagina's
-lib/ data-loaders, validatie, mail
+lib/ data-loaders, validatie
 Elke nieuwe statische route krijgt een eigen map in app/, anders vangt app/[club]
 de URL af. Controleer bij elke nieuwe route of de slug niet botst met een clubcode.
 
@@ -161,13 +161,16 @@ Kennisbank staat tijdelijk uit. Bij livegang deze zes plekken terugzetten:
 
 FORMULIEREN EN LEADS
 Alle formulieren lopen via een server action met Zod-validatie en een
-honeypotveld `website`. Validatie gebeurt op de server. Verzending gaat vanuit
-de browser naar Web3Forms. Er is geen eigen opslag. Leads staan in Web3Forms.
+honeypotveld `bedrijfsnaam-controle`. Validatie gebeurt op de server. Verzending
+gaat daarna vanuit de browser naar Web3Forms. Er is geen eigen opslag. Leads
+staan in Web3Forms.
+Er zit geen maildienst in het project. Stel die niet voor. Er gaat daarom geen
+bevestigingsmail naar de aanmelder; zet die belofte niet in teksten op de site.
 Een mislukte verzending is alleen in de Vercel-logs terug te vinden, met prefix
 [LEAD-NIET-VERZONDEN]. Vraag nooit meer velden uit dan nodig; elk extra veld
 kost conversie.
 Drie publieke keys, per formuliertype:
-- `NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY` — contact
+- `NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY` — contact en partner
 - `NEXT_PUBLIC_WEB3FORMS_LEDEN_KEY` — clubactie/leden
 - `NEXT_PUBLIC_WEB3FORMS_REFERRAL_KEY` — referral
 De JSON-body voor Web3Forms komt uit `web3formsBodyUitFormulier` in

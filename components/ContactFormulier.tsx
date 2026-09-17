@@ -15,13 +15,15 @@ import {
 } from "@/app/aanmelden/actions";
 import { Knop } from "@/components/ui";
 import { meetPlausibleEvent } from "@/lib/plausible";
-import type { FormulierState } from "@/lib/validatie";
+import { HONEYPOT_VELD, type FormulierState } from "@/lib/validatie";
 import { verstuurViaWeb3Forms } from "@/lib/web3forms";
 
 const VERZENDFOUT = "Verzenden is mislukt. Probeer het later opnieuw.";
 
 /** Lege strings en TODO-placeholders mogen nooit als naschrift in beeld. */
-function zichtbaarNaschrift(naschrift: ReactNode | undefined): ReactNode | null {
+function zichtbaarNaschrift(
+  naschrift: ReactNode | undefined,
+): ReactNode | null {
   if (naschrift == null || naschrift === false) {
     return null;
   }
@@ -90,7 +92,7 @@ type Paneel = "ijsblauw" | "navy";
 
 type VeldGedeeld = {
   naam: string;
-  label: string;
+  label: ReactNode;
   autoComplete?: string;
   verplicht?: boolean;
   /** Over beide kolommen in plaats van één, vanaf md. */
@@ -355,11 +357,16 @@ export function ContactFormulier({
                 {titel}
               </h2>
 
-              <div aria-hidden="true" className="sr-only">
-                <label htmlFor={`${id}-website`}>Website</label>
+              <div
+                aria-hidden="true"
+                className="pointer-events-none fixed top-0 -left-[10000px] h-px w-px overflow-hidden"
+              >
+                <label htmlFor={`${id}-${HONEYPOT_VELD}`}>
+                  Bedrijfsnaam controle
+                </label>
                 <input
-                  id={`${id}-website`}
-                  name="website"
+                  id={`${id}-${HONEYPOT_VELD}`}
+                  name={HONEYPOT_VELD}
                   type="text"
                   autoComplete="off"
                   tabIndex={-1}

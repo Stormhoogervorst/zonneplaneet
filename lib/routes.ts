@@ -17,6 +17,7 @@ export const GERESERVEERDE_SLUGS = [
   "voorwaarden",
   "actievoorwaarden",
   "styleguide",
+  ".well-known",
 ] as const;
 
 export type GereserveerdeSlug = (typeof GERESERVEERDE_SLUGS)[number];

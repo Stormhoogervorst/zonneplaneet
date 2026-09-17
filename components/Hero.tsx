@@ -17,7 +17,7 @@ type HeroInhoud = {
   kop: ReactNode;
   /** Optioneel beeld boven de kop, bijvoorbeeld een clublogo van 64px hoog. */
   logo?: { alt: string; src: string };
-  subregel: string;
+  subregel: ReactNode;
 };
 
 type HeroUitgelijnd = HeroInhoud &

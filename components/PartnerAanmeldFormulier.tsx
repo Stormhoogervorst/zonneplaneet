@@ -61,6 +61,7 @@ export function PartnerAanmeldFormulier() {
       id="club-aanmelden"
       titel="Aanmelden"
       velden={velden}
+      verborgenVelden={[{ naam: "actie", waarde: "partner" }]}
       action={meldClubAan}
       beginState={{ success: false }}
       knopLabel="Meld mijn club aan"

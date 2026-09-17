@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { FaqSectie } from "@/components/FaqSectie";
 import { Hero } from "@/components/Hero";
 import { PaginaStatement } from "@/components/PaginaStatement";
@@ -11,6 +12,9 @@ export const metadata: Metadata = {
   title: "Zonnepanelen",
   description:
     "Wek je eigen groene energie op met zonnepanelen. Van advies tot installatie, afgestemd op je woning en energiegebruik.",
+  alternates: {
+    canonical: "/zonnepanelen",
+  },
 };
 
 const rijen = [
@@ -106,8 +110,23 @@ const vragen = [
       "In de meeste gevallen niet. Zonnepanelen op een schuin dak zijn doorgaans vergunningvrij als ze in hetzelfde vlak liggen als het dak. Bij een monument, in een beschermd stadsgezicht of bij een plat dak kunnen andere regels gelden. Twijfel je, informeer dan bij je gemeente.",
   },
   /* TODO: "Hoe lang duurt de installatie?" — tekst aanleveren. */
-  /* TODO: "Welke garantie krijg ik?" — tekst aanleveren, inclusief de exacte
-     garantietermijnen op panelen, omvormers en installatie. */
+  {
+    vraag: "Welke garantie krijg ik?",
+    antwoord:
+      "Op de producten geldt de wettelijke garantie en de fabrieksgarantie van de fabrikant. Op de installatiewerkzaamheden geldt garantie voor zover wettelijk verplicht. Je wettelijke rechten als consument blijven altijd van kracht. De volledige voorwaarden staan in onze algemene voorwaarden.",
+    inhoud: (
+      <>
+        Op de producten geldt de wettelijke garantie en de fabrieksgarantie van
+        de fabrikant. Op de installatiewerkzaamheden geldt garantie voor zover
+        wettelijk verplicht. Je wettelijke rechten als consument blijven altijd
+        van kracht. De volledige voorwaarden staan in onze{" "}
+        <Link href="/voorwaarden" className="underline">
+          algemene voorwaarden
+        </Link>
+        .
+      </>
+    ),
+  },
 ];
 
 export default function ZonnepanelenPage() {
@@ -159,10 +178,7 @@ export default function ZonnepanelenPage() {
               getal="€540"
               label="PER JAAR MET ZONNEPANELEN EN VAST CONTRACT"
             />
-            <StatKaart
-              getal="€1.050"
-              label="PER JAAR ZONDER ZONNEPANELEN"
-            />
+            <StatKaart getal="€1.050" label="PER JAAR ZONDER ZONNEPANELEN" />
           </div>
 
           <p className="mt-6 text-[0.875rem] leading-[1.6] text-body-donker">

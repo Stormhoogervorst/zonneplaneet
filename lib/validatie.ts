@@ -177,6 +177,10 @@ export const partnerAanmeldingSchema = z.object({
     .int("Vul het aantal leden in als een heel getal.")
     .positive("Vul een aantal groter dan nul in."),
   opmerking: z.string().trim(),
+  actie: z.literal("partner", {
+    error:
+      "Deze actie is niet bekend. Open de pagina opnieuw en probeer het nog een keer.",
+  }),
 });
 
 export type PartnerAanmelding = z.infer<typeof partnerAanmeldingSchema>;
@@ -184,6 +188,9 @@ export type PartnerAanmeldVeld = keyof PartnerAanmelding;
 
 export type PartnerAanmeldState = {
   success: boolean;
+  magVerzenden?: boolean;
+  leadId?: string;
+  lead?: unknown;
   message?: string;
   meetConversie?: boolean;
   errors?: Partial<Record<PartnerAanmeldVeld, string[]>>;
@@ -247,6 +254,14 @@ export type FormulierState = {
   meetConversie?: boolean;
   errors?: Partial<Record<string, string[]>>;
 };
+
+/** Honeypot: bots vullen dit, mensen niet. De naam lijkt niet op een echt veld. */
+export const HONEYPOT_VELD = "bedrijfsnaam-controle";
+
+export function honeypotGevuld(formData: FormData): boolean {
+  const waarde = formData.get(HONEYPOT_VELD);
+  return typeof waarde === "string" && waarde.trim() !== "";
+}
 
 export const actieTypen = ["cashback", "winactie"] as const;
 

@@ -16,6 +16,9 @@ export const metadata: Metadata = {
   title: "Clubactie voor sportverenigingen",
   description:
     "Lees wat de samenwerking met Zonneplaneet Actie oplevert en wat er van een sportvereniging wordt gevraagd.",
+  alternates: {
+    canonical: "/partner",
+  },
 };
 
 export default function PartnerPage() {

@@ -11,6 +11,9 @@ export const metadata: Metadata = {
   title: "Laadpaal",
   description:
     "Laad je elektrische auto eenvoudig op je eigen oprit. Met een slimme laadoplossing heb je altijd een laadpunt binnen handbereik en bepaal je zelf wanneer je auto wordt opgeladen.",
+  alternates: {
+    canonical: "/laadpaal",
+  },
 };
 
 const rijen = [

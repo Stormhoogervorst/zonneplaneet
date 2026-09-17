@@ -11,11 +11,11 @@ import {
   logLeadNietVerzonden,
   logLeadVerzonden,
 } from "@/lib/leads";
-import { stuurActieAanmelding, stuurPartnerAanmelding } from "@/lib/mail";
 import {
   aanmeldingSchema,
   actieAanmeldingSchema,
   contactSchema,
+  honeypotGevuld,
   ledenAanmeldingSchema,
   normaliseerTelefoon,
   partnerAanmeldingSchema,
@@ -32,8 +32,7 @@ export async function meldAan(
 ): Promise<AanmeldState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     const clubcode = formData.get("clubcode");
     return {
       success: true,
@@ -106,8 +105,7 @@ export async function meldLidAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     return { success: true };
   }
 
@@ -166,8 +164,7 @@ export async function meldClubAan(
 ): Promise<PartnerAanmeldState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     return { success: true };
   }
 
@@ -179,6 +176,7 @@ export async function meldClubAan(
     telefoon: formData.get("telefoon"),
     ledenaantal: formData.get("ledenaantal"),
     opmerking: formData.get("opmerking") ?? "",
+    actie: formData.get("actie"),
   });
 
   if (!resultaat.success) {
@@ -199,7 +197,7 @@ export async function meldClubAan(
     lead = await bewaarPartnerLead(aanmelding);
   } catch (fout) {
     console.error(
-      "Partneraanmelding opslaan mislukt; er is geen mail verstuurd.",
+      "Partneraanmelding opslaan mislukt; er is niets naar Web3Forms gestuurd.",
       fout,
     );
     return {
@@ -209,18 +207,12 @@ export async function meldClubAan(
     };
   }
 
-  try {
-    await stuurPartnerAanmelding(lead);
-    logLeadVerzonden(lead.id, "partner");
-  } catch (fout) {
-    console.error("Mail over partneraanmelding mislukt.", {
-      leadId: lead.id,
-      fout,
-    });
-    logLeadNietVerzonden(lead);
-  }
-
-  return { success: true, meetConversie: true };
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
 }
 
 export async function stuurContact(
@@ -229,8 +221,7 @@ export async function stuurContact(
 ): Promise<ContactState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     return { success: true };
   }
 
@@ -285,8 +276,7 @@ export async function meldActieAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     return { success: true };
   }
 
@@ -319,7 +309,7 @@ export async function meldActieAan(
     lead = await bewaarActieLead(aanmelding);
   } catch (fout) {
     console.error(
-      "Actie-aanmelding opslaan mislukt; er is geen mail verstuurd.",
+      "Actie-aanmelding opslaan mislukt; er is niets naar Web3Forms gestuurd.",
       fout,
     );
     return {
@@ -329,28 +319,12 @@ export async function meldActieAan(
     };
   }
 
-  const mailResultaten = await Promise.allSettled([stuurActieAanmelding(lead)]);
-  const mailNamen = ["actie-aanmelding naar Zonneplaneet Actie"];
-  let actieVerzonden = true;
-
-  mailResultaten.forEach((mailResultaat, index) => {
-    if (mailResultaat.status === "rejected") {
-      actieVerzonden = false;
-      console.error(`Mail mislukt: ${mailNamen[index]}.`, {
-        leadId: lead.id,
-        actie: lead.actie,
-        fout: mailResultaat.reason,
-      });
-    }
-  });
-
-  if (actieVerzonden) {
-    logLeadVerzonden(lead.id, lead.actie);
-  } else {
-    logLeadNietVerzonden(lead);
-  }
-
-  return { success: true, meetConversie: true };
+  return {
+    success: false,
+    magVerzenden: true,
+    leadId: lead.id,
+    lead,
+  };
 }
 
 export async function meldReferralAan(
@@ -359,8 +333,7 @@ export async function meldReferralAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  const website = formData.get("website");
-  if (typeof website === "string" && website.trim() !== "") {
+  if (honeypotGevuld(formData)) {
     return { success: true };
   }
 

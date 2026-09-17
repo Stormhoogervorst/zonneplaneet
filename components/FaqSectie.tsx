@@ -1,7 +1,9 @@
+import type { ReactNode } from "react";
 import { Accordeon, Tag } from "@/components/ui";
 
 export type FaqVraag = {
   antwoord: string;
+  inhoud?: ReactNode;
   standaardOpen?: boolean;
   vraag: string;
 };
@@ -50,9 +52,7 @@ export function FaqSectie({ eyebrow, headingId, vragen }: FaqSectieProps) {
 
       <div className="mx-auto max-w-[1000px] px-8 md:px-16">
         <div className="mb-16 text-center">
-          <Tag className="mx-auto font-mono">
-            {eyebrow}
-          </Tag>
+          <Tag className="mx-auto font-mono">{eyebrow}</Tag>
           <h2
             id={headingId}
             className="mt-10 text-center text-[clamp(2rem,5vw,3.5rem)] leading-[1.1] font-normal text-navy"
@@ -61,7 +61,14 @@ export function FaqSectie({ eyebrow, headingId, vragen }: FaqSectieProps) {
           </h2>
         </div>
 
-        <Accordeon variant="lijnen" items={vragenMetAntwoord} />
+        <Accordeon
+          variant="lijnen"
+          items={vragenMetAntwoord.map((item) => ({
+            vraag: item.vraag,
+            antwoord: item.inhoud ?? item.antwoord,
+            standaardOpen: item.standaardOpen,
+          }))}
+        />
       </div>
     </section>
   );
