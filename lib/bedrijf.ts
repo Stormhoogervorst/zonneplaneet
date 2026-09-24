@@ -42,36 +42,6 @@ export type Bedrijfsgegeven = {
   href?: string;
 };
 
-export function footerBedrijfsgegevens(): Bedrijfsgegeven[] {
-  const regels: Bedrijfsgegeven[] = [
-    { label: "Bedrijfsnaam", waarde: BEDRIJFSNAAM },
-    { label: "KvK-nummer", waarde: KVK_NUMMER },
-  ];
-
-  const adres = formatteerVestigingsadres();
-  if (adres) {
-    regels.push({ label: "Vestigingsadres", waarde: adres });
-  }
-
-  if (isBedrijfsVeldGevuld(TELEFOON)) {
-    regels.push({
-      label: "Telefoon",
-      waarde: TELEFOON,
-      href: `tel:${TELEFOON}`,
-    });
-  }
-
-  if (isBedrijfsVeldGevuld(EMAIL)) {
-    regels.push({
-      label: "E-mail",
-      waarde: EMAIL,
-      href: `mailto:${EMAIL}`,
-    });
-  }
-
-  return regels;
-}
-
 export function contactBedrijfsgegevens(): Bedrijfsgegeven[] {
   const regels: Bedrijfsgegeven[] = [
     { label: "Bedrijfsnaam", waarde: BEDRIJFSNAAM },

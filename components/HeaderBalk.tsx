@@ -3,9 +3,7 @@ import { BureaubladNavigatie } from "@/components/BureaubladNavigatie";
 import { MobielMenu } from "@/components/MobielMenu";
 import { Woordmerk } from "@/components/Woordmerk";
 import { Knop } from "@/components/ui";
-import { navigatie } from "@/lib/navigatie";
-
-const contact = { href: "/contact", label: "Contact" };
+import { contactLink, navigatie } from "@/lib/navigatie";
 
 /** Het vlak waarop de doorzichtige balk ligt, want dat bepaalt de kleuren. */
 type Ondergrond = "licht" | "donker";
@@ -41,12 +39,12 @@ export function HeaderBalk({ ondergrond }: { ondergrond: Ondergrond }) {
       <BureaubladNavigatie items={navigatie} />
 
       <span className="hidden shrink-0 lg:block">
-        <Knop href={contact.href} variant={contactKnopVariant[ondergrond]}>
-          {contact.label}
+        <Knop href={contactLink.href} variant={contactKnopVariant[ondergrond]}>
+          {contactLink.label}
         </Knop>
       </span>
 
-      <MobielMenu items={navigatie} contact={contact} />
+      <MobielMenu items={navigatie} contact={contactLink} />
     </div>
   );
 }

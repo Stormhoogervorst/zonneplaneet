@@ -96,18 +96,6 @@
   transition: background-color 9999s;
 }
 
-/* Pagina's met `data-installateur` tonen `SectieInstallateur` zelf. Het
-   vertrouwensblok in de footer zou Zonneplaneet daar dubbel noemen. */
-body:has(main[data-installateur]) .site-footer-trust {
-  display: none;
-}
-
-/* Pagina's die het vertrouwensblok niet in de footer willen, zonder dat ze
-   `SectieInstallateur` zelf tonen. */
-body:has(main[data-geen-vertrouwensblok]) .site-footer-trust {
-  display: none;
-}
-
 /* De full-screen hero heeft een eigen bovenbalk met logo, navigatie en menuknop. */
 body:has(main[data-hero-balk]) .site-header {
   display: none;

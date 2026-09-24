@@ -39,6 +39,48 @@ export function heeftKinderen(
   return (item.kinderen?.length ?? 0) > 0;
 }
 
+/** Contact is een knop in de header en een link in de voettekst. */
+export const contactLink: NavigatieLink = {
+  href: "/contact",
+  label: "Contact",
+};
+
+export type FooterKolom = {
+  titel: string;
+  links: NavigatieLink[];
+};
+
+/**
+ * Voettekstkolommen uit `navigatie`. Een ouderlink komt erbij als die nog
+ * niet tussen de kinderen staat, zodat Producten niet dubbel loopt en
+ * Clubactie wel naar `/clubactie` wijst. Losse items plus contact vormen
+ * de kolom Meer.
+ */
+export function footerKolommen(): FooterKolom[] {
+  const metKinderen = navigatie.filter(heeftKinderen);
+  const zonderKinderen = navigatie.filter((item) => !heeftKinderen(item));
+
+  const kolommen: FooterKolom[] = metKinderen.map((item) => {
+    const ouder: NavigatieLink = { href: item.href, label: item.label };
+    const ouderStaatErin = item.kinderen.some((kind) => kind.href === ouder.href);
+
+    return {
+      titel: item.label,
+      links: ouderStaatErin ? item.kinderen : [ouder, ...item.kinderen],
+    };
+  });
+
+  kolommen.push({
+    titel: "Meer",
+    links: [
+      ...zonderKinderen.map(({ href, label }) => ({ href, label })),
+      contactLink,
+    ],
+  });
+
+  return kolommen;
+}
+
 export function isNavigatieHuidig(pathname: string, href: string): boolean {
   return pathname === href;
 }
