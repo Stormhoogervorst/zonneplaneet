@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { meldActieAan } from "@/app/aanmelden/actions";
 import {
   ContactFormulier,
@@ -47,9 +48,9 @@ const velden: FormulierVeld[] = [
       <>
         Ik geef toestemming om mijn gegevens te gebruiken voor deze actie. Ik ga
         akkoord met de{" "}
-        <a href="/voorwaarden" className="underline">
+        <Link href="/voorwaarden" className="underline">
           algemene voorwaarden
-        </a>
+        </Link>
         .
       </>
     ),

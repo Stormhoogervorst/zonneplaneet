@@ -46,7 +46,7 @@ export default function PrivacyPage() {
         </h2>
         <p className="mt-4">
           Op onder meer de contactpagina, Over Zonneplaneet en de
-          productpagina's kun je zelf een gesprek van ongeveer 30 minuten
+          productpagina&apos;s kun je zelf een gesprek van ongeveer 30 minuten
           inplannen. De agenda wordt geladen via Cal.com, een externe dienst.
         </p>
         <p className="mt-4">

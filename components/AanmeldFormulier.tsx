@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { meldAan } from "@/app/aanmelden/actions";
 import {
   ContactFormulier,
@@ -66,9 +67,9 @@ const velden: FormulierVeld[] = [
       <>
         Ik geef toestemming om mijn gegevens met mijn clubcode te gebruiken voor
         mijn aanvraag.{" "}
-        <a href="/voorwaarden" className="underline">
+        <Link href="/voorwaarden" className="underline">
           Ik ga akkoord met de actievoorwaarden.
-        </a>
+        </Link>
       </>
     ),
     soort: "vinkje",

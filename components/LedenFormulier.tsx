@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { meldLidAan } from "@/app/aanmelden/actions";
 import {
   ContactFormulier,
@@ -83,9 +84,9 @@ const velden: FormulierVeld[] = [
     label: (
       <>
         Ik geef toestemming om mijn gegevens te gebruiken voor mijn aanvraag.{" "}
-        <a href="/voorwaarden" className="underline">
+        <Link href="/voorwaarden" className="underline">
           Ik ga akkoord met de actievoorwaarden.
-        </a>
+        </Link>
       </>
     ),
     soort: "vinkje",

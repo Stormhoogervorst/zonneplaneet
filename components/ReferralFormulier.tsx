@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { meldReferralAan } from "@/app/aanmelden/actions";
 import {
   ContactFormulier,
@@ -93,9 +94,9 @@ const toestemmingVeld: FormulierVeld = {
     <>
       Ik heb toestemming van deze persoon om zijn of haar gegevens door te
       geven.{" "}
-      <a href="/voorwaarden" className="underline">
+      <Link href="/voorwaarden" className="underline">
         Ik ga akkoord met de actievoorwaarden.
-      </a>
+      </Link>
     </>
   ),
   soort: "vinkje",
@@ -125,9 +126,9 @@ export function ReferralFormulier() {
         <>
           <p>
             Je ontvangt{" "}
-            <a href="/voorwaarden" className="underline">
+            <Link href="/voorwaarden" className="underline">
               €200
-            </a>{" "}
+            </Link>{" "}
             zodra degene die je aandraagt de installatie heeft laten uitvoeren.
           </p>
           <div className="mt-4 space-y-1 text-[0.875rem] leading-[1.6] text-white/70">
