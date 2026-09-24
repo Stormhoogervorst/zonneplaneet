@@ -12,7 +12,7 @@ export const VESTIGING = {
 /** TODO: telefoonnummer aanleveren. */
 export const TELEFOON = "";
 
-export const EMAIL = "zonneplaneetactie@gmail.com";
+export const EMAIL = "team@zonneplaneetactie.nl";
 
 export function isBedrijfsVeldGevuld(waarde: string | undefined): boolean {
   const tekst = waarde?.trim() ?? "";
