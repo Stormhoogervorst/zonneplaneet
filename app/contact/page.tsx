@@ -84,7 +84,11 @@ export default function ContactPage() {
         alt="Rij windmolens langs een dijk met schapen in het gras ervoor"
       />
 
-      <SectieAfspraak headingId="contact-afspraak" />
+      <SectieAfspraak
+        headingId="contact-afspraak"
+        kop="Plan een afspraak in onze showroom"
+        subregel=""
+      />
 
       <SectieContactgegevens />
 

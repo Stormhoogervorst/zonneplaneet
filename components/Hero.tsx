@@ -21,9 +21,11 @@ type HeroInhoud = {
 };
 
 type HeroUitgelijnd = HeroInhoud &
-  (HeroKnop | HeroZonderKnop) & {
-    alt: string;
-    foto: StaticImageData | string;
+  (HeroKnop | HeroZonderKnop) &
+  (
+    | { alt: string; foto: StaticImageData | string }
+    | { alt?: never; foto?: never }
+  ) & {
     overlayKlasse?: never;
     /** Tweekoloms hero: kop links, tekst en knop rechts, foto eronder. */
     uitgelijnd: true;
@@ -181,22 +183,24 @@ function UitgelijndeHero({
         </div>
       </div>
 
-      <div
-        className={
-          compact
-            ? "relative aspect-[16/9] w-full md:aspect-[21/9]"
-            : "relative aspect-[4/3] w-full md:aspect-[21/9]"
-        }
-      >
-        <Image
-          src={foto}
-          alt={alt}
-          fill
-          preload
-          sizes="100vw"
-          className="object-cover"
-        />
-      </div>
+      {foto ? (
+        <div
+          className={
+            compact
+              ? "relative aspect-[16/9] w-full md:aspect-[21/9]"
+              : "relative aspect-[4/3] w-full md:aspect-[21/9]"
+          }
+        >
+          <Image
+            src={foto}
+            alt={alt}
+            fill
+            preload
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+      ) : null}
     </section>
   );
 }

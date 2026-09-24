@@ -102,9 +102,7 @@ const sleutelLabels: Record<string, string> = {
 const referralSleutelLabels: Record<string, string> = {
   voornaam: "Voornaam van de aangedragene",
   achternaam: "Achternaam van de aangedragene",
-  email: "E-mailadres van de aangedragene",
   telefoon: "Telefoonnummer van de aangedragene",
-  plaats: "Plaats van de aangedragene",
   interesse: "Interesse van de aangedragene",
 };
 

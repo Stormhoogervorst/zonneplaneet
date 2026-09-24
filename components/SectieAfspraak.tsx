@@ -53,9 +53,11 @@ export function SectieAfspraak({
         >
           {kop}
         </h2>
-        <p className="mt-4 max-w-[52ch] text-[1.0625rem] leading-[1.6] text-body-donker">
-          {subregel}
-        </p>
+        {subregel ? (
+          <p className="mt-4 max-w-[52ch] text-[1.0625rem] leading-[1.6] text-body-donker">
+            {subregel}
+          </p>
+        ) : null}
         <div className={embedVakClasses}>
           <Boekingsmodule />
         </div>

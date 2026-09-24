@@ -47,24 +47,10 @@ const aangedrageneVelden: FormulierVeld[] = [
     verplicht: true,
   },
   {
-    naam: "email",
-    label: "E-mailadres",
-    soort: "email",
-    autoComplete: "section-aangedragene email",
-    verplicht: true,
-  },
-  {
     naam: "telefoon",
     label: "Telefoonnummer",
     soort: "telefoon",
     autoComplete: "section-aangedragene tel",
-    verplicht: true,
-  },
-  {
-    naam: "plaats",
-    label: "Plaats",
-    soort: "tekst",
-    autoComplete: "section-aangedragene address-level2",
     verplicht: true,
   },
   {

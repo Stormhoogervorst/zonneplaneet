@@ -21,7 +21,14 @@ export const navigatie: NavigatieItem[] = [
       { label: "Laadpaal", href: "/laadpaal" },
     ],
   },
-  { label: "Clubactie", href: "/clubactie" },
+  {
+    label: "Clubactie",
+    href: "/clubactie",
+    kinderen: [
+      { label: "Voor leden", href: "/leden" },
+      { label: "Voor clubs", href: "/partner" },
+    ],
+  },
   { label: "Referral", href: "/referral" },
   { label: "Over Zonneplaneet", href: "/over-zonneplaneet" },
 ];
@@ -32,22 +39,21 @@ export function heeftKinderen(
   return (item.kinderen?.length ?? 0) > 0;
 }
 
-/** /leden hoort bij de clubactie en heeft geen eigen nav-item. */
 export function isNavigatieHuidig(pathname: string, href: string): boolean {
-  if (pathname === href) {
-    return true;
-  }
-
-  return href === "/clubactie" && pathname === "/leden";
+  return pathname === href;
 }
 
 export function isNavigatieItemHuidig(
   pathname: string,
   item: NavigatieItem,
 ): boolean {
+  if (isNavigatieHuidig(pathname, item.href)) {
+    return true;
+  }
+
   if (heeftKinderen(item)) {
     return item.kinderen.some((kind) => isNavigatieHuidig(pathname, kind.href));
   }
 
-  return isNavigatieHuidig(pathname, item.href);
+  return false;
 }

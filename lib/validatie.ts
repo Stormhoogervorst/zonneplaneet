@@ -352,12 +352,6 @@ export const referralSchema = z.object({
     ),
   voornaam: naamDeel("Vul de voornaam in van de persoon die je aandraagt."),
   achternaam: naamDeel("Vul de achternaam in van de persoon die je aandraagt."),
-  email: z
-    .string({
-      error: "Vul het e-mailadres in van de persoon die je aandraagt.",
-    })
-    .trim()
-    .email("Vul een geldig e-mailadres in."),
   telefoon: z
     .string({
       error: "Vul het telefoonnummer in van de persoon die je aandraagt.",
@@ -367,10 +361,6 @@ export const referralSchema = z.object({
       (telefoon) => /^\+31[1-9]\d{8}$/.test(normaliseerTelefoon(telefoon)),
       "Vul een geldig Nederlands telefoonnummer in.",
     ),
-  plaats: z
-    .string({ error: "Vul de plaats in van de persoon die je aandraagt." })
-    .trim()
-    .min(2, "Vul de plaats in van de persoon die je aandraagt."),
   interesse: z.enum(referralInteresses, {
     error: "Kies waar diegene interesse in heeft.",
   }),

@@ -42,8 +42,6 @@ export default function LedenPage() {
             .
           </>
         }
-        foto="/zonnepanelen-woningen.jpg"
-        alt="Rij nieuwbouwwoningen met zonnepanelen op de dakvlakken"
       />
 
       <LedenFormulier />

@@ -90,8 +90,8 @@ dan geen toe.
 
 NAVIGATIE
 De items staan in `lib/navigatie.ts`: Producten (zonnepanelen,
-thuisbatterij, laadpaal), Clubactie, Referral, Over Zonneplaneet.
-`HeaderBalk` toont die rij vanaf `lg`, met een uitklapmenu op Producten.
+thuisbatterij, laadpaal), Clubactie (leden, partner), Referral, Over Zonneplaneet.
+`HeaderBalk` toont die rij vanaf `lg`, met een uitklapmenu op Producten en Clubactie.
 Onder `lg` staat alles in het hamburgermenu (`MobielMenu`).
 Pagina's met een Hero zetten `data-hero-balk` op `main`. Dan verbergt
 `app/globals.css` de `SiteHeader`, omdat de Hero zelf de HeaderBalk

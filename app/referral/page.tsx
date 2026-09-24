@@ -32,8 +32,6 @@ export default function ReferralPage() {
             .
           </>
         }
-        foto="/thuisbatterij-installatie.jpg"
-        alt="Zonnepanelen en thuisbatterijen gemonteerd tegen een lichte wand"
       />
 
       <ReferralFormulier />
