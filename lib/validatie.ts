@@ -256,7 +256,13 @@ export type FormulierState = {
 };
 
 /** Honeypot: bots vullen dit, mensen niet. De naam lijkt niet op een echt veld. */
-export const HONEYPOT_VELD = "bedrijfsnaam-controle";
+export const HONEYPOT_VELD = "extra-check-9x";
+
+/** Tijdstip waarop het formulier in de browser geladen is, in ms. */
+export const FORMULIER_GELADEN_VELD = "formulier-geladen";
+
+/** Tijdstip waarop de bezoeker op verzenden klikte, in ms. Zelfde klok als geladen. */
+export const FORMULIER_VERZONDEN_VELD = "formulier-verzonden";
 
 export function honeypotGevuld(formData: FormData): boolean {
   const waarde = formData.get(HONEYPOT_VELD);

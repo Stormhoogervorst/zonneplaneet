@@ -5,20 +5,17 @@ import {
   useActionState,
   useEffect,
   useRef,
-  useState,
   type FormEvent,
   type ReactNode,
 } from "react";
-import {
-  logWeb3FormsGelukt,
-  logWeb3FormsMislukt,
-} from "@/app/aanmelden/actions";
 import { Knop } from "@/components/ui";
 import { meetPlausibleEvent } from "@/lib/plausible";
-import { HONEYPOT_VELD, type FormulierState } from "@/lib/validatie";
-import { verstuurViaWeb3Forms } from "@/lib/web3forms";
-
-const VERZENDFOUT = "Verzenden is mislukt. Probeer het later opnieuw.";
+import {
+  FORMULIER_GELADEN_VELD,
+  FORMULIER_VERZONDEN_VELD,
+  HONEYPOT_VELD,
+  type FormulierState,
+} from "@/lib/validatie";
 
 /** Lege strings en TODO-placeholders mogen nooit als naschrift in beeld. */
 function zichtbaarNaschrift(
@@ -37,49 +34,6 @@ function zichtbaarNaschrift(
   }
 
   return naschrift;
-}
-
-const web3formsOnderweg = new Set<string>();
-const web3formsAfgerond = new Set<string>();
-
-async function verstuurWeb3FormsVanuitFormulier(
-  leadId: string,
-  lead: unknown,
-  formulierData: FormData,
-  opBezig: (waarde: boolean) => void,
-  opGelukt: () => void,
-  opFout: (melding: string) => void,
-): Promise<void> {
-  if (web3formsAfgerond.has(leadId) || web3formsOnderweg.has(leadId)) {
-    return;
-  }
-
-  web3formsOnderweg.add(leadId);
-  opBezig(true);
-  opFout("");
-
-  try {
-    const actie = String(formulierData.get("actie") ?? "");
-    await verstuurViaWeb3Forms(formulierData, leadId);
-    web3formsAfgerond.add(leadId);
-    try {
-      await logWeb3FormsGelukt(leadId, actie);
-    } catch (logFout) {
-      console.error(logFout);
-    }
-    opGelukt();
-  } catch (fout) {
-    web3formsOnderweg.delete(leadId);
-    console.error(fout);
-    opFout(VERZENDFOUT);
-    try {
-      await logWeb3FormsMislukt(lead);
-    } catch (logFout) {
-      console.error(logFout);
-    }
-  } finally {
-    opBezig(false);
-  }
 }
 
 /**
@@ -241,11 +195,10 @@ export function ContactFormulier({
   plausibleProps,
 }: ContactFormulierProps) {
   const [state, formAction, pending] = useActionState(action, beginState);
-  const [web3Bezig, setWeb3Bezig] = useState(false);
-  const [web3Gelukt, setWeb3Gelukt] = useState(false);
-  const [web3Fout, setWeb3Fout] = useState("");
   const formulierRef = useRef<HTMLFormElement>(null);
-  const snapshotRef = useRef<FormData | null>(null);
+  const geladenOp = useRef<string | null>(null);
+  const geladenRef = useRef<HTMLInputElement>(null);
+  const verzondenRef = useRef<HTMLInputElement>(null);
   const conversieGemeten = useRef(false);
   const stijl = stijlen[paneel];
   const titelId = `${id}-titel`;
@@ -253,61 +206,30 @@ export function ContactFormulier({
     ...(blokken ?? []),
     ...(velden && velden.length > 0 ? [{ velden }] : []),
   ];
-  const toonBevestiging = state.success || web3Gelukt;
-  const bezig = pending || web3Bezig;
-  const foutmelding = web3Fout || state.message;
+  const toonBevestiging = state.success;
+  const foutmelding = state.message;
   const naschriftInhoud = zichtbaarNaschrift(naschrift);
 
   useEffect(() => {
-    if (!state.magVerzenden || !state.leadId || web3Gelukt) {
-      return;
+    geladenOp.current = String(Date.now());
+    if (geladenRef.current) {
+      geladenRef.current.value = geladenOp.current;
     }
-
-    const snapshot = snapshotRef.current;
-    if (!snapshot) {
-      return;
-    }
-
-    void verstuurWeb3FormsVanuitFormulier(
-      state.leadId,
-      state.lead,
-      snapshot,
-      setWeb3Bezig,
-      () => setWeb3Gelukt(true),
-      setWeb3Fout,
-    );
-  }, [state.lead, state.leadId, state.magVerzenden, web3Gelukt]);
+  }, []);
 
   useEffect(() => {
-    const magMeten =
-      web3Gelukt || (state.success && Boolean(state.meetConversie));
-    if (magMeten && !conversieGemeten.current) {
+    if (state.success && state.meetConversie && !conversieGemeten.current) {
       meetPlausibleEvent(plausibleEvent, plausibleProps);
       conversieGemeten.current = true;
     }
-  }, [
-    plausibleEvent,
-    plausibleProps,
-    state.meetConversie,
-    state.success,
-    web3Gelukt,
-  ]);
+  }, [plausibleEvent, plausibleProps, state.meetConversie, state.success]);
 
   function bijVerzenden(event: FormEvent<HTMLFormElement>) {
-    snapshotRef.current = new FormData(event.currentTarget);
-    if (!state.magVerzenden || !state.leadId || web3Gelukt) {
-      return;
-    }
-
     event.preventDefault();
-    void verstuurWeb3FormsVanuitFormulier(
-      state.leadId,
-      state.lead,
-      snapshotRef.current,
-      setWeb3Bezig,
-      () => setWeb3Gelukt(true),
-      setWeb3Fout,
-    );
+    if (verzondenRef.current) {
+      verzondenRef.current.value = String(Date.now());
+    }
+    formAction(new FormData(event.currentTarget));
   }
 
   return (
@@ -362,7 +284,7 @@ export function ContactFormulier({
                 className="pointer-events-none fixed top-0 -left-[10000px] h-px w-px overflow-hidden"
               >
                 <label htmlFor={`${id}-${HONEYPOT_VELD}`}>
-                  Bedrijfsnaam controle
+                  Laat dit veld leeg
                 </label>
                 <input
                   id={`${id}-${HONEYPOT_VELD}`}
@@ -372,6 +294,19 @@ export function ContactFormulier({
                   tabIndex={-1}
                 />
               </div>
+
+              <input
+                ref={geladenRef}
+                type="hidden"
+                name={FORMULIER_GELADEN_VELD}
+                defaultValue=""
+              />
+              <input
+                ref={verzondenRef}
+                type="hidden"
+                name={FORMULIER_VERZONDEN_VELD}
+                defaultValue=""
+              />
 
               {verborgenVelden?.map((veld) => (
                 <input
@@ -617,10 +552,10 @@ export function ContactFormulier({
                 <Knop
                   type="submit"
                   variant={stijl.knop}
-                  disabled={bezig}
+                  disabled={pending}
                   className="h-14 w-full disabled:opacity-60 md:w-auto"
                 >
-                  {bezig ? knopBezigLabel : knopLabel}
+                  {pending ? knopBezigLabel : knopLabel}
                 </Knop>
                 {bijKnop}
               </div>

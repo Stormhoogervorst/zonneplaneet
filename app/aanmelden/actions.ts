@@ -1,20 +1,19 @@
 "use server";
 
 import { getClub } from "@/lib/clubs";
+import { meldingVoorLaadtijd } from "@/lib/laadtijd";
+import { verwerkLead } from "@/lib/lead-verwerking";
 import {
-  bewaarActieLead,
-  bewaarContactbericht,
-  bewaarLead,
-  bewaarLedenLead,
-  bewaarPartnerLead,
-  bewaarReferralLead,
-  logLeadNietVerzonden,
-  logLeadVerzonden,
-} from "@/lib/leads";
+  afzenderVoorLead,
+  onderwerpVoorLead,
+  veldenVoorLeadMail,
+} from "@/lib/mail";
 import {
   aanmeldingSchema,
   actieAanmeldingSchema,
   contactSchema,
+  FORMULIER_GELADEN_VELD,
+  FORMULIER_VERZONDEN_VELD,
   honeypotGevuld,
   ledenAanmeldingSchema,
   normaliseerTelefoon,
@@ -26,18 +25,92 @@ import {
   type PartnerAanmeldState,
 } from "@/lib/validatie";
 
+const VERZENDFOUT = "Verzenden is mislukt. Probeer het later opnieuw.";
+
+function teSnelVerzonden(formData: FormData): string | undefined {
+  // TODO: rate limiting per IP. Een teller in het proces deelt geen staat
+  // tussen Vercel-instances. Dat vraagt aparte infra, bijvoorbeeld Upstash.
+  return meldingVoorLaadtijd(
+    formData.get(FORMULIER_GELADEN_VELD),
+    formData.get(FORMULIER_VERZONDEN_VELD),
+  );
+}
+
+function stopBijHoneypot(formData: FormData, type: string): boolean {
+  if (!honeypotGevuld(formData)) {
+    return false;
+  }
+
+  console.warn(type, "honeypot");
+  return true;
+}
+
+function tekstVan(waarde: unknown): string | undefined {
+  if (waarde == null) {
+    return undefined;
+  }
+
+  const tekst = String(waarde).trim();
+  return tekst === "" ? undefined : tekst;
+}
+
+function mailVelden(
+  bron: Record<string, unknown>,
+  vinkjes: readonly string[],
+): Record<string, string> {
+  const velden: Record<string, string> = {};
+
+  for (const [naam, waarde] of Object.entries(bron)) {
+    if (vinkjes.includes(naam)) {
+      velden[naam] = waarde === true ? "ja" : "nee";
+      continue;
+    }
+
+    const tekst = tekstVan(waarde);
+    if (tekst !== undefined) {
+      velden[naam] = tekst;
+    }
+  }
+
+  return velden;
+}
+
+async function verstuurLead(
+  type: string,
+  velden: Record<string, string>,
+): Promise<FormulierState> {
+  const afzender = afzenderVoorLead(type, velden);
+  const resultaat = await verwerkLead({
+    type,
+    subject: onderwerpVoorLead(type, velden),
+    ...afzender,
+    velden: veldenVoorLeadMail(type, velden),
+  });
+
+  if (!resultaat.ok) {
+    return { success: false, message: VERZENDFOUT };
+  }
+
+  return { success: true, meetConversie: true };
+}
+
 export async function meldAan(
   prevState: AanmeldState,
   formData: FormData,
 ): Promise<AanmeldState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  if (stopBijHoneypot(formData, "clubactie")) {
     const clubcode = formData.get("clubcode");
     return {
       success: true,
       clubcode: typeof clubcode === "string" ? clubcode : undefined,
     };
+  }
+
+  const tijdFoutAan = teSnelVerzonden(formData);
+  if (tijdFoutAan) {
+    return { success: false, message: tijdFoutAan };
   }
 
   const resultaat = aanmeldingSchema.safeParse({
@@ -73,30 +146,11 @@ export async function meldAan(
     ...resultaat.data,
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
     postcode: resultaat.data.postcode.toUpperCase(),
+    actie: "clubactie",
+    clubnaam: club.naam,
   };
 
-  let lead;
-  try {
-    lead = await bewaarLead(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Lead opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-    clubcode: lead.clubcode,
-  };
+  return verstuurLead("clubactie", mailVelden(aanmelding, ["akkoord"]));
 }
 
 export async function meldLidAan(
@@ -105,8 +159,13 @@ export async function meldLidAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  if (stopBijHoneypot(formData, "clubactie")) {
     return { success: true };
+  }
+
+  const tijdFoutLid = teSnelVerzonden(formData);
+  if (tijdFoutLid) {
+    return { success: false, message: tijdFoutLid };
   }
 
   const resultaat = ledenAanmeldingSchema.safeParse({
@@ -135,27 +194,7 @@ export async function meldLidAan(
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
   };
 
-  let lead;
-  try {
-    lead = await bewaarLedenLead(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Lead opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
+  return verstuurLead("clubactie", mailVelden(aanmelding, ["akkoord"]));
 }
 
 export async function meldClubAan(
@@ -164,8 +203,13 @@ export async function meldClubAan(
 ): Promise<PartnerAanmeldState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  if (stopBijHoneypot(formData, "partner")) {
     return { success: true };
+  }
+
+  const tijdFoutClub = teSnelVerzonden(formData);
+  if (tijdFoutClub) {
+    return { success: false, message: tijdFoutClub };
   }
 
   const resultaat = partnerAanmeldingSchema.safeParse({
@@ -192,27 +236,7 @@ export async function meldClubAan(
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
   };
 
-  let lead;
-  try {
-    lead = await bewaarPartnerLead(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Partneraanmelding opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
+  return verstuurLead("partner", mailVelden(aanmelding, []));
 }
 
 export async function stuurContact(
@@ -221,8 +245,13 @@ export async function stuurContact(
 ): Promise<ContactState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  if (stopBijHoneypot(formData, "contact")) {
     return { success: true };
+  }
+
+  const tijdFoutContact = teSnelVerzonden(formData);
+  if (tijdFoutContact) {
+    return { success: false, message: tijdFoutContact };
   }
 
   const resultaat = contactSchema.safeParse({
@@ -245,29 +274,10 @@ export async function stuurContact(
   const bericht = {
     ...resultaat.data,
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
+    actie: "contact",
   };
 
-  let lead;
-  try {
-    lead = await bewaarContactbericht(bericht);
-  } catch (fout) {
-    console.error(
-      "Contactbericht opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je bericht kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
+  return verstuurLead("contact", mailVelden(bericht, []));
 }
 
 export async function meldActieAan(
@@ -276,8 +286,21 @@ export async function meldActieAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  const actieType = formData.get("actie");
+  if (
+    stopBijHoneypot(
+      formData,
+      actieType === "cashback" || actieType === "winactie"
+        ? actieType
+        : "actie",
+    )
+  ) {
     return { success: true };
+  }
+
+  const tijdFoutActie = teSnelVerzonden(formData);
+  if (tijdFoutActie) {
+    return { success: false, message: tijdFoutActie };
   }
 
   const resultaat = actieAanmeldingSchema.safeParse({
@@ -304,27 +327,10 @@ export async function meldActieAan(
     postcode: resultaat.data.postcode.toUpperCase(),
   };
 
-  let lead;
-  try {
-    lead = await bewaarActieLead(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Actie-aanmelding opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
+  return verstuurLead(
+    resultaat.data.actie,
+    mailVelden(aanmelding, ["akkoord"]),
+  );
 }
 
 export async function meldReferralAan(
@@ -333,8 +339,13 @@ export async function meldReferralAan(
 ): Promise<FormulierState> {
   void prevState;
 
-  if (honeypotGevuld(formData)) {
+  if (stopBijHoneypot(formData, "referral")) {
     return { success: true };
+  }
+
+  const tijdFoutReferral = teSnelVerzonden(formData);
+  if (tijdFoutReferral) {
+    return { success: false, message: tijdFoutReferral };
   }
 
   const resultaat = referralSchema.safeParse({
@@ -366,36 +377,5 @@ export async function meldReferralAan(
     telefoon: normaliseerTelefoon(resultaat.data.telefoon),
   };
 
-  let lead;
-  try {
-    lead = await bewaarReferralLead(aanmelding);
-  } catch (fout) {
-    console.error(
-      "Referral opslaan mislukt; er is niets naar Web3Forms gestuurd.",
-      fout,
-    );
-    return {
-      success: false,
-      message:
-        "Je aanmelding kon niet worden opgeslagen. Probeer het later opnieuw.",
-    };
-  }
-
-  return {
-    success: false,
-    magVerzenden: true,
-    leadId: lead.id,
-    lead,
-  };
-}
-
-export async function logWeb3FormsGelukt(
-  leadId: string,
-  actie: string,
-): Promise<void> {
-  logLeadVerzonden(leadId, actie);
-}
-
-export async function logWeb3FormsMislukt(lead: unknown): Promise<void> {
-  logLeadNietVerzonden(lead);
+  return verstuurLead("referral", mailVelden(aanmelding, ["toestemming"]));
 }

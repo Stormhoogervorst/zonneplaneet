@@ -160,22 +160,23 @@ Kennisbank staat tijdelijk uit. Bij livegang deze zes plekken terugzetten:
 6. `components/SectieSaldering.tsx` — knop naar `/kennisbank` terug
 
 FORMULIEREN EN LEADS
-Alle formulieren lopen via een server action met Zod-validatie en een
-honeypotveld `bedrijfsnaam-controle`. Validatie gebeurt op de server. Verzending
-gaat daarna vanuit de browser naar Web3Forms. Er is geen eigen opslag. Leads
-staan in Web3Forms.
-Er zit geen maildienst in het project. Stel die niet voor. Er gaat daarom geen
-bevestigingsmail naar de aanmelder; zet die belofte niet in teksten op de site.
-Een mislukte verzending is alleen in de Vercel-logs terug te vinden, met prefix
+Alle formulieren lopen van de client naar een server action. Die valideert
+met Zod, weigert een gevulde honeypot `extra-check-9x` en controleert de
+laadtijd (minimaal 2 seconden tussen laden en verzenden). Daarna gaat de
+aanmelding door `verwerkLead` (`lib/lead-verwerking.ts`) naar
+`verstuurLeadMail` (`lib/mail.ts`) en Resend.
+Er is geen eigen opslag. De mail is de enige opslag. Een mislukte mail wordt
+nooit als succes getoond. Het Lead-id is de idempotency key van de
+Resend-aanroep; een herpoging gebruikt hetzelfde id.
+Er gaat geen bevestigingsmail naar de aanmelder; zet die belofte niet in
+teksten op de site.
+Een mislukte verzending is in de Vercel-logs terug te vinden, met prefix
 [LEAD-NIET-VERZONDEN]. Vraag nooit meer velden uit dan nodig; elk extra veld
 kost conversie.
-Drie publieke keys, per formuliertype:
-- `NEXT_PUBLIC_WEB3FORMS_CONTACT_KEY` — contact en partner
-- `NEXT_PUBLIC_WEB3FORMS_LEDEN_KEY` — clubactie/leden
-- `NEXT_PUBLIC_WEB3FORMS_REFERRAL_KEY` — referral
-De JSON-body voor Web3Forms komt uit `web3formsBodyUitFormulier` in
-`lib/web3forms.ts`: die leest de `FormData`, dus een nieuw veld in het
-formulier gaat automatisch mee.
+Drie server-side variabelen, zonder `NEXT_PUBLIC_`:
+- `RESEND_API_KEY` — API-sleutel van Resend
+- `RESEND_FROM` — afzender van de leadmail
+- `LEAD_NOTIFY_TO` — ontvanger, één adres of een kommagescheiden lijst
 De in-memory rate limiter (`lib/rate-limit.ts`) is verwijderd. Die deelde
 geen staat tussen Vercel-instances en gaf daardoor een schijnlimiet.
 

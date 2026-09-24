@@ -20,6 +20,18 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Formulieren en leads
+
+Formulier (client) → server action (Zod, honeypot, tijdcheck) → `verwerkLead` → `verstuurLeadMail` → Resend.
+
+Er is geen eigen opslag. De mail is de enige opslag. Een mislukte mail wordt nooit als succes getoond. Het Lead-id is de idempotency key van de Resend-aanroep.
+
+Server-side omgevingsvariabelen, zonder `NEXT_PUBLIC_`. Zet ze in `.env.local` (niet committen) en in de Vercel-omgeving:
+
+- `RESEND_API_KEY` — API-sleutel van Resend
+- `RESEND_FROM` — afzender van de leadmail
+- `LEAD_NOTIFY_TO` — ontvanger, één adres of een kommagescheiden lijst
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

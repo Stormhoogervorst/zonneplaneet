@@ -11,7 +11,10 @@ export const metadata: Metadata = {
 
 export default function VoorwaardenPage() {
   return (
-    <main className="mx-auto max-w-[68ch] px-5 py-12 text-[1.0625rem] leading-[1.7] text-navy">
+    <main
+      data-geen-vertrouwensblok
+      className="mx-auto max-w-[68ch] px-5 py-12 text-[1.0625rem] leading-[1.7] text-navy"
+    >
       <h1 className="text-3xl font-semibold">Algemene voorwaarden</h1>
       <p className="mt-4">Versie: januari 2025</p>
 

@@ -6,13 +6,17 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:mail": "node --conditions=react-server --experimental-strip-types --import ./lib/mail-test-register.mjs --test lib/mail.test.ts lib/lead-verwerking.test.ts lib/laadtijd.test.ts",
+    "test:mail:live": "node --conditions=react-server --experimental-strip-types --env-file=.env.local --import ./lib/mail-test-register.mjs scripts/test-mail.ts"
   },
   "dependencies": {
     "@calcom/embed-react": "^1.5.3",
     "next": "16.3.4",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "resend": "^6.28.1",
+    "server-only": "^0.0.1",
     "zod": "^4.5.4"
   },
   "devDependencies": {
